@@ -1,5 +1,181 @@
 [
   {
+    "name": "Below Ice Mountain",
+    "aliases": [
+      "Below Ice Mountain",
+      "below"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "Black Knight's Fortress",
+    "aliases": [
+      "Black Knight's Fortress",
+      "black"
+    ],
+    "price": 1500000
+  },
+  {
+    "name": "Cook's Assistant ",
+    "aliases": [
+      "Cook's Assistant ",
+      "cook"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "X Marks the Spot",
+    "aliases": [
+      "X Marks the Spot",
+      "xmarks"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "The Corsair Curse",
+    "aliases": [
+      "The Corsair Curse",
+      "corsair"
+    ],
+    "price": 2500000
+  },
+  {
+    "name": "Demon Slayer",
+    "aliases": [
+      "Demon Slayer",
+      "demon"
+    ],
+    "price": 2500000
+  },
+  {
+    "name": "Doric's Quest",
+    "aliases": [
+      "Doric's Quest",
+      "doric"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "Dragon Slayer",
+    "aliases": [
+      "Dragon Slayer",
+      "ds1"
+    ],
+    "price": 4000000
+  },
+  {
+    "name": "Ernest the Chicken",
+    "aliases": [
+      "Ernest the Chicken",
+      "ernest"
+    ],
+    "price": 2000000
+  },
+  {
+    "name": "Goblin Diplomacy",
+    "aliases": [
+      "Goblin Diplomacy",
+      "goblin"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "Imp Catcher",
+    "aliases": [
+      "Imp Catcher",
+      "imp"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "The Knight's Sword",
+    "aliases": [
+      "The Knight's Sword",
+      "knight"
+    ],
+    "price": 2000000
+  },
+  {
+    "name": "Misthalin Mystery",
+    "aliases": [
+      "Misthalin Mystery",
+      "misthalin"
+    ],
+    "price": 2000000
+  },
+  {
+    "name": "Pirate's Treasure",
+    "aliases": [
+      "Pirate's Treasure",
+      "pirate"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "Prince Ali Rescue",
+    "aliases": [
+      "Prince Ali Rescue",
+      "prince"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "The Restless Ghost",
+    "aliases": [
+      "The Restless Ghost",
+      "restless"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "Romeo & Juliet",
+    "aliases": [
+      "Romeo & Juliet",
+      "romeo"
+    ],
+    "price": 2000000
+  },
+  {
+    "name": "Rune Mysteries",
+    "aliases": [
+      "Rune Mysteries",
+      "runem"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "Sheep Shearer",
+    "aliases": [
+      "Sheep Shearer",
+      "sheeps"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "Shield of Arrav",
+    "aliases": [
+      "Shield of Arrav",
+      "sheild"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "Vampire Slayer",
+    "aliases": [
+      "Vampire Slayer",
+      "vampire"
+    ],
+    "price": 1000000
+  },
+  {
+    "name": "Witch's Potion",
+    "aliases": [
+      "Witch's Potion",
+      "witchp"
+    ],
+    "price": 1000000
+  },
+  {
     "name": "Animal Magnetism",
     "aliases": [
       "Animal Magnetism",
@@ -1424,5 +1600,133 @@
       "zogre"
     ],
     "price": 2000000
+  },
+  {
+    "name": "Alfred Barcrawl",
+    "aliases": [
+      "Alfred Barcrawl",
+      "alfred"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "Architectural Alliance",
+    "aliases": [
+      "Architectural Alliance",
+      "arch"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "Bear Your Soul",
+    "aliases": [
+      "Bear Your Soul",
+      "bear"
+    ],
+    "price": 5000000
+  },
+  {
+    "name": "Curse of the empty Lord",
+    "aliases": [
+      "Curse of the empty Lord",
+      "curse"
+    ],
+    "price": 8000000
+  },
+  {
+    "name": "Enchanted Key",
+    "aliases": [
+      "Enchanted Key",
+      "enchanted"
+    ],
+    "price": 9000000
+  },
+  {
+    "name": "Enter The Abyss",
+    "aliases": [
+      "Enter The Abyss",
+      "abyss"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "Family Pest",
+    "aliases": [
+      "Family Pest",
+      "pest"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "The General's Shadow",
+    "aliases": [
+      "The General's Shadow",
+      "thegeneral"
+    ],
+    "price": 5000000
+  },
+  {
+    "name": "Hopespear's Will",
+    "aliases": [
+      "Hopespear's Will",
+      "hopespear"
+    ],
+    "price": 5000000
+  },
+  {
+    "name": "Lair of Tarn",
+    "aliases": [
+      "Lair of Tarn",
+      "tarn"
+    ],
+    "price": 4000000
+  },
+  {
+    "name": "Skippy and the Morges",
+    "aliases": [
+      "Skippy and the Morges",
+      "skippy"
+    ],
+    "price": 2000000
+  },
+  {
+    "name": "Morges Hat Hunt",
+    "aliases": [
+      "Morges Hat Hunt",
+      "mogrehat"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "Morges Flippers Hunt",
+    "aliases": [
+      "Morges Flippers Hunt",
+      "mogreflipp"
+    ],
+    "price": 4000000
+  },
+  {
+    "name": "Search of Knowledge",
+    "aliases": [
+      "Search of Knowledge",
+      "knowledge"
+    ],
+    "price": 12000000
+  },
+  {
+    "name": "Daddy's Home",
+    "aliases": [
+      "Daddy's Home",
+      "daddy"
+    ],
+    "price": 3000000
+  },
+  {
+    "name": "The Frozen Door",
+    "aliases": [
+      "The Frozen Door",
+      "frozen"
+    ],
+    "price": 12000000
   }
 ]
