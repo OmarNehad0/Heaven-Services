@@ -1,1 +1,1 @@
-worker: python "Discord Omar Bot.py"
+worker: python "Heaven Bot.py"
