@@ -1,0 +1,62 @@
+[
+    {
+        "name": "COX - Trio",
+        "aliases": [
+            "coxtrio"
+        ],
+        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "items": [
+            {
+                "name": "Trio",
+                "price": 12000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:1068621254879346698:1231636672475566090>"
+    },
+    {
+        "name": "COX - Challenge Mode - CM",
+        "aliases": [
+            "coxcm"
+        ],
+        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "items": [
+            {
+                "name": "Challenge Mode - Mass",
+                "price": 20000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            },
+            {
+                "name": "Challenge Mode - 3-5",
+                "price": 25000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:1068621254879346698:1231636672475566090>"
+    },
+    {
+        "name": "COX Solo",
+        "aliases": [
+            "coxsolo"
+        ],
+        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "items": [
+            {
+                "name": "Twisted Bow (TBow)",
+                "price": 10000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            },
+            {
+                "name": "Bow of Faerdhinen (Bowfa)",
+                "price": 12000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            },
+            {
+                "name": "Tentacle Whip/Toxic Blowpipe (BP)",
+                "price": 15000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:1068621254879346698:1231636672475566090>"
+    }
+]

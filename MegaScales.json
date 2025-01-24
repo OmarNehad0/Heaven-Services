@@ -1,0 +1,92 @@
+[
+{
+        "name": "MegaScales - T-Bow Guaranted",
+        "aliases": [
+            "tbow"
+        ],
+        "caption": "Additional costs:\nNot able to fish/cook is +10%\nNo Fish Eater is 10m\nBuying 3 kc gets you 4% Discount\nBuying 5 kc gets you 7% Discount\nBuying 10 kc gets you 10% Discount.",
+        "items": [
+            {
+                "name": "MegaScales - T-Bow Guaranted",
+                "price": 25000000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Twisted_bow_detail.png/150px-Twisted_bow_detail.png?7aa10"
+            }
+        ],
+        "emoji" : "<:150pxTwisted_bow_detail:1247829163164041228>"
+    },
+    {
+        "name": "MegaScales - 50%",
+        "aliases": [
+            "50%"
+        ],
+        "caption": "Additional costs:\nNot able to fish/cook is +10%\nNo Fish Eater is 10m\nBuying 3 kc gets you 4% Discount\nBuying 5 kc gets you 7% Discount\nBuying 10 kc gets you 10% Discount.",
+        "items": [
+            {
+                "name": "50% Purple Chance",
+                "price": 270000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:1068621254879346698:1231636672475566090>"
+    },
+    {
+        "name": "MegaScales - 65%",
+        "aliases": [
+            "65%"
+        ],
+        "caption": "Additional costs:\nNot able to fish/cook is +10%\nNo Fish Eater is 10m\nBuying 3 kc gets you 4% Discount\nBuying 5 kc gets you 7% Discount\nBuying 10 kc gets you 10% Discount.",
+        "items": [
+            {
+                "name": "65% Purple Chance",
+                "price": 430000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:1068621254879346698:1231636672475566090>"
+    },
+    {
+        "name": "MegaScales - 100%",
+        "aliases": [
+            "100%"
+        ],
+        "caption": "Additional costs:\nNot able to fish/cook is +10%\nNo Fish Eater is 10m\nBuying 3 kc gets you 4% Discount\nBuying 5 kc gets you 7% Discount\nBuying 10 kc gets you 10% Discount.",
+        "items": [
+            {
+                "name": "100% Purple Chance",
+                "price": 700000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:purple:1321670245848711229>"
+    },
+{
+        "name": "100% +1 Prayer Scroll Protection",
+        "aliases": [
+            "100% +1"
+        ],
+        "caption": "Additional costs:\nNot able to fish/cook is +10%\nNo Fish Eater is 10m\nBuying 3 kc gets you 4% Discount\nBuying 5 kc gets you 7% Discount\nBuying 10 kc gets you 10% Discount.",
+        "items": [
+            {
+                "name": "100% Purple Chance +1 Prayer Scroll Protection",
+                "price": 1050000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:purple:1321670245848711229>"
+    },
+    {
+        "name": "100% +2 Prayer Scroll Protection",
+        "aliases": [
+            "100% +2"
+        ],
+        "caption": "Additional costs:\nNot able to fish/cook is +10%\nNo Fish Eater is 10m\nBuying 3 kc gets you 4% Discount\nBuying 5 kc gets you 7% Discount\nBuying 10 kc gets you 10% Discount.",
+        "items": [
+            {
+                "name": "100% Purple Chance +2 Prayer Scroll Protection",
+                "price": 1700000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
+            }
+        ],
+        "emoji" : "<:purple:1321670245848711229>"
+    }
+]

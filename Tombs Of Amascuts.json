@@ -1,0 +1,136 @@
+[
+    {
+      "name": "Solos - Expert / Normal Modes",
+      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "aliases": [
+        "toa",
+        "tombs of amascuts"
+      ],
+      "items": [
+        {
+          "name": "150 Raid Level - With Budget Gear",
+          "price": 12000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+          "name": "200 Raid Level - With Budget Gears",
+          "price": 14000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+          "name": "250 Raid Level - With Budget Gears",
+          "price": 16000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+          "name": "300 Raid Level",
+          "price": 17000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+          "name": "350 Raid Level (Ava's Kit)",
+          "price": 40000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+        "name" : "400 Raid Level",
+        "price" : 55000000,
+        "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+          "name": "425 Raid Level (Ward Kit)",
+          "price": 90000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+          "name": "450 Raid Level",
+          "price": 150000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        },
+        {
+          "name": "500 Raid Level (Fang Kit)",
+          "price": 250000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
+        }
+      ],
+          "emoji" : "<:Tombs_of_Amascut__Expert_Mode_ic:1321178273740361728>"
+    },
+    {
+      "name": "Pet Transmogs",
+      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "aliases": [
+        "toapet",
+        "pettrans"
+      ],
+      "items": [
+        {
+          "name": "All Demiboss Transmogs Pack",
+          "price": 650000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Tumeken%27s_Guardian_%28follower%29.png/250px-Tumeken%27s_Guardian_%28follower%29.png?7583d"
+        }],
+          "emoji" : "<:250pxTumekens_Guardian_follower:1319271332692758548>"
+    },
+         {
+      "name": "Zebak Transmog",
+      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "aliases": [
+        "zebak",
+        "toazebak"
+      ],
+      "items": [
+        {
+          "name": "Zebak Transmog",
+          "price": 150000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Zebo_%28follower%29.png/280px-Zebo_%28follower%29.png?f874d"
+        }],
+          "emoji" : "<:280pxZebo_follower:1321174930775081113>"
+         },
+        {
+      "name": "Kephri Transmog",
+      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "aliases": [
+        "kephri",
+        "toakephri"
+      ],
+      "items": [
+        {
+          "name": "Kephri Transmog",
+          "price": 200000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Kephriti_%28follower%29.png/250px-Kephriti_%28follower%29.png?f874d"
+        }
+      ],
+          "emoji" : "<:250pxKephriti_follower:1321174922961358959>"
+    },
+    {
+      "name": "Baba Transmog",
+      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "aliases": [
+        "baba",
+        "toababa"
+      ],
+      "items": [
+        {
+          "name": "Baba Transmog",
+          "price": 150000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Babi_%28follower%29.png/280px-Babi_%28follower%29.png?bb285"
+        }
+      ],
+         "emoji" : "<:280pxBabi_follower:1321174927448997928>"
+    },
+    {
+      "name": "Akha Transmog",
+      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "aliases": [
+        "akha",
+        "toaakha"
+      ],
+      "items": [
+        {
+          "name": "Akha Transmog",
+          "price": 150000000,
+          "image" : "https://oldschool.runescape.wiki/images/thumb/Akkhito_%28follower%29.png/220px-Akkhito_%28follower%29.png?bb285"
+        }
+      ],
+         "emoji" : "<:220pxAkkhito_follower:1321174918636896417>"
+    }
+  ]

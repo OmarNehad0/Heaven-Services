@@ -1,0 +1,81 @@
+[
+       {
+        "name": "Armadyal",
+        "aliases": ["Arma"],
+        "caption": "You keep all loot.\nPrices may vary depending on stats and gear.",
+        "items": [
+            {
+                "name": "Armadyl (No Chins)",
+                "price": 1800000,
+                "image" : "https://oldschool.runescape.wiki/images/thumb/Kree%27arra.png/800px-Kree%27arra.png?ba75c"
+            },
+            {
+                "name": "Armadyl (Red Chins)",
+                "price": 1700000,
+                "image" : "https://oldschool.runescape.wiki/images/thumb/Kree%27arra.png/800px-Kree%27arra.png?ba75c"
+            },
+            {
+                "name": "Armadyl (Black Chins)",
+                "price": 1400000,
+                "image" : "https://oldschool.runescape.wiki/images/thumb/Kree%27arra.png/800px-Kree%27arra.png?ba75c"}],
+                "emoji" : "<:280pxKreearra:1321168406359179364>"
+        },
+     {
+                "name": "Bandos",
+                "aliases": ["Bandos"],
+                "caption" : "You keep all loot.\nPrices may vary depending on stats and gear.",
+                "items" : [
+
+               { "name": "Bandos",
+                 "price" : 1500000,
+                 "image" : "https://oldschool.runescape.wiki/images/thumb/General_Graardor.png/280px-General_Graardor.png?4dd90"
+               }],
+                "emoji" : "<:280pxGeneral_Graardor:1321168401967878185>"
+     },
+    {
+                "name": "Saradomin",
+                "aliases": ["sara"],
+                "caption" : "You keep all loot.\nPrices may vary depending on stats and gear.",
+                "items" : [
+
+               { "name": "Saradomin",
+                 "price" : 1200000,
+                 "image" : "https://oldschool.runescape.wiki/images/thumb/Commander_Zilyana.png/250px-Commander_Zilyana.png?c5eaa"}],
+                "emoji" : "<:250pxCommander_Zilyana:1321168398239137904>"
+    },
+                         {
+                "name": "Zamorak",
+                "aliases": ["zammy"],
+                "caption" : "You keep all loot.\nPrices may vary depending on stats and gear.",
+                "items" : [
+
+               { "name": "Zamorak",
+                 "price" : 1500000,
+                 "image" : "https://oldschool.runescape.wiki/images/thumb/K%27ril_Tsutsaroth.png/280px-K%27ril_Tsutsaroth.png?73bda"
+               }],
+                "emoji" : "<:280pxKril_Tsutsaroth:1321168411107262595>"
+                },                         {
+                    "name": "Nex",
+                    "aliases": ["Nex"],
+                    "caption" : "You keep all loot.\nPrices may vary depending on stats and gear.",
+                    "items" : [
+    
+                   { "name": "Nex - Logins - Small team (6-8) with Twisted Bow",
+                     "price" : 2000000,
+                     "image" : "https://oldschool.runescape.wiki/images/thumb/Nex.png/800px-Nex.png?2a1b3"
+                },
+                
+                {  "name": "Nex - Logins - 5 Mans with Twisted Bow",
+                   "price" : 4000000,
+                   "image" : "https://oldschool.runescape.wiki/images/thumb/Nex.png/800px-Nex.png?2a1b3"
+                 },
+                 
+                 
+                 {  "name": "Nex - Logins - 3 Mans with Twisted Bow",
+                 "price" : 6000000,
+                 "image" : "https://oldschool.runescape.wiki/images/thumb/Nex.png/800px-Nex.png?2a1b3"
+               }   
+                ],
+                "emoji" : "<:Nex:1217155665668079788>"
+                    }                    
+]
