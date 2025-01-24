@@ -40,8 +40,17 @@ with open("quests-members.json", "r") as f:
 
 # Helper function to find a quest by name or alias
 def find_quest(quest_name):
+    # Normalize the input by stripping whitespace and converting to lowercase
+    normalized_input = " ".join(quest_name.lower().strip().split())
+
     for quest in quest_data:
-        if quest_name.lower() in [alias.lower() for alias in quest["aliases"]] or quest_name.lower() == quest["name"].lower():
+        # Normalize the quest name
+        normalized_name = " ".join(quest["name"].lower().strip().split())
+        # Normalize aliases
+        normalized_aliases = [" ".join(alias.lower().strip().split()) for alias in quest["aliases"]]
+
+        # Match against both the quest name and its aliases
+        if normalized_input == normalized_name or normalized_input in normalized_aliases:
             return quest
     return None
 
