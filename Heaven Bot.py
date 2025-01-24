@@ -206,57 +206,13 @@ async def feedback(ctx):
 
     await ctx.send(embed=initial_embed, view=view)
 
-
-
-
-
-# Command to handle currency and discount calculations
-@bot.command(name="c")
-async def calculate(ctx, expression: str):
-    try:
-        # Handle multiplication cases
-        if '*' in expression:
-            gp_amount_str, multiplier_str = expression.lower().split('*')
-            gp_amount = float(gp_amount_str.replace('m', '').replace('k', ''))  # Handle 'm' and 'k'
-            gp_amount = gp_amount * 1_000_000 if 'm' in gp_amount_str else gp_amount * 1_000
-            
-            if 'm' in multiplier_str:  # GP to GP multiplication
-                multiplier = float(multiplier_str.replace('m', '')) * 1_000_000
-                result = (gp_amount * multiplier) / 1_000_000_000  # Convert to millions
-                await ctx.send(f"**Value**: {result:.2f}m <:cashstack:1210284059926986792>")
-            elif '$' in multiplier_str:  # GP to USD conversion
-                usd_rate = float(multiplier_str.replace('$', ''))
-                usd_result = (gp_amount / 1_000_000) * usd_rate  # Dynamic rate usage
-                await ctx.send(f"**Value In Dollars**: {usd_result:.2f}$ :dollar:")
-            else:  # Generic multiplier without restrictions
-                multiplier = float(multiplier_str)
-                result = gp_amount * multiplier / 1_000_000
-                await ctx.send(f"**Value**: {result:.2f}m <:cashstack:1210284059926986792>")
-        
-        # Handle percentage discount
-        elif '-' in expression and '%' in expression:
-            gp_amount_str, percent_discount_str = expression.lower().replace('m', '').replace('%', '').split('-')
-            gp_amount = float(gp_amount_str)
-            discount = float(percent_discount_str) / 100
-            discounted_amount = gp_amount * (1 - discount)
-            await ctx.send(f"**After Discount Price Will Be**: {discounted_amount:.2f}m <:cashstack:1210284059926986792>")
-
-        else:
-            await ctx.send("Invalid format. Use '508m*0.155$', '3000m*2.9', or '30m-15%'.")
-    except Exception as e:
-        await ctx.send("Error processing your request. Please check your input format.")
-        print(f"Error in calculate command: {e}")
-
-
-
-
 # Payment methods with custom emojis and addresses
 payment_methods_with_emojis = {
-    "Bitcoin": ("1D398RDWnEW4DRYeQ3DKSmbzT1sMuM1xgW", "<:Dragonclaws:831987485839458384>"),
-    "USDT (TRC20)": ("TXfZyGJ7Jbx94uD8vzdFoEFfcS7heJDZBW", "<:Dragonclaws:831987485839458384>"),
-    "Eth (Erc20)" : ("0x40a6190110d3f1d8a7936eb0de3287b1d88921dc" , "<:Dragonclaws:831987485839458384>"),
-    "Binance to Binance & USDT" : ("461848277", "<:Dragonclaws:831987485839458384>"),
-    "LiteCoin" :("LQ3yQWMstLTenNRWbFiwiNXkua4PoKdrZY" ,"<:Dragonclaws:831987485839458384>"),
+    "Bitcoin": ("1D398RDWnEW4DRYeQ3DKSmbzT1sMuM1xgW", "<:btc:1332372139541528627>"),
+    "USDT (TRC20)": ("TXfZyGJ7Jbx94uD8vzdFoEFfcS7heJDZBW", "<:usdt:1332372201080623115>"),
+    "Eth (Erc20)" : ("0x40a6190110d3f1d8a7936eb0de3287b1d88921dc" , "<:eth:1332372162711130142>"),
+    "Binance to Binance & USDT" : ("461848277", "<:binance:1332372691088445480>"),
+    "LiteCoin" :("LQ3yQWMstLTenNRWbFiwiNXkua4PoKdrZY" ,"<:ltc:1332372439652634647>"),
     "Ada (Cardano)" : ("addr1v92xngktp696jnpav2vjyps2a5hqzdpxkfdlqd98ed4hgscsy74a2", "<:Dragonclaws:831987485839458384>")}
 
 # Command to display payment options
