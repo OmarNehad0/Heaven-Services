@@ -171,7 +171,7 @@
     "name": "Desert Treasure",
     "aliases": [
       "Desert Treasure",
-      "dtreasure"
+      "dtreasure","dt1","dt"
     ],
     "price": 12000000
   },
@@ -179,7 +179,7 @@
     "name": "Desert Treasure (-43 Pray)",
     "aliases": [
       "Desert Treasure (-43 Pray)",
-      "dtreasure-43"
+      "dtreasure-43","dt-43"
     ],
     "price": 20000000
   },
@@ -273,15 +273,15 @@
     "price": 3000000
   },
   {
-    "name": "Elemental Workshop I",
+    "name": "Elemental Workshop 1",
     "aliases": [
-      "Elemental Workshop I",
+      "Elemental Workshop 1",
       "elemental1"
     ],
     "price": 1000000
   },
   {
-    "name": "Elemental Workshop II",
+    "name": "Elemental Workshop 2",
     "aliases": [
       "Elemental Workshop II",
       "Elemental Workshop 2",
@@ -725,7 +725,7 @@
   {
     "name": "Mourning's Ends Part I",
     "aliases": [
-      "mep1"
+      "mep1","mourning ends 1","mourning's ends part 1"
     ],
     "price": 8000000
   },
@@ -739,7 +739,7 @@
   {
     "name": "Mourning's Ends Part II",
     "aliases": [
-      "mep2"
+      "mep2","mourning ends 2","mourning's ends part 2"
     ],
     "price": 18000000
   },
