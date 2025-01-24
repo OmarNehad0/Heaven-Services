@@ -252,12 +252,12 @@ async def calculate(ctx, expression: str):
 
 # Payment methods with custom emojis and addresses
 payment_methods_with_emojis = {
-    "Bitcoin": ("1D398RDWnEW4DRYeQ3DKSmbzT1sMuM1xgW", "<:bitcoinbtclogo:1210395515133362316>"),
-    "USDT (TRC20)": ("TXfZyGJ7Jbx94uD8vzdFoEFfcS7heJDZBW", "<:R5:1210457644394086421>"),
-    "Eth (Erc20)" : ("0x40a6190110d3f1d8a7936eb0de3287b1d88921dc" , "<:R5:1210457644394086421>"),
-    "Binance to Binance & USDT" : ("461848277", "<:OIP2:1210456498929532948>"),
-    "LiteCoin" :("LQ3yQWMstLTenNRWbFiwiNXkua4PoKdrZY" ,"<:1490823:1210457048987467796>"),
-    "Ada (Cardano)" : ("addr1v92xngktp696jnpav2vjyps2a5hqzdpxkfdlqd98ed4hgscsy74a2", "<:cardanocrypto48047104002423:1210458255411642378>")}
+    "Bitcoin": ("1D398RDWnEW4DRYeQ3DKSmbzT1sMuM1xgW", "<:Dragonclaws:831987485839458384>"),
+    "USDT (TRC20)": ("TXfZyGJ7Jbx94uD8vzdFoEFfcS7heJDZBW", "<:Dragonclaws:831987485839458384>"),
+    "Eth (Erc20)" : ("0x40a6190110d3f1d8a7936eb0de3287b1d88921dc" , "<:Dragonclaws:831987485839458384>"),
+    "Binance to Binance & USDT" : ("461848277", "<:Dragonclaws:831987485839458384>"),
+    "LiteCoin" :("LQ3yQWMstLTenNRWbFiwiNXkua4PoKdrZY" ,"<:Dragonclaws:831987485839458384>"),
+    "Ada (Cardano)" : ("addr1v92xngktp696jnpav2vjyps2a5hqzdpxkfdlqd98ed4hgscsy74a2", "<:Dragonclaws:831987485839458384>")}
 
 # Command to display payment options
 @bot.command(name="pay")
