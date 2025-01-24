@@ -27,6 +27,93 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Define the constants
+EXCHANGE_RATE = 0.2  # 1M GP = $0.2
+EMOJI_CATEGORY = {
+    "gp": "<:coins:1332378895047069777>",  # Replace with your emoji ID for GP
+    "usd": "<:btc:1332372139541528627>"  # Replace with your emoji ID for USD
+}
+
+# Load quest data from JSON file
+with open("quests-members.json", "r") as f:
+    quest_data = json.load(f)
+
+# Helper function to find a quest by name or alias
+def find_quest(quest_name):
+    for quest in quest_data:
+        if quest_name.lower() in [alias.lower() for alias in quest["aliases"]] or quest_name.lower() == quest["name"].lower():
+            return quest
+    return None
+
+# Command to calculate quests
+@bot.command(name="q")
+async def quest_calculator(ctx, *, quests: str):
+    quest_names = [q.strip() for q in quests.split(",")]
+    found_quests = []
+    not_found_quests = []
+    total_price_gp = 0
+
+    for quest_name in quest_names:
+        quest = find_quest(quest_name)
+        if quest:
+            # Add quest details
+            price_m = quest['price'] // 1000000
+            found_quests.append(f"• **{quest['name']}**: {price_m}M {EMOJI_CATEGORY['gp']}")
+            total_price_gp += quest["price"]
+        else:
+            not_found_quests.append(f"• {quest_name}")
+
+    # Calculate total price in dollars
+    total_price_usd = total_price_gp / 1000000 * EXCHANGE_RATE
+
+    # Create the embed message
+    embed = discord.Embed(
+        title="Quest Calculator ",
+        color=discord.Color.purple()
+    )
+    embed.set_thumbnail(
+        url="https://media.discordapp.net/attachments/1327412187228012596/1332372283960070306/image.png?ex=679503e2&is=6793b262&hm=1886a7412e8ea5964e3b88692e5235e163e69de01896db310fb95e443ad68b70&=&format=webp&quality=lossless"
+    )  # Replace with your thumbnail URL
+
+    # Add found quests to the embed
+    if found_quests:
+        embed.add_field(
+            name="Quests",
+            value="\n".join(found_quests),
+            inline=False
+        )
+
+    # Add the total price
+    if total_price_gp > 0:
+        embed.add_field(
+            name="Order Total",
+            value=(
+                f"{total_price_gp // 1000000}M {EMOJI_CATEGORY['gp']}\n"
+                f"${total_price_usd:.2f} {EMOJI_CATEGORY['usd']}"
+            ),
+            inline=False
+        )
+
+    # Add not found quests to the embed
+    if not_found_quests:
+        embed.add_field(
+            name="Could not find the following quests",
+            value="\n".join(not_found_quests),
+            inline=False
+        )
+
+    # Add a footer as a thumbnail
+    embed.set_image(url="https://media.discordapp.net/attachments/1327412187228012596/1332372283960070306/image.png?ex=679503e2&is=6793b262&hm=1886a7412e8ea5964e3b88692e5235e163e69de01896db310fb95e443ad68b70&=&format=webp&quality=lossless")
+
+    # Send the embed
+    await ctx.send(embed=embed)
+
+@bot.event
+async def on_ready():
+    print(f"Bot is ready as {bot.user}")
+
+
+
 LOG_CHANNEL_ID = 1332354894597853346  # Replace with your actual log channel ID
 
 @bot.command(name="inf")
