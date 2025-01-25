@@ -20,6 +20,8 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from discord import app_commands
 import gspread
+from google.auth.transport.requests import Request
+from google.auth import exceptions
 
 # Define intents
 intents = discord.Intents.default()
@@ -846,13 +848,30 @@ def format_currency(value, currency_type="gp"):
 # Google Sheets setup
 SERVICE_ACCOUNT_FILE = "moonlit-app-445200-e9-7df19e1fb81a.json"  # Path to your service account JSON key file
 SPREADSHEET_NAME = "Order Tracking"  # Replace with your Google Sheet name
+try:
+    # Authenticate using the service account
+    gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
+    
+    # Open the spreadsheet
+    sheet = gc.open(SPREADSHEET_NAME)
+    
+    # Access individual sheets
+    orders_sheet = sheet.worksheet("Orders")
+    wallets_sheet = sheet.worksheet("Wallets")
+    spent_sheet = sheet.worksheet("Spent")
 
-gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
-sheet = gc.open(SPREADSHEET_NAME)
-orders_sheet = sheet.worksheet("Orders")
-wallets_sheet = sheet.worksheet("Wallets")
-spent_sheet = sheet.worksheet("Spent")
+    print("Successfully connected to the Google Sheets API and opened the sheets!")
 
+except FileNotFoundError:
+    print(f"Error: The file {SERVICE_ACCOUNT_FILE} was not found.")
+except DefaultCredentialsError:
+    print("Error: Could not authenticate with the Google Sheets API. Check your credentials.")
+except gspread.exceptions.SpreadsheetNotFound:
+    print(f"Error: Spreadsheet with name '{SPREADSHEET_NAME}' not found.")
+except gspread.exceptions.WorksheetNotFound:
+    print("Error: One or more of the worksheets 'Orders', 'Wallets', or 'Spent' not found.")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
 # Helper Functions
 def load_data():
     orders = {row[0]: {"customer": row[1], "value": row[2], "worker": row[3], "status": row[4]} for row in orders_sheet.get_all_values()[1:]}
