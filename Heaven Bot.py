@@ -945,6 +945,16 @@ async def accept_order(interaction, order_id):
     # Logic to handle when a worker accepts the job
     await interaction.response.send_message(f"Order {order_id} has been accepted by {interaction.user.name}.")
 
+
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    try:
+        synced = await bot.tree.sync()  # Sync all slash commands
+        print(f"Synced {len(synced)} commands.")
+    except Exception as e:
+        print(f"Error syncing commands: {e}")
+
 # Flask setup for keeping the bot alive (Replit hosting)
 app = Flask('')
 
@@ -958,8 +968,6 @@ def run():
 def keep_alive():
     thread = Thread(target=run)
     thread.start()
-
-import asyncio
 
 # Add restart command for the bot (Owner-only)
 @bot.command()
