@@ -38,8 +38,8 @@ with open("xp_data.json", "r") as f:
 # Constants
 EXCHANGE_RATE = 0.2  # 1M GP = $0.2
 EMOJI_CATEGORY = {
-    "gp": "<:cashstack:1210284059926986792>",  # Replace with your emoji ID for GP
-    "usd": "<:bitcoinbtclogo:1210395515133362316>"  # Replace with your emoji ID for USD
+    "gp": "<:coins:1332378895047069777>",  # Replace with your emoji ID for GP
+    "usd": "<:btc:1332372139541528627>"  # Replace with your emoji ID for USD
 }
 
 # Helper function to chunk text into multiple parts that fit Discord's field limit
@@ -138,7 +138,7 @@ async def s(ctx, skill_name: str, levels: str):
         additional_text = "\n".join([
         f"**{method['title']}** (Requires level {method['req']}) {method['gpxp']}gp/xp\n"
         f"**{(XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000:,.2f}M** <:coins:1332378895047069777>\n"
-        f"**${((XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000) * EXCHANGE_RATE:,.2f}** <:bitcoinbtclogo:1210395515133362316>\n"
+        f"**${((XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000) * EXCHANGE_RATE:,.2f}** <:btc:1332372139541528627>\n"
         for method in skill["methods"]
         ])
 
@@ -157,7 +157,7 @@ async def s(ctx, skill_name: str, levels: str):
         embed.add_field(
             name=f"Using the cheapest methods available, level {level_start} to {level_end} will cost you:",
             value=f"**{total_gp_cost:,.2f}M** <:coins:1332378895047069777>\n"
-                  f"**${total_usd_cost:,.2f}** <:bitcoinbtclogo:1210395515133362316>",
+                  f"**${total_usd_cost:,.2f}** <:btc:1332372139541528627>",
             inline=False,
         )
 
