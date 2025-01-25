@@ -22,7 +22,7 @@ from discord import app_commands
 import gspread
 from google.auth.transport.requests import Request
 from google.auth import exceptions
-
+from google.auth.exceptions import DefaultCredentialsError
 # Define intents
 intents = discord.Intents.default()
 intents.message_content = True
