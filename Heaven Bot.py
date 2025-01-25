@@ -19,6 +19,7 @@ from datetime import datetime
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from discord import app_commands
+import gspread
 
 # Define intents
 intents = discord.Intents.default()
