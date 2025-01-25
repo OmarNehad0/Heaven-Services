@@ -137,7 +137,7 @@ async def s(ctx, skill_name: str, levels: str):
         # Full method calculations (showing all available methods)
         additional_text = "\n".join([
         f"**{method['title']}** (Requires level {method['req']}) {method['gpxp']}gp/xp\n"
-        f"**{(XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000:,.2f}M** <:cashstack:1210284059926986792>\n"
+        f"**{(XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000:,.2f}M** <:coins:1332378895047069777>\n"
         f"**${((XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000) * EXCHANGE_RATE:,.2f}** <:bitcoinbtclogo:1210395515133362316>\n"
         for method in skill["methods"]
         ])
@@ -156,7 +156,7 @@ async def s(ctx, skill_name: str, levels: str):
         # Add total cost
         embed.add_field(
             name=f"Using the cheapest methods available, level {level_start} to {level_end} will cost you:",
-            value=f"**{total_gp_cost:,.2f}M** <:cashstack:1210284059926986792>\n"
+            value=f"**{total_gp_cost:,.2f}M** <:coins:1332378895047069777>\n"
                   f"**${total_usd_cost:,.2f}** <:bitcoinbtclogo:1210395515133362316>",
             inline=False,
         )
@@ -164,7 +164,7 @@ async def s(ctx, skill_name: str, levels: str):
         # Add breakdown of methods
         breakdown_text = "\n".join([
             f"{segment['title']} at level {segment['start_level']} "
-            f"({segment['gpxp']}gp/xp = **{segment['gp_cost']:,.2f}M** <:cashstack:1210284059926986792>)"
+            f"({segment['gpxp']}gp/xp = **{segment['gp_cost']:,.2f}M** <:coins:1332378895047069777>)"
             for segment in breakdown
         ])
         embed.add_field(
