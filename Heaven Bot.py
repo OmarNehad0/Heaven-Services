@@ -848,6 +848,8 @@ def format_currency(value, currency_type="gp"):
 # Google Sheets setup
 SERVICE_ACCOUNT_FILE = "moonlit-app-445200-e9-7df19e1fb81a.json"  # Path to your service account JSON key file
 SPREADSHEET_NAME = "Order Tracking"  # Replace with your Google Sheet name
+# Use the correct scope
+scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 try:
     # Authenticate using the service account
     gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
