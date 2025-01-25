@@ -834,10 +834,17 @@ async def acc(interaction: discord.Interaction):
     modal = AccountSaleModal()
     await interaction.response.send_modal(modal)
 
+# Helper Functions
+def format_currency(value, currency_type="gp"):
+    if currency_type == "gp":
+        return f"{value}M"
+    elif currency_type == "$":
+        return f"${value}"
+
 
 # Google Sheets setup
-SERVICE_ACCOUNT_FILE = 'moonlit-app-445200-e9-7df19e1fb81a.json'  # or from GitHub secrets/environment variable
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']  # Sheet edit access
+SERVICE_ACCOUNT_FILE = 'moonlit-app-445200-e9-7df19e1fb81a.json'
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # Set up the Google Sheets API
 credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
@@ -846,155 +853,154 @@ sheets_service = build('sheets', 'v4', credentials=credentials)
 # Your Google Sheets ID
 SHEET_ID = '10CeBcKS0rURBcnKgCPahsfkIxCDmvOzJkTl3nuNAnX8'
 
-# Command: /view
-@bot.tree.command(name="view")
-async def view_order(interaction: discord.Interaction):
-    await interaction.response.send_message("Please enter the order ID:", ephemeral=True)
-    
-    def check(m):
-        return m.author == interaction.user and m.channel == interaction.channel
 
-    order_id_msg = await bot.wait_for("message", check=check)
-    order_id = order_id_msg.content.strip()
+def read_sheet(range_name):
+    """Reads data from a Google Sheet range."""
+    sheet = sheets_service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SHEET_ID, range=range_name).execute()
+    return result.get('values', [])
 
-    # Fetch order details from Google Sheets
-    order_details = get_order_details_from_sheet(order_id)
 
-    if order_details:
-        # Construct Embed
-        embed = discord.Embed(title=f"Order {order_id} Details", color=discord.Color.blue())
-        embed.add_field(name="Worker ID", value=order_details['worker_id'])
-        embed.add_field(name="Customer ID", value=order_details['customer_id'])
-        embed.add_field(name="Value", value=f"${order_details['value']:.2f}")
-        embed.add_field(name="Order Description", value=order_details['description'])
-        await interaction.followup.send(embed=embed)
-    else:
-        await interaction.followup.send("Order not found.")
+def append_to_sheet(range_name, values):
+    """Appends data to a Google Sheet."""
+    sheet = sheets_service.spreadsheets()
+    body = {'values': [values]}
+    result = sheet.values().append(
+        spreadsheetId=SHEET_ID,
+        range=range_name,
+        valueInputOption='RAW',
+        body=body
+    ).execute()
+    return result
 
-# Command: /spent
-@bot.tree.command(name="spent")
-async def spent(interaction: discord.Interaction):
-    await interaction.response.send_message("Please enter the user ID to check their spending:", ephemeral=True)
-    
-    def check(m):
-        return m.author == interaction.user and m.channel == interaction.channel
 
-    user_id_msg = await bot.wait_for("message", check=check)
-    user_id = user_id_msg.content.strip()
+def update_sheet(range_name, values):
+    """Updates data in a Google Sheet."""
+    sheet = sheets_service.spreadsheets()
+    body = {'values': [values]}
+    result = sheet.values().update(
+        spreadsheetId=SHEET_ID,
+        range=range_name,
+        valueInputOption='RAW',
+        body=body
+    ).execute()
+    return result
 
-    # Fetch total spent by user from Google Sheets
-    total_spent = get_total_spent_from_sheet(user_id)
 
-    # Construct Embed
-    embed = discord.Embed(title=f"Total Spent by User {user_id}", color=discord.Color.green())
-    embed.add_field(name="Total Spent", value=f"${total_spent:.2f}")
+# /view Command
+@bot.tree.command(name="view", description="View order details.")
+async def view(interaction: discord.Interaction, order_id: int):
+    order = data["orders"].get(str(order_id))
+    if not order:
+        await interaction.response.send_message("Order not found.", ephemeral=True)
+        return
 
-    await interaction.followup.send(embed=embed)
-
-# Command: /post
-CHANNEL_ID = 1332354894597853346  # Set your channel ID here
-
-@bot.tree.command(name="post")
-async def post_order(interaction: discord.Interaction):
-    # Prompt for inputs
-    await interaction.response.send_message("Please enter the customer ID:", ephemeral=True)
-    def check(m):
-        return m.author == interaction.user and m.channel == interaction.channel
-
-    customer_id_msg = await bot.wait_for("message", check=check)
-    customer_id = customer_id_msg.content.strip()
-
-    await interaction.followup.send("Please enter the helper ID:", ephemeral=True)
-    helper_id_msg = await bot.wait_for("message", check=check)
-    helper_id = helper_id_msg.content.strip()
-
-    await interaction.followup.send("Please enter the value:", ephemeral=True)
-    value_msg = await bot.wait_for("message", check=check)
-    value = float(value_msg.content.strip())
-
-    await interaction.followup.send("Please enter the order description:", ephemeral=True)
-    description_msg = await bot.wait_for("message", check=check)
-    description = description_msg.content.strip()
-
-    # Create the embed for the new order
-    embed = discord.Embed(
-        title="New Order Posted",
-        description=f"Order for {customer_id} to be completed by {helper_id}.",
-        color=discord.Color.green()
-    )
-    embed.add_field(name="Value", value=f"${value:.2f}", inline=False)
-    embed.add_field(name="Description", value=description, inline=False)
-
-    # Get the channel object by ID and send the embed message
-    channel = bot.get_channel(CHANNEL_ID)  # Get the channel by ID
-    if channel:
-        post_message = await channel.send(embed=embed)  # Send the embed to the channel
-
-        # Add a button (e.g., "Accept TOS & Take Job") to the message
-        button = Button(label="Accept TOS & Take Job", style=discord.ButtonStyle.green)
-        
-        async def button_callback(interaction):
-            if interaction.user.id == int(helper_id):
-                # Add the helper to the ticket and confirm the order has been accepted
-                await interaction.response.send_message(f"{interaction.user.mention} has accepted the order!")
-                # Add any necessary actions for updating the order status here
-
-        # Attach button to the embed
-        view = View()
-        view.add_item(button)
-        await post_message.edit(view=view)
-
-# Function to get order details from Google Sheets
-def get_order_details_from_sheet(order_id):
-    range_ = f"Orders!A2:F"  # Assuming the order data is from row 2 onward
-    result = sheets_service.spreadsheets().values().get(spreadsheetId=SHEET_ID, range=range_).execute()
-    values = result.get('values', [])
-
-    for row in values:
-        if row[0] == order_id:  # Assuming order ID is in column A
-            return {
-                'worker_id': row[1],
-                'customer_id': row[2],
-                'value': float(row[3]),
-                'description': row[4]
-            }
-
-    return None  # Order not found
-
-# Function to get total spent by user from Google Sheets
-def get_total_spent_from_sheet(user_id):
-    range_ = f"Orders!A2:F"
-    result = sheets_service.spreadsheets().values().get(spreadsheetId=SHEET_ID, range=range_).execute()
-    values = result.get('values', [])
-
-    total_spent = 0
-    for row in values:
-        if row[2] == user_id:  # Assuming customer ID is in column C
-            total_spent += float(row[3])  # Assuming the value is in column D
-
-    return total_spent
-
-# Function to add an order to Google Sheets
-def add_order_to_sheet(customer_id, helper_id, value, description):
-    range_ = f"Orders!A2:F"  # Orders range in the sheet
-    values = [
-        [str(len(get_order_details_from_sheet("")) + 1), helper_id, customer_id, value, description]  # New order ID will be the next row number
-    ]
-
-    body = {
-        'values': values
+    embed = discord.Embed(title="Order Details", color=discord.Color.blue())
+    embed.add_field(name="ID", value=order_id, inline=True)
+    embed.add_field(name="Customer", value=order["customer"], inline=True)
+    embed.add_field(name="Worker", value=order["worker"], inline=True)
+    embed.add_field(name="Value", value=order["value"], inline=True)
+    embed.add_field(name="Status", value=order["status"], inline=True)
+    await interaction.response.send_message(embed=embed)
+# /set Command
+@bot.tree.command(name="set", description="Manually set an order.")
+async def set_order(interaction: discord.Interaction, value: str, customer: discord.Member, worker: discord.Member, description: str):
+    order_id = len(data["orders"]) + 1
+    data["orders"][str(order_id)] = {
+        "customer": customer.mention,
+        "value": format_currency(value),
+        "worker": worker.mention,
+        "status": "Set",
+        "description": description,
     }
+    save_data(data)
 
-    result = sheets_service.spreadsheets().values().append(
-        spreadsheetId=SHEET_ID, range=range_,
-        valueInputOption="RAW", body=body).execute()
+    embed = discord.Embed(title="Order Set", color=discord.Color.blue())
+    embed.add_field(name="ID", value=order_id, inline=True)
+    embed.add_field(name="Customer", value=customer.mention, inline=True)
+    embed.add_field(name="Worker", value=worker.mention, inline=True)
+    embed.add_field(name="Value", value=format_currency(value), inline=True)
+    embed.add_field(name="Description", value=description, inline=False)
+    await interaction.response.send_message(embed=embed)
 
-    return result['updates']['updatedRange'].split('!')[1].split(':')[0]  # Return new order ID
+# /spent Command
+@bot.tree.command(name="spent", description="View customer spending.")
+async def spent(interaction: discord.Interaction, customer: discord.Member):
+    total_spent = data["spent"].get(customer.mention, 0)
+    embed = discord.Embed(title="Customer Spending", description=f"Total spent by {customer.mention}", color=discord.Color.gold())
+    embed.add_field(name="Total Spent", value=format_currency(total_spent), inline=True)
+    await interaction.response.send_message(embed=embed)
 
-# Function to accept the order
-async def accept_order(interaction, order_id):
-    # Logic to handle when a worker accepts the job
-    await interaction.response.send_message(f"Order {order_id} has been accepted by {interaction.user.name}.")
+# /complete Command
+@bot.tree.command(name="complete", description="Complete an order.")
+async def complete(interaction: discord.Interaction, order_id: int):
+    order = data["orders"].get(str(order_id))
+    if not order:
+        await interaction.response.send_message("Order not found.", ephemeral=True)
+        return
+
+    value = float(order["value"].replace("M", ""))
+    worker_share = value * 0.8
+    server_commission = value * 0.17
+    poster_commission = value * 0.03
+
+    # Update wallets
+    worker = order["worker"]
+    data["wallets"].setdefault(worker, {"gp": 0, "$": 0})
+    data["wallets"][worker]["gp"] += worker_share
+
+    customer = order["customer"]
+    data["spent"].setdefault(customer, 0)
+    data["spent"][customer] += value
+
+    save_data(data)
+
+    # Send confirmation
+    embed = discord.Embed(title="Order Completed", description=f"Order {order_id} has been completed.", color=discord.Color.green())
+    embed.add_field(name="Worker Take", value=format_currency(worker_share), inline=True)
+    embed.add_field(name="Server Commission", value=format_currency(server_commission), inline=True)
+    embed.add_field(name="Poster Commission", value=format_currency(poster_commission), inline=True)
+    await interaction.response.send_message(embed=embed)
+    
+# /post Command
+@bot.tree.command(name="post", description="Create a new order post.")
+async def post(interaction: discord.Interaction, value: str, customer: discord.Member, description: str):
+    order_id = len(data["orders"]) + 1
+    embed = discord.Embed(title="Heaven Services", description="New Order", color=discord.Color.blue())
+    embed.add_field(name="ID", value=order_id, inline=True)
+    embed.add_field(name="Customer", value=customer.mention, inline=True)
+    embed.add_field(name="Value", value=format_currency(value), inline=True)
+    embed.add_field(name="Description", value=description, inline=False)
+    embed.set_thumbnail(url="https://example.com/image.png")
+    view = OrderView(order_id, interaction.channel_id)
+    await interaction.response.send_message(embed=embed, view=view)
+
+class OrderView(discord.ui.View):
+    def __init__(self, order_id, channel_id):
+        super().__init__(timeout=None)
+        self.order_id = order_id
+        self.channel_id = channel_id
+
+    @discord.ui.button(label="Accept Tos & Take Job", style=discord.ButtonStyle.green)
+    async def accept_job(self, interaction: discord.Interaction, button: discord.ui.Button):
+        worker = interaction.user
+        # Update data
+        data["orders"][str(self.order_id)] = {
+            "customer": interaction.message.embeds[0].fields[1].value,
+            "value": interaction.message.embeds[0].fields[2].value,
+            "worker": worker.mention,
+            "status": "Accepted",
+        }
+        save_data(data)
+
+        # Notify acceptance
+        embed = discord.Embed(title="Heaven Services", description="Order Accepted", color=discord.Color.green())
+        embed.add_field(name="ID", value=self.order_id, inline=True)
+        embed.add_field(name="Customer", value=data["orders"][str(self.order_id)]["customer"], inline=True)
+        embed.add_field(name="Worker", value=worker.mention, inline=True)
+        embed.add_field(name="Value", value=data["orders"][str(self.order_id)]["value"], inline=True)
+        await interaction.response.send_message(embed=embed)
+        await interaction.message.delete()
 
 
 @bot.event
