@@ -846,108 +846,124 @@ def format_currency(value, currency_type="gp"):
 
 
 # Google Sheets setup
-SERVICE_ACCOUNT_FILE = "moonlit-app-445200-e9-7df19e1fb81a.json"  # Path to your service account JSON key file
-SPREADSHEET_NAME = "Order Tracking"  # Replace with your Google Sheet name
-# Use the correct scope
-scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-try:
-    # Authenticate using the service account
-    gc = gspread.service_account(filename=SERVICE_ACCOUNT_FILE)
-    
-    # Open the spreadsheet
-    sheet = gc.open(SPREADSHEET_NAME)
-    
-    # Access individual sheets
-    orders_sheet = sheet.worksheet("Orders")
-    wallets_sheet = sheet.worksheet("Wallets")
-    spent_sheet = sheet.worksheet("Spent")
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+SERVICE_ACCOUNT_FILE = 'moonlit-app-445200-e9-7df19e1fb81a.json'
 
-    print("Successfully connected to the Google Sheets API and opened the sheets!")
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-except FileNotFoundError:
-    print(f"Error: The file {SERVICE_ACCOUNT_FILE} was not found.")
-except DefaultCredentialsError:
-    print("Error: Could not authenticate with the Google Sheets API. Check your credentials.")
-except gspread.exceptions.SpreadsheetNotFound:
-    print(f"Error: Spreadsheet with name '{SPREADSHEET_NAME}' not found.")
-except gspread.exceptions.WorksheetNotFound:
-    print("Error: One or more of the worksheets 'Orders', 'Wallets', or 'Spent' not found.")
-except Exception as e:
-    print(f"An unexpected error occurred: {e}")
-# Helper Functions
-def load_data():
-    orders = {row[0]: {"customer": row[1], "value": row[2], "worker": row[3], "status": row[4]} for row in orders_sheet.get_all_values()[1:]}
-    wallets = {row[0]: {"gp": float(row[1]), "$": float(row[2])} for row in wallets_sheet.get_all_values()[1:]}
-    spent = {row[0]: float(row[1]) for row in spent_sheet.get_all_values()[1:]}
-    return {"orders": orders, "wallets": wallets, "spent": spent}
+spreadsheet_id = '10CeBcKS0rURBcnKgCPahsfkIxCDmvOzJkTl3nuNAnX8'
+service = build('sheets', 'v4', credentials=credentials)
+sheet = service.spreadsheets()
 
+# Data structure
+data = {
+    "orders": {},   # Orders with their details
+    "wallets": {},  # Wallets by user
+    "spent": {}     # Spending by customer
+}
+
+# Helper function to save data to Google Sheets
 def save_data(data):
-    orders_sheet.clear()
-    orders_sheet.append_row(["ID", "Customer", "Value", "Worker", "Status"])
-    for order_id, order in data["orders"].items():
-        orders_sheet.append_row([order_id, order["customer"], order["value"], order["worker"], order["status"]])
+    # Save Orders
+    sheet.values().clear(spreadsheetId=spreadsheet_id, range="Orders!A1:E1").execute()
+    orders_data = [["ID", "Customer", "Value", "Worker", "Status"]] + [
+        [order_id, order["customer"], order["value"], order["worker"], order["status"]]
+        for order_id, order in data["orders"].items()
+    ]
+    sheet.values().update(spreadsheetId=spreadsheet_id, range="Orders", valueInputOption="RAW", body={"values": orders_data}).execute()
 
-    wallets_sheet.clear()
-    wallets_sheet.append_row(["User", "GP", "$"])
-    for user, wallet in data["wallets"].items():
-        wallets_sheet.append_row([user, wallet["gp"], wallet["$"]])
+    # Save Wallets
+    sheet.values().clear(spreadsheetId=spreadsheet_id, range="Wallets!A1:C1").execute()
+    wallets_data = [["User", "GP", "$"]] + [
+        [user, wallet["gp"], wallet["usd"]] for user, wallet in data["wallets"].items()
+    ]
+    sheet.values().update(spreadsheetId=spreadsheet_id, range="Wallets", valueInputOption="RAW", body={"values": wallets_data}).execute()
 
-    spent_sheet.clear()
-    spent_sheet.append_row(["Customer", "Total Spent"])
-    for customer, total in data["spent"].items():
-        spent_sheet.append_row([customer, total])
+    # Save Spending
+    sheet.values().clear(spreadsheetId=spreadsheet_id, range="Spent!A1:B1").execute()
+    spent_data = [["Customer", "Total Spent"]] + [
+        [customer, total] for customer, total in data["spent"].items()
+    ]
+    sheet.values().update(spreadsheetId=spreadsheet_id, range="Spent", valueInputOption="RAW", body={"values": spent_data}).execute()
 
-data = load_data()
+# Helper function for currency formatting
+def format_currency(value: str):
+    if value.lower().endswith("m"):
+        return f"{float(value[:-1]):.2f}M"
+    elif value.startswith("$"):
+        return f"${float(value[1:]):.2f}"
+    else:
+        raise ValueError("Invalid currency format. Use 'M' for OSRS GP or '$' for USD.")
 
-def format_currency(value, currency_type="gp"):
-    if currency_type == "gp":
-        return f"{value}M"
-    elif currency_type == "$":
-        return f"${value}"
-
-async def send_embed(interaction, embed):
-    await interaction.response.send_message(embed=embed)
-
-# /post Command
+# /post command
 @bot.tree.command(name="post", description="Create a new order post.")
 async def post(interaction: discord.Interaction, value: str, customer: discord.Member, description: str):
+    try:
+        formatted_value = format_currency(value)
+    except ValueError as e:
+        await interaction.response.send_message(str(e), ephemeral=True)
+        return
+
     order_id = len(data["orders"]) + 1
-    embed = discord.Embed(title="Heaven Services", description="New Order", color=discord.Color.blue())
-    embed.add_field(name="ID", value=order_id, inline=True)
+    data["orders"][str(order_id)] = {
+        "customer": customer.mention,
+        "value": formatted_value,
+        "worker": "None",
+        "status": "Pending"
+    }
+    save_data(data)
+
+    embed = discord.Embed(
+        title="Heaven Services",
+        description="A new order has been posted!",
+        color=discord.Color.blue()
+    )
+    embed.add_field(name="Order ID", value=order_id, inline=True)
     embed.add_field(name="Customer", value=customer.mention, inline=True)
-    embed.add_field(name="Value", value=format_currency(value), inline=True)
+    embed.add_field(name="Value", value=formatted_value, inline=True)
     embed.add_field(name="Description", value=description, inline=False)
-    embed.set_thumbnail(url="https://example.com/image.png")
-    view = OrderView(order_id, interaction.channel_id)
-    await interaction.response.send_message(embed=embed, view=view)
+    embed.set_thumbnail(url=customer.display_avatar.url)
+    await interaction.response.send_message(embed=embed)
 
-class OrderView(discord.ui.View):
-    def __init__(self, order_id, channel_id):
-        super().__init__(timeout=None)
-        self.order_id = order_id
-        self.channel_id = channel_id
+# /wallet command
+@bot.tree.command(name="wallet", description="Check a user's wallet.")
+async def wallet(interaction: discord.Interaction, user: discord.Member = None):
+    user = user or interaction.user
+    wallet = data["wallets"].get(user.mention, {"gp": 0, "usd": 0})
 
-    @discord.ui.button(label="Accept Tos & Take Job", style=discord.ButtonStyle.green)
-    async def accept_job(self, interaction: discord.Interaction, button: discord.ui.Button):
-        worker = interaction.user
-        # Update data
-        data["orders"][str(self.order_id)] = {
-            "customer": interaction.message.embeds[0].fields[1].value,
-            "value": interaction.message.embeds[0].fields[2].value,
-            "worker": worker.mention,
-            "status": "Accepted",
-        }
-        save_data(data)
+    embed = discord.Embed(
+        title=f"{user.display_name}'s Wallet",
+        color=discord.Color.green()
+    )
+    embed.set_thumbnail(url=user.display_avatar.url)
+    embed.add_field(name="OSRS GP", value=f"{wallet['gp']}M", inline=True)
+    embed.add_field(name="USD", value=f"${wallet['usd']}", inline=True)
+    await interaction.response.send_message(embed=embed)
 
-        # Notify acceptance
-        embed = discord.Embed(title="Heaven Services", description="Order Accepted", color=discord.Color.green())
-        embed.add_field(name="ID", value=self.order_id, inline=True)
-        embed.add_field(name="Customer", value=data["orders"][str(self.order_id)]["customer"], inline=True)
-        embed.add_field(name="Worker", value=worker.mention, inline=True)
-        embed.add_field(name="Value", value=data["orders"][str(self.order_id)]["value"], inline=True)
-        await interaction.response.send_message(embed=embed)
-        await interaction.message.delete()
+# /adjust_wallet command
+@bot.tree.command(name="adjust_wallet", description="Adjust a user's wallet manually.")
+async def adjust_wallet(interaction: discord.Interaction, user: discord.Member, adjustment: str):
+    try:
+        if adjustment.lower().endswith("m"):
+            currency = "gp"
+            amount = float(adjustment[:-1])
+        elif adjustment.startswith("$"):
+            currency = "usd"
+            amount = float(adjustment[1:])
+        else:
+            raise ValueError("Invalid adjustment format. Use 'M' for OSRS GP or '$' for USD.")
+    except ValueError as e:
+        await interaction.response.send_message(str(e), ephemeral=True)
+        return
 
+    if user.mention not in data["wallets"]:
+        data["wallets"][user.mention] = {"gp": 0, "usd": 0}
+    data["wallets"][user.mention][currency] += amount
+    save_data(data)
+
+    await interaction.response.send_message(f"{user.mention}'s wallet has been adjusted by {adjustment}.")
+    
 # /complete Command
 @bot.tree.command(name="complete", description="Complete an order.")
 async def complete(interaction: discord.Interaction, order_id: int):
@@ -979,49 +995,65 @@ async def complete(interaction: discord.Interaction, order_id: int):
     embed.add_field(name="Poster Commission", value=format_currency(poster_commission), inline=True)
     await interaction.response.send_message(embed=embed)
 
-# /view Command
-@bot.tree.command(name="view", description="View order details.")
-async def view(interaction: discord.Interaction, order_id: int):
-    order = data["orders"].get(str(order_id))
+# /view command
+@bot.tree.command(name="view", description="View the details of an order.")
+async def view_order(interaction: discord.Interaction, order_id: str):
+    order = data["orders"].get(order_id)
     if not order:
-        await interaction.response.send_message("Order not found.", ephemeral=True)
+        await interaction.response.send_message(f"Order with ID {order_id} not found.", ephemeral=True)
         return
 
-    embed = discord.Embed(title="Order Details", color=discord.Color.blue())
-    embed.add_field(name="ID", value=order_id, inline=True)
+    embed = discord.Embed(
+        title="Order Details",
+        description=f"Details for Order ID {order_id}",
+        color=discord.Color.green()
+    )
     embed.add_field(name="Customer", value=order["customer"], inline=True)
-    embed.add_field(name="Worker", value=order["worker"], inline=True)
     embed.add_field(name="Value", value=order["value"], inline=True)
+    embed.add_field(name="Worker", value=order["worker"], inline=True)
     embed.add_field(name="Status", value=order["status"], inline=True)
     await interaction.response.send_message(embed=embed)
 
-# /set Command
+# /spent command
+@bot.tree.command(name="spent", description="View a customer's total spent.")
+async def spent(interaction: discord.Interaction, customer: discord.Member):
+    total_spent = data["spent"].get(customer.mention, 0)
+    embed = discord.Embed(
+        title="Customer Spending",
+        description=f"Total spent by {customer.mention}",
+        color=discord.Color.gold()
+    )
+    embed.add_field(name="Total Spent", value=f"${total_spent}" if isinstance(total_spent, float) else f"{total_spent}M", inline=True)
+    await interaction.response.send_message(embed=embed)
+
+# /set command
 @bot.tree.command(name="set", description="Manually set an order.")
 async def set_order(interaction: discord.Interaction, value: str, customer: discord.Member, worker: discord.Member, description: str):
+    try:
+        formatted_value = format_currency(value)
+    except ValueError as e:
+        await interaction.response.send_message(str(e), ephemeral=True)
+        return
+
     order_id = len(data["orders"]) + 1
     data["orders"][str(order_id)] = {
         "customer": customer.mention,
-        "value": format_currency(value),
+        "value": formatted_value,
         "worker": worker.mention,
-        "status": "Set",
-        "description": description,
+        "status": "Set"
     }
     save_data(data)
 
-    embed = discord.Embed(title="Order Set", color=discord.Color.blue())
-    embed.add_field(name="ID", value=order_id, inline=True)
+    embed = discord.Embed(
+        title="Order Set",
+        description="A new order has been manually created.",
+        color=discord.Color.blue()
+    )
+    embed.add_field(name="Order ID", value=order_id, inline=True)
     embed.add_field(name="Customer", value=customer.mention, inline=True)
     embed.add_field(name="Worker", value=worker.mention, inline=True)
-    embed.add_field(name="Value", value=format_currency(value), inline=True)
+    embed.add_field(name="Value", value=formatted_value, inline=True)
     embed.add_field(name="Description", value=description, inline=False)
-    await interaction.response.send_message(embed=embed)
-
-# /spent Command
-@bot.tree.command(name="spent", description="View customer spending.")
-async def spent(interaction: discord.Interaction, customer: discord.Member):
-    total_spent = data["spent"].get(customer.mention, 0)
-    embed = discord.Embed(title="Customer Spending", description=f"Total spent by {customer.mention}", color=discord.Color.gold())
-    embed.add_field(name="Total Spent", value=format_currency(total_spent), inline=True)
     await interaction.response.send_message(embed=embed)
 
 @bot.event
