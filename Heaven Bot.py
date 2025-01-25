@@ -27,6 +27,178 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Load skills JSON data
+with open("skills.json", "r") as f:
+    skills_data = json.load(f)
+
+# Load XP table from JSON
+with open("xp_data.json", "r") as f:
+    XP_TABLE = {int(k): v for k, v in json.load(f)["xp_data"].items()}  # Ensure keys are integers
+
+# Constants
+EXCHANGE_RATE = 0.2  # 1M GP = $0.2
+EMOJI_CATEGORY = {
+    "gp": "<:cashstack:1210284059926986792>",  # Replace with your emoji ID for GP
+    "usd": "<:bitcoinbtclogo:1210395515133362316>"  # Replace with your emoji ID for USD
+}
+
+# Helper function to chunk text into multiple parts that fit Discord's field limit
+def chunk_text(text, max_length=1024):
+    # Split text into chunks of max_length or smaller
+    chunks = []
+    while len(text) > max_length:
+        split_point = text.rfind("\n", 0, max_length)  # Find the last newline within the limit
+        chunks.append(text[:split_point])
+        text = text[split_point + 1:]
+    chunks.append(text)  # Add the remaining text as the last chunk
+    return chunks
+
+# Command to calculate skill costs
+@bot.command()
+async def s(ctx, skill_name: str, levels: str):
+    try:
+        # Parse level range
+        level_start, level_end = map(int, levels.split("-"))
+        if level_start < 1 or level_end > 99 or level_start >= level_end:
+            await ctx.send("Invalid level range. Use `!s skill_name start-end` with levels between 1-99.")
+            return
+
+        # Find the skill by name or alias
+        skill = None
+        for skill_data in skills_data:
+            if skill_name.lower() == skill_data["name"].lower() or skill_name.lower() in skill_data["aliases"]:
+                skill = skill_data
+                break
+
+        if not skill:
+            await ctx.send(f"Error: Skill '{skill_name}' not found.")
+            return
+
+        # Calculate cheapest method breakdown
+        breakdown = []
+        total_gp_cost = 0
+        total_usd_cost = 0
+        current_level = level_start
+
+        while current_level < level_end:
+            # Find the cheapest method available at the current level
+            valid_methods = [method for method in skill["methods"] if method["req"] <= current_level]
+            if not valid_methods:
+                await ctx.send(f"No valid methods available for level {current_level}.")
+                return
+
+            cheapest_method = min(valid_methods, key=lambda m: m["gpxp"])
+
+            # Calculate the XP required to reach the next method or the target level
+            next_method_level = min(
+                (method["req"] for method in skill["methods"] if method["req"] > current_level),
+                default=level_end,
+            )
+            target_level = min(next_method_level, level_end)
+            xp_to_next = XP_TABLE[target_level] - XP_TABLE[current_level]
+
+            # Calculate costs for this segment
+            gp_cost = xp_to_next * cheapest_method["gpxp"] / 1_000_000  # Convert to millions
+            usd_cost = gp_cost * EXCHANGE_RATE
+            total_gp_cost += gp_cost
+            total_usd_cost += usd_cost
+
+            # Add breakdown details
+            breakdown.append({
+                "title": cheapest_method["title"],
+                "start_level": current_level,
+                "end_level": target_level,
+                "gp_cost": gp_cost,
+                "usd_cost": usd_cost,
+                "gpxp": cheapest_method["gpxp"],
+            })
+            
+            # Update the current level
+            current_level = target_level
+
+        # Full method calculations
+        additional_calculations = []
+        for method in skill["methods"]:
+            if method["req"] > level_start:
+                continue
+
+            # Calculate total cost for the method from level_start to level_end
+            xp_required = XP_TABLE[level_end] - XP_TABLE[level_start]
+            gp_cost_full = xp_required * method["gpxp"] / 1_000_000  # Convert to millions
+            usd_cost_full = gp_cost_full * EXCHANGE_RATE
+            additional_calculations.append({
+                "title": method["title"],
+                "gpxp": method["gpxp"],
+                "gp_cost": gp_cost_full,
+                "usd_cost": usd_cost_full,
+            })
+
+        # Add additional calculations for full methods
+        # Full method calculations (showing all available methods)
+        additional_text = "\n".join([
+        f"**{method['title']}** (Requires level {method['req']}) {method['gpxp']}gp/xp\n"
+        f"**{(XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000:,.2f}M** <:cashstack:1210284059926986792>\n"
+        f"**${((XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000) * EXCHANGE_RATE:,.2f}** <:bitcoinbtclogo:1210395515133362316>\n"
+        for method in skill["methods"]
+        ])
+
+        # Chunk the text to ensure no field exceeds 1024 characters
+        chunks = chunk_text(additional_text)
+
+        # Embed setup
+        embed = discord.Embed(
+            title=f"{skill['emoji']} {skill['name']} Level {level_start} to {level_end}",
+            description=f"Requires {XP_TABLE[level_end] - XP_TABLE[level_start]:,} XP",
+            color=discord.Color.blue(),
+        )
+        embed.set_thumbnail(url=skill["image"])
+
+        # Add total cost
+        embed.add_field(
+            name=f"Using the cheapest methods available, level {level_start} to {level_end} will cost you:",
+            value=f"**{total_gp_cost:,.2f}M** <:cashstack:1210284059926986792>\n"
+                  f"**${total_usd_cost:,.2f}** <:bitcoinbtclogo:1210395515133362316>",
+            inline=False,
+        )
+
+        # Add breakdown of methods
+        breakdown_text = "\n".join([
+            f"{segment['title']} at level {segment['start_level']} "
+            f"({segment['gpxp']}gp/xp = **{segment['gp_cost']:,.2f}M** <:cashstack:1210284059926986792>)"
+            for segment in breakdown
+        ])
+        embed.add_field(
+            name="This will consist of the following methods:",
+            value=breakdown_text,
+            inline=False,
+        )
+
+        # Add optional notes
+        if skill.get("caption"):
+            embed.add_field(
+                name="Notes",
+                value=skill["caption"],
+                inline=False,
+            )
+
+        # Add each chunk as a separate field in the embed
+        for idx, chunk in enumerate(chunks):
+         embed.add_field(
+         name=f"Alternatively, if you want to choose a specific method (Part {idx + 1}):",
+         value=chunk,
+         inline=False,
+         )
+
+        # Send the embed
+        await ctx.send(embed=embed)
+
+    except Exception as e:
+        await ctx.send(f"Error calculating skill: {e}")
+
+
+
+
+
 # Define the constants
 EXCHANGE_RATE = 0.2  # 1M GP = $0.2
 EMOJI_CATEGORY = {
