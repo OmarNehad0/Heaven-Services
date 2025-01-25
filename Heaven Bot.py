@@ -825,7 +825,7 @@ class AccountSaleModal(discord.ui.Modal):
         embed.set_author(name=interaction.client.user.name, icon_url=interaction.client.user.avatar.url)
         embed.set_footer(text="Discord.gg/Heaven")
         view = discord.ui.View()
-        view.add_item(discord.ui.Button(label="Make Your Purchase", style=discord.ButtonStyle.link, url="https://Discord.gg/Heaven"))
+        view.add_item(discord.ui.Button(label="Make Your Purchase", style=discord.ButtonStyle.link, url="https://discord.com/channels/520905245174267908/1327419108366487634"))
         await bot.get_channel(1327419108366487634).send(embed=embed, view=view)
         await interaction.response.send_message("Account posted successfully!", ephemeral=True)
 
