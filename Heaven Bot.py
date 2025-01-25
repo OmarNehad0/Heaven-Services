@@ -784,6 +784,57 @@ async def b(ctx, *, boss_name_with_multiplier: str):
     except Exception as e:
         print(f"Error: {e}")
         await ctx.send(f"An error occurred: {e}")
+
+# Slash command to post an account for sale
+class AccountSaleModal(discord.ui.Modal):
+    def __init__(self):
+        super().__init__(title="Post Account for Sale")
+        self.crypto_value = discord.ui.TextInput(
+            label="Value in Crypto ($)", placeholder="e.g., 100"
+        )
+        self.osrs_gp_value = discord.ui.TextInput(
+            label="Value in Osrs GP (m)", placeholder="e.g., 500"
+        )
+        self.description = discord.ui.TextInput(
+            label="Description", placeholder="Describe the account details", style=discord.TextStyle.long
+        )
+        self.image_links = discord.ui.TextInput(
+            label="Image URLs (comma-separated)", placeholder="Paste image URLs here, separated by commas."
+        )
+        self.add_item(self.crypto_value)
+        self.add_item(self.osrs_gp_value)
+        self.add_item(self.description)
+        self.add_item(self.image_links)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        images = [url.strip() for url in self.image_links.value.split(',') if url.strip()]
+        embed = discord.Embed(
+            title="Account for Sale",
+            description=f"**Description:** {self.description.value}\n\n"
+                        f"**Price in Crypto:** ${self.crypto_value.value} :dollar: \n"
+                        f"**Price in Osrs GP:** {self.osrs_gp_value.value}m :moneybag: ",
+            color=discord.Color.gold()
+        )
+        if images:
+            for i, image_url in enumerate(images):
+                if i == 0:
+                    embed.set_image(url=image_url)
+                else:
+                    embed.add_field(name=f"Image {i+1}", value=image_url, inline=False)
+        embed.set_thumbnail(url=interaction.client.user.avatar.url)
+        embed.set_author(name=interaction.client.user.name, icon_url=interaction.client.user.avatar.url)
+        embed.set_footer(text="Discord.gg/Heaven")
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="Make Your Purchase", style=discord.ButtonStyle.link, url="https://Discord.gg/Heaven"))
+        await bot.get_channel(1327419108366487634).send(embed=embed, view=view)
+        await interaction.response.send_message("Account posted successfully!", ephemeral=True)
+
+@bot.tree.command(name="acc", description="Post an account for sale.")
+async def acc(interaction: discord.Interaction):
+    modal = AccountSaleModal()
+    await interaction.response.send_modal(modal)
+
+
 # Google Sheets setup
 SERVICE_ACCOUNT_FILE = 'moonlit-app-445200-e9-7df19e1fb81a.json'  # or from GitHub secrets/environment variable
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']  # Sheet edit access
