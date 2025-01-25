@@ -809,14 +809,16 @@ async def view_order(interaction: discord.Interaction):
     # Fetch order details from Google Sheets
     order_details = get_order_details_from_sheet(order_id)
 
-    # Construct Embed
-    embed = discord.Embed(title=f"Order {order_id} Details", color=discord.Color.blue())
-    embed.add_field(name="Worker ID", value=order_details['worker_id'])
-    embed.add_field(name="Customer ID", value=order_details['customer_id'])
-    embed.add_field(name="Value", value=f"{order_details['value']} USD")
-    embed.add_field(name="Order Description", value=order_details['description'])
-    
-    await interaction.followup.send(embed=embed)
+    if order_details:
+        # Construct Embed
+        embed = discord.Embed(title=f"Order {order_id} Details", color=discord.Color.blue())
+        embed.add_field(name="Worker ID", value=order_details['worker_id'])
+        embed.add_field(name="Customer ID", value=order_details['customer_id'])
+        embed.add_field(name="Value", value=f"${order_details['value']:.2f}")
+        embed.add_field(name="Order Description", value=order_details['description'])
+        await interaction.followup.send(embed=embed)
+    else:
+        await interaction.followup.send("Order not found.")
 
 # Command: /spent
 @bot.tree.command(name="spent")
@@ -834,18 +836,39 @@ async def spent(interaction: discord.Interaction):
 
     # Construct Embed
     embed = discord.Embed(title=f"Total Spent by User {user_id}", color=discord.Color.green())
-    embed.add_field(name="Total Spent", value=f"{total_spent} USD")
+    embed.add_field(name="Total Spent", value=f"${total_spent:.2f}")
 
     await interaction.followup.send(embed=embed)
 
-CHANNEL_ID = 1332354894597853346 
 # Command: /post
-@bot.command()
-async def post(ctx, customer: discord.User, helper: discord.User, value: float, description: str):
+CHANNEL_ID = 1332354894597853346  # Set your channel ID here
+
+@bot.tree.command(name="post")
+async def post_order(interaction: discord.Interaction):
+    # Prompt for inputs
+    await interaction.response.send_message("Please enter the customer ID:", ephemeral=True)
+    def check(m):
+        return m.author == interaction.user and m.channel == interaction.channel
+
+    customer_id_msg = await bot.wait_for("message", check=check)
+    customer_id = customer_id_msg.content.strip()
+
+    await interaction.followup.send("Please enter the helper ID:", ephemeral=True)
+    helper_id_msg = await bot.wait_for("message", check=check)
+    helper_id = helper_id_msg.content.strip()
+
+    await interaction.followup.send("Please enter the value:", ephemeral=True)
+    value_msg = await bot.wait_for("message", check=check)
+    value = float(value_msg.content.strip())
+
+    await interaction.followup.send("Please enter the order description:", ephemeral=True)
+    description_msg = await bot.wait_for("message", check=check)
+    description = description_msg.content.strip()
+
     # Create the embed for the new order
     embed = discord.Embed(
         title="New Order Posted",
-        description=f"Order for {customer.mention} to be completed by {helper.mention}.",
+        description=f"Order for {customer_id} to be completed by {helper_id}.",
         color=discord.Color.green()
     )
     embed.add_field(name="Value", value=f"${value:.2f}", inline=False)
@@ -857,20 +880,18 @@ async def post(ctx, customer: discord.User, helper: discord.User, value: float, 
         post_message = await channel.send(embed=embed)  # Send the embed to the channel
 
         # Add a button (e.g., "Accept TOS & Take Job") to the message
-        button = discord.ui.Button(label="Accept TOS & Take Job", style=discord.ButtonStyle.green)
+        button = Button(label="Accept TOS & Take Job", style=discord.ButtonStyle.green)
         
-        # Use your button interaction handler (you might need to define the button logic)
         async def button_callback(interaction):
-            if interaction.user == helper:
+            if interaction.user.id == int(helper_id):
                 # Add the helper to the ticket and confirm the order has been accepted
-                await interaction.response.send_message(f"{helper.mention} has accepted the order!")
+                await interaction.response.send_message(f"{interaction.user.mention} has accepted the order!")
                 # Add any necessary actions for updating the order status here
 
-        # Add the button to the message
-        await post_message.edit(view=discord.ui.View().add_item(button))
-    else:
-        await ctx.send("Error: Could not find the specified channel.")
-
+        # Attach button to the embed
+        view = View()
+        view.add_item(button)
+        await post_message.edit(view=view)
 
 # Function to get order details from Google Sheets
 def get_order_details_from_sheet(order_id):
@@ -883,7 +904,7 @@ def get_order_details_from_sheet(order_id):
             return {
                 'worker_id': row[1],
                 'customer_id': row[2],
-                'value': row[3],
+                'value': float(row[3]),
                 'description': row[4]
             }
 
