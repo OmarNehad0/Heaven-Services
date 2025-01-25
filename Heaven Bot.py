@@ -909,7 +909,7 @@ async def post(interaction: discord.Interaction, value: str, customer: discord.M
     save_data(data)
 
     # Example: Replace this with the ID of the channel you want the order posted in
-    orders_channel_id = 123456789012345678
+    orders_channel_id = 1332354894597853346
     orders_channel = bot.get_channel(orders_channel_id)
     if not orders_channel:
         await interaction.response.send_message("Orders channel not found. Please check the channel ID.", ephemeral=True)
