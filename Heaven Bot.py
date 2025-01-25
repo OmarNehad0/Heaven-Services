@@ -837,13 +837,6 @@ async def acc(interaction: discord.Interaction):
     modal = AccountSaleModal()
     await interaction.response.send_modal(modal)
 
-# Helper Functions
-def format_currency(value, currency_type="gp"):
-    if currency_type == "gp":
-        return f"{value}M"
-    elif currency_type == "$":
-        return f"${value}"
-
 
 # Google Sheets setup
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -889,7 +882,8 @@ def save_data(data):
 
 # Helper function for currency formatting
 def format_currency(value: str):
-    if value.lower().endswith("m"):
+    value = value.strip().lower()
+    if value.endswith("m"):
         return f"{float(value[:-1]):.2f}M"
     elif value.startswith("$"):
         return f"${float(value[1:]):.2f}"
@@ -898,7 +892,7 @@ def format_currency(value: str):
 
 # /post command
 @bot.tree.command(name="post", description="Create a new order post.")
-async def post(interaction: discord.Interaction, value: str, customer: discord.Member, description: str):
+async def post(interaction: discord.Interaction, value: str, customer: discord.Member, description: str, role: discord.Role):
     try:
         formatted_value = format_currency(value)
     except ValueError as e:
@@ -914,9 +908,16 @@ async def post(interaction: discord.Interaction, value: str, customer: discord.M
     }
     save_data(data)
 
+    # Example: Replace this with the ID of the channel you want the order posted in
+    orders_channel_id = 123456789012345678
+    orders_channel = bot.get_channel(orders_channel_id)
+    if not orders_channel:
+        await interaction.response.send_message("Orders channel not found. Please check the channel ID.", ephemeral=True)
+        return
+
     embed = discord.Embed(
-        title="Heaven Services",
-        description="A new order has been posted!",
+        title="New Order Posted",
+        description=f"An order has been posted by {customer.mention}!",
         color=discord.Color.blue()
     )
     embed.add_field(name="Order ID", value=order_id, inline=True)
@@ -924,7 +925,11 @@ async def post(interaction: discord.Interaction, value: str, customer: discord.M
     embed.add_field(name="Value", value=formatted_value, inline=True)
     embed.add_field(name="Description", value=description, inline=False)
     embed.set_thumbnail(url=customer.display_avatar.url)
-    await interaction.response.send_message(embed=embed)
+    embed.set_footer(text=f"Tag: {role.mention} for availability")
+
+    await orders_channel.send(embed=embed)
+    await interaction.response.send_message(f"Order posted successfully in {orders_channel.mention}!")
+
 
 # /wallet command
 @bot.tree.command(name="wallet", description="Check a user's wallet.")
@@ -940,7 +945,7 @@ async def wallet(interaction: discord.Interaction, user: discord.Member = None):
     embed.add_field(name="OSRS GP", value=f"{wallet['gp']}M", inline=True)
     embed.add_field(name="USD", value=f"${wallet['usd']}", inline=True)
     await interaction.response.send_message(embed=embed)
-
+    
 # /adjust_wallet command
 @bot.tree.command(name="adjust_wallet", description="Adjust a user's wallet manually.")
 async def adjust_wallet(interaction: discord.Interaction, user: discord.Member, adjustment: str):
