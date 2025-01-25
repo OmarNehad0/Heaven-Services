@@ -16,6 +16,9 @@ import aiohttp
 import math
 from discord import Interaction, Embed
 from datetime import datetime
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from discord import app_commands
 
 # Define intents
 intents = discord.Intents.default()
@@ -781,6 +784,145 @@ async def b(ctx, *, boss_name_with_multiplier: str):
     except Exception as e:
         print(f"Error: {e}")
         await ctx.send(f"An error occurred: {e}")
+# Google Sheets setup
+SERVICE_ACCOUNT_FILE = 'moonlit-app-445200-e9-7df19e1fb81a.json'  # or from GitHub secrets/environment variable
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']  # Sheet edit access
+
+# Set up the Google Sheets API
+credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+sheets_service = build('sheets', 'v4', credentials=credentials)
+
+# Your Google Sheets ID
+SHEET_ID = '10CeBcKS0rURBcnKgCPahsfkIxCDmvOzJkTl3nuNAnX8'
+
+# Command: /view
+@bot.tree.command(name="view")
+async def view_order(interaction: discord.Interaction):
+    await interaction.response.send_message("Please enter the order ID:", ephemeral=True)
+    
+    def check(m):
+        return m.author == interaction.user and m.channel == interaction.channel
+
+    order_id_msg = await bot.wait_for("message", check=check)
+    order_id = order_id_msg.content.strip()
+
+    # Fetch order details from Google Sheets
+    order_details = get_order_details_from_sheet(order_id)
+
+    # Construct Embed
+    embed = discord.Embed(title=f"Order {order_id} Details", color=discord.Color.blue())
+    embed.add_field(name="Worker ID", value=order_details['worker_id'])
+    embed.add_field(name="Customer ID", value=order_details['customer_id'])
+    embed.add_field(name="Value", value=f"{order_details['value']} USD")
+    embed.add_field(name="Order Description", value=order_details['description'])
+    
+    await interaction.followup.send(embed=embed)
+
+# Command: /spent
+@bot.tree.command(name="spent")
+async def spent(interaction: discord.Interaction):
+    await interaction.response.send_message("Please enter the user ID to check their spending:", ephemeral=True)
+    
+    def check(m):
+        return m.author == interaction.user and m.channel == interaction.channel
+
+    user_id_msg = await bot.wait_for("message", check=check)
+    user_id = user_id_msg.content.strip()
+
+    # Fetch total spent by user from Google Sheets
+    total_spent = get_total_spent_from_sheet(user_id)
+
+    # Construct Embed
+    embed = discord.Embed(title=f"Total Spent by User {user_id}", color=discord.Color.green())
+    embed.add_field(name="Total Spent", value=f"{total_spent} USD")
+
+    await interaction.followup.send(embed=embed)
+
+CHANNEL_ID = 1332354894597853346 
+# Command: /post
+@bot.command()
+async def post(ctx, customer: discord.User, helper: discord.User, value: float, description: str):
+    # Create the embed for the new order
+    embed = discord.Embed(
+        title="New Order Posted",
+        description=f"Order for {customer.mention} to be completed by {helper.mention}.",
+        color=discord.Color.green()
+    )
+    embed.add_field(name="Value", value=f"${value:.2f}", inline=False)
+    embed.add_field(name="Description", value=description, inline=False)
+
+    # Get the channel object by ID and send the embed message
+    channel = bot.get_channel(CHANNEL_ID)  # Get the channel by ID
+    if channel:
+        post_message = await channel.send(embed=embed)  # Send the embed to the channel
+
+        # Add a button (e.g., "Accept TOS & Take Job") to the message
+        button = discord.ui.Button(label="Accept TOS & Take Job", style=discord.ButtonStyle.green)
+        
+        # Use your button interaction handler (you might need to define the button logic)
+        async def button_callback(interaction):
+            if interaction.user == helper:
+                # Add the helper to the ticket and confirm the order has been accepted
+                await interaction.response.send_message(f"{helper.mention} has accepted the order!")
+                # Add any necessary actions for updating the order status here
+
+        # Add the button to the message
+        await post_message.edit(view=discord.ui.View().add_item(button))
+    else:
+        await ctx.send("Error: Could not find the specified channel.")
+
+
+# Function to get order details from Google Sheets
+def get_order_details_from_sheet(order_id):
+    range_ = f"Orders!A2:F"  # Assuming the order data is from row 2 onward
+    result = sheets_service.spreadsheets().values().get(spreadsheetId=SHEET_ID, range=range_).execute()
+    values = result.get('values', [])
+
+    for row in values:
+        if row[0] == order_id:  # Assuming order ID is in column A
+            return {
+                'worker_id': row[1],
+                'customer_id': row[2],
+                'value': row[3],
+                'description': row[4]
+            }
+
+    return None  # Order not found
+
+# Function to get total spent by user from Google Sheets
+def get_total_spent_from_sheet(user_id):
+    range_ = f"Orders!A2:F"
+    result = sheets_service.spreadsheets().values().get(spreadsheetId=SHEET_ID, range=range_).execute()
+    values = result.get('values', [])
+
+    total_spent = 0
+    for row in values:
+        if row[2] == user_id:  # Assuming customer ID is in column C
+            total_spent += float(row[3])  # Assuming the value is in column D
+
+    return total_spent
+
+# Function to add an order to Google Sheets
+def add_order_to_sheet(customer_id, helper_id, value, description):
+    range_ = f"Orders!A2:F"  # Orders range in the sheet
+    values = [
+        [str(len(get_order_details_from_sheet("")) + 1), helper_id, customer_id, value, description]  # New order ID will be the next row number
+    ]
+
+    body = {
+        'values': values
+    }
+
+    result = sheets_service.spreadsheets().values().append(
+        spreadsheetId=SHEET_ID, range=range_,
+        valueInputOption="RAW", body=body).execute()
+
+    return result['updates']['updatedRange'].split('!')[1].split(':')[0]  # Return new order ID
+
+# Function to accept the order
+async def accept_order(interaction, order_id):
+    # Logic to handle when a worker accepts the job
+    await interaction.response.send_message(f"Order {order_id} has been accepted by {interaction.user.name}.")
 
 # Flask setup for keeping the bot alive (Replit hosting)
 app = Flask('')
