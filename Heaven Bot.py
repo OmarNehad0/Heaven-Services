@@ -43,6 +43,9 @@ def get_minigame(name):
         if name.lower() == game["name"].lower() or name.lower() in game.get("aliases", []):
             return game
     return None
+    
+# Conversion rate: 1m = 0.2$
+M_TO_USD = 0.2
 
 @bot.command(name="m")
 async def minigame(ctx, *, minigame_name: str):
@@ -52,10 +55,13 @@ async def minigame(ctx, *, minigame_name: str):
         await ctx.send(f"Minigame '{minigame_name}' not found!")
         return
 
+    # Ensure caption is available, fallback to a default value if missing
+    caption = game.get("caption", "No caption available for this minigame.")
+
     # Create embed
     embed = discord.Embed(
         title=game["name"],
-        description=game["caption"],
+        description=caption,
         color=discord.Color.blue(),
     )
     embed.set_author(
@@ -70,9 +76,14 @@ async def minigame(ctx, *, minigame_name: str):
 
     # Add items and prices to embed
     for item in game["items"]:
+        price_m = item["price"]  # Price in millions (m)
+        price_usd = price_m * M_TO_USD  # Convert to dollars
         embed.add_field(
             name=item["name"],
-            value=f'{item["price"]:,} GP',
+            value=(
+                f'<:coins:1332378895047069777> {price_m:,}m\n'
+                f'<:btc:1332372139541528627> ${price_usd:,.2f}'
+            ),
             inline=False
         )
 
