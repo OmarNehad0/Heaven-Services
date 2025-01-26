@@ -487,7 +487,7 @@ payment_methods_with_emojis = {
     "Eth (Erc20)" : ("0x40a6190110d3f1d8a7936eb0de3287b1d88921dc" , "<:eth:1332372162711130142>"),
     "Binance to Binance & USDT" : ("461848277", "<:binance:1332372691088445480>"),
     "LiteCoin" :("LQ3yQWMstLTenNRWbFiwiNXkua4PoKdrZY" ,"<:ltc:1332372439652634647>"),
-    "Ada (Cardano)" : ("addr1v92xngktp696jnpav2vjyps2a5hqzdpxkfdlqd98ed4hgscsy74a2", "<:Dragonclaws:831987485839458384>")}
+    "Ada (Cardano)" : ("addr1v92xngktp696jnpav2vjyps2a5hqzdpxkfdlqd98ed4hgscsy74a2", "<:cardano:1333053268192002200>")}
 
 # Command to display payment options
 @bot.command(name="pay")
