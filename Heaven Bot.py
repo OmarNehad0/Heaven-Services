@@ -38,18 +38,22 @@ with open("minigames.json", "r") as file:
     minigames = json.load(file)
 
 # Helper function to find a minigame by name or alias
-def get_minigame(name):
+def get_minigame(minigame_name):
+    minigame_name = minigame_name.lower()
+    with open("minigames.json", "r") as f:
+        minigames = json.load(f)
+
     for game in minigames:
-        if name.lower() == game["name"].lower() or name.lower() in game.get("aliases", []):
+        if minigame_name == game["name"].lower() or minigame_name in game.get("aliases", []):
             return game
     return None
     
-# Conversion rate: 1m = 0.2$
+# Conversion rate: 1m = 0.2$    
 M_TO_USD = 0.2
 
 @bot.command(name="m")
 async def minigame(ctx, *, minigame_name: str):
-    # Find minigame
+    # Find the minigame
     game = get_minigame(minigame_name)
     if not game:
         await ctx.send(f"Minigame '{minigame_name}' not found!")
@@ -58,36 +62,35 @@ async def minigame(ctx, *, minigame_name: str):
     # Ensure caption is available, fallback to a default value if missing
     caption = game.get("caption", "No caption available for this minigame.")
 
-    # Create embed
+    # Extract emoji for display
+    emoji = game.get("emoji", "")
+
+    # Create the embed
     embed = discord.Embed(
-        title=game["name"],
+        title=f"{emoji} {game['name']}",  # Show emoji beside the name
         description=caption,
         color=discord.Color.blue(),
     )
-    embed.set_author(
-        name="Omar Bot",
-        icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
-    )
-    embed.set_thumbnail(url=game["emoji"])
-    embed.set_footer(text="Omar Bot")
-    embed.set_image(
-        url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&="
+
+    # Set the thumbnail
+    embed.set_thumbnail(
+        url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
     )
 
-    # Add items and prices to embed
-    for item in game["items"]:
-        price_m = item["price"]  # Price in millions (m)
-        price_usd = price_m * M_TO_USD  # Convert to dollars
+    # Set the footer
+    embed.set_footer(text="Omar Bot")
+
+    # Add items to the embed as fields
+    for item in game.get("items", []):
+        m_price = item["price"]
+        usd_price = round(m_price * 0.2, 2)  # Convert price to USD at a rate of 0.2
         embed.add_field(
             name=item["name"],
-            value=(
-                f'<:coins:1332378895047069777> {price_m:,}m\n'
-                f'<:btc:1332372139541528627> ${price_usd:,.2f}'
-            ),
-            inline=False
+            value=f"<:coins:1332378895047069777> {m_price:,}m / <:btc:1332372139541528627> ${usd_price:,.2f}",
+            inline=False,
         )
 
-    # Send embed
+    # Send the embed
     await ctx.send(embed=embed)
 
 
