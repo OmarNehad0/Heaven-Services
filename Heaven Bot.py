@@ -78,7 +78,7 @@ async def minigame(ctx, *, minigame_name: str):
     )
 
     # Set the footer
-    embed.set_footer(text="Omar Bot", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
+    embed.set_footer(text="Heaven Services", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
     # Add items to the embed as fields
     for item in game.get("items", []):
@@ -221,7 +221,7 @@ async def s(ctx, skill_name: str, levels: str):
         )
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")  # Thumbnail image
         embed.set_footer(
-            text="Omar Bot",
+            text="Heaven Services",
             icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
         )  # Footer with thumbnail-style icon
 
@@ -328,7 +328,7 @@ async def quest_calculator(ctx, *, quests: str):
         url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
     )  # Replace with your thumbnail URL
     embed.set_footer(
-            text="Omar Bot",
+            text="Heaven Services",
             icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
         )  # Footer with thumbnail-style icon
     # Add found quests to the embed
@@ -539,7 +539,7 @@ async def feedback(ctx):
     )
     initial_embed.set_author(name=ctx.author.name, icon_url=ctx.author.display_avatar.url)
     initial_embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
-    initial_embed.set_footer(text="Omar Bot", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
+    initial_embed.set_footer(text="Heaven Services", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
     # Send the embed with rating buttons
     view = FeedbackView()
@@ -685,7 +685,7 @@ class KillCountModal(Modal):
                     embed.set_thumbnail(url=item["image"])
 
             embed.set_footer(
-            text="Omar Bot",
+            text="Heaven Services",
             icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
             )  # Footer with thumbnail-style icon
             embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
@@ -725,7 +725,7 @@ async def log_interaction(user, selected_boss, json_file):
         embed.set_thumbnail(url=boss["image"])
 
     embed.set_footer(
-            text="Omar Bot",
+            text="Heaven Services",
             icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
         )  # Footer with thumbnail-style icon
     embed.set_author(name="Call Logs By Omar Bot", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
@@ -856,7 +856,7 @@ async def b(ctx, *, boss_name_with_multiplier: str):
                 embed.set_thumbnail(url=item["image"])
 
         embed.set_footer(
-            text="Omar Bot",
+            text="Heaven Services",
             icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
         )  # Footer with thumbnail-style icon
         embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
@@ -893,7 +893,7 @@ class AccountSaleModal(discord.ui.Modal):
             title="Account for Sale",
             description=f"**Description:** {self.description.value}\n\n"
                         f"**Price in Crypto:** ${self.crypto_value.value} :dollar: \n"
-                        f"**Price in Osrs GP:** {self.osrs_gp_value.value}m :moneybag: ",
+                        f"**Price in Osrs GP:** {self.osrs_gp_value.value} :moneybag: ",
             color=discord.Color.gold()
         )
         if images:
@@ -907,7 +907,7 @@ class AccountSaleModal(discord.ui.Modal):
         embed.set_footer(text="Discord.gg/Heaven")
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="Make Your Purchase", style=discord.ButtonStyle.link, url="https://discord.com/channels/520905245174267908/1327419108366487634"))
-        await bot.get_channel(1327419108366487634).send(embed=embed, view=view)
+        await bot.get_channel(1327418905789993030).send(embed=embed, view=view)
         await interaction.response.send_message("Account posted successfully!", ephemeral=True)
 
 @bot.tree.command(name="acc", description="Post an account for sale.")
