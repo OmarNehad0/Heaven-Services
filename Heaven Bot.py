@@ -158,6 +158,10 @@ async def s(ctx, skill_name: str, levels: str):
             color=discord.Color.blue(),
         )
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")  # Thumbnail image
+        embed.set_footer(
+            text="Omar Bot",
+            icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+        )  # Footer with thumbnail-style icon
 
         # Add total cost
         embed.add_field(
@@ -261,7 +265,10 @@ async def quest_calculator(ctx, *, quests: str):
     embed.set_thumbnail(
         url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
     )  # Replace with your thumbnail URL
-
+    embed.set_footer(
+            text="Omar Bot",
+            icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+        )  # Footer with thumbnail-style icon
     # Add found quests to the embed
     if found_quests:
         embed.add_field(
@@ -615,7 +622,10 @@ class KillCountModal(Modal):
                 if "image" in item and item["image"]:
                     embed.set_thumbnail(url=item["image"])
 
-            embed.set_footer(text="Heaven Services")
+            embed.set_footer(
+            text="Omar Bot",
+            icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+            )  # Footer with thumbnail-style icon
             embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -652,7 +662,10 @@ async def log_interaction(user, selected_boss, json_file):
     if "image" in boss and boss["image"]:
         embed.set_thumbnail(url=boss["image"])
 
-    embed.set_footer(text="Logged by Omar Bot")
+    embed.set_footer(
+            text="Omar Bot",
+            icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+        )  # Footer with thumbnail-style icon
     embed.set_author(name="Call Logs By Omar Bot", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
     # Send the embed to the log channel
@@ -780,7 +793,10 @@ async def b(ctx, *, boss_name_with_multiplier: str):
             if "image" in item and item["image"]:
                 embed.set_thumbnail(url=item["image"])
 
-        embed.set_footer(text="Bot By Omar")
+        embed.set_footer(
+            text="Omar Bot",
+            icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+        )  # Footer with thumbnail-style icon
         embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
         await ctx.send(embed=embed)
