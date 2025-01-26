@@ -157,7 +157,7 @@ async def s(ctx, skill_name: str, levels: str):
             description=f"Requires {XP_TABLE[level_end] - XP_TABLE[level_start]:,} XP",
             color=discord.Color.blue(),
         )
-        embed.set_thumbnail(url=skill["image"])
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")  # Thumbnail image
 
         # Add total cost
         embed.add_field(
@@ -259,7 +259,7 @@ async def quest_calculator(ctx, *, quests: str):
         color=discord.Color.purple()
     )
     embed.set_thumbnail(
-        url="https://media.discordapp.net/attachments/1327412187228012596/1332372283960070306/image.png?ex=679503e2&is=6793b262&hm=1886a7412e8ea5964e3b88692e5235e163e69de01896db310fb95e443ad68b70&=&format=webp&quality=lossless"
+        url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
     )  # Replace with your thumbnail URL
 
     # Add found quests to the embed
@@ -290,7 +290,7 @@ async def quest_calculator(ctx, *, quests: str):
         )
 
     # Add a footer as a thumbnail
-    embed.set_image(url="https://media.discordapp.net/attachments/1327412187228012596/1332372283960070306/image.png?ex=679503e2&is=6793b262&hm=1886a7412e8ea5964e3b88692e5235e163e69de01896db310fb95e443ad68b70&=&format=webp&quality=lossless")
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
 
     # Send the embed
     await ctx.send(embed=embed)
@@ -445,14 +445,14 @@ async def feedback(ctx):
             color=0x8a2be2,  # Purple color
             description=f"{stars_text}\n**Vouch**:\n{review}")
             embed.set_author(name=f"{interaction.user.name} left a vouch!", icon_url=interaction.user.display_avatar.url)
-            embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1332357390565376022/600x240.gif?ex=6794f603&is=6793a483&hm=e8a7b3e08d4c4344b38845e76ccb3b439ab701aeea79ff97050707ec7724c23f&=")
+            embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
             # Adding Date and User fields as single lines
             date_line = f"**Date**: `{interaction.created_at.strftime('%B %d, %Y')}`"
             user_line = f"**Discord User**: `{interaction.user.name}`"
             embed.description = f"{date_line}\n{user_line}\n\n{stars_text}\n**Vouch**:\n{review}"
 
-            embed.set_footer(text="Heaven Services", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1332357390565376022/600x240.gif?ex=6794f603&is=6793a483&hm=e8a7b3e08d4c4344b38845e76ccb3b439ab701aeea79ff97050707ec7724c23f&=")
+            embed.set_footer(text="Heaven Services", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
             feedback_channel = bot.get_channel(FEEDBACK_CHANNEL_ID)
             if feedback_channel:
@@ -469,8 +469,8 @@ async def feedback(ctx):
         description="**We Appreciate Vouching For Us On [Sythe](https://www.sythe.org/threads/www-sythe-org-threads-cynx-osrs-service-vouch-thread/page-6#post-85913828).**\n\n**Please select your rating below (1-5 stars).**\nOnce selected, you will be asked to leave a review."
     )
     initial_embed.set_author(name=ctx.author.name, icon_url=ctx.author.display_avatar.url)
-    initial_embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1332357390565376022/600x240.gif?ex=6794f603&is=6793a483&hm=e8a7b3e08d4c4344b38845e76ccb3b439ab701aeea79ff97050707ec7724c23f&=")
-    initial_embed.set_footer(text="Omar Bot", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1332357390565376022/600x240.gif?ex=6794f603&is=6793a483&hm=e8a7b3e08d4c4344b38845e76ccb3b439ab701aeea79ff97050707ec7724c23f&=")
+    initial_embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
+    initial_embed.set_footer(text="Omar Bot", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
     # Send the embed with rating buttons
     view = FeedbackView()
@@ -616,7 +616,7 @@ class KillCountModal(Modal):
                     embed.set_thumbnail(url=item["image"])
 
             embed.set_footer(text="Heaven Services")
-            embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1332357390565376022/600x240.gif?ex=6794f603&is=6793a483&hm=e8a7b3e08d4c4344b38845e76ccb3b439ab701aeea79ff97050707ec7724c23f&=")
+            embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
             await interaction.response.send_message(embed=embed, ephemeral=True)
         except ValueError:
@@ -653,7 +653,7 @@ async def log_interaction(user, selected_boss, json_file):
         embed.set_thumbnail(url=boss["image"])
 
     embed.set_footer(text="Logged by Omar Bot")
-    embed.set_author(name="Call Logs By Omar Bot", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1332357390565376022/600x240.gif?ex=6794f603&is=6793a483&hm=e8a7b3e08d4c4344b38845e76ccb3b439ab701aeea79ff97050707ec7724c23f&=")
+    embed.set_author(name="Call Logs By Omar Bot", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
     # Send the embed to the log channel
     await log_channel.send(embed=embed)
@@ -700,7 +700,7 @@ class BossSelectView(View):
 @bot.command()
 async def start(ctx):
     # Direct URL to the banner image
-    banner_url = "https://media.discordapp.net/attachments/1327412187228012596/1332372283960070306/image.png?ex=679503e2&is=6793b262&hm=1886a7412e8ea5964e3b88692e5235e163e69de01896db310fb95e443ad68b70&=&format=webp&quality=lossless"
+    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806808766517258/demo.gif?ex=67974151&is=6795efd1&hm=5fb6c829bd0856a1489592bdddd23639ce1e29553737d98457c97335eb23fe52&="
     import io
 
     # Download and send the banner image
@@ -781,7 +781,7 @@ async def b(ctx, *, boss_name_with_multiplier: str):
                 embed.set_thumbnail(url=item["image"])
 
         embed.set_footer(text="Bot By Omar")
-        embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1332357390565376022/600x240.gif?ex=6794f603&is=6793a483&hm=e8a7b3e08d4c4344b38845e76ccb3b439ab701aeea79ff97050707ec7724c23f&=")
+        embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
         await ctx.send(embed=embed)
     except Exception as e:
