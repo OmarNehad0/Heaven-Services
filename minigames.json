@@ -1,0 +1,531 @@
+[
+  {
+    "name": "Barbarian Assault",
+    "emoji": "<:Fighter_hat:1332628035018428456>",
+    "aliases": [
+      "barb",
+      "ba"
+    ],
+    "caption": "+50% For any group hardcore ironman",
+    "items": [
+      {
+        "name": "Torso",
+        "price": 45000000
+      },
+      {
+        "name": "Skirt",
+        "price": 45000000
+      },
+      {
+        "name": "Hat",
+        "price": 25000000
+      },
+      {
+        "name": "Gloves",
+        "price": 18000000
+      },
+      {
+        "name": "Boots",
+        "price": 12000000
+      },
+      {
+        "name": "Price per round",
+        "price": 12500000
+      },
+      {
+        "name": "Hard Diary",
+        "price": 12500000
+      },
+      {
+        "name": "Elite Diary - 32.5m each",
+        "price": 130000000
+      },
+      {
+        "name": "High gamble",
+        "price": 14000000
+      },
+      {
+        "name": "Low gamble",
+        "price": 5000000
+      }
+    ]
+  },
+  {
+    "name": "Brimhaven Agility",
+    "emoji": "<:Brimhaven:1333063680170135582>",
+    "aliases": [
+      "brim",
+      "brimag"
+    ],
+    "items": [
+      {
+        "name": "Per ticket",
+        "price": 130000
+      },
+      {
+        "name": "Toadflax",
+        "price": 390000
+      },
+      {
+        "name": "Snapdragon",
+        "price": 1300000
+      },
+      {
+        "name": "Graceful outfit recolor",
+        "price": 32500000
+      },
+      {
+        "name": "Pirate Hook",
+        "price": 104000000
+      },
+      {
+        "name": "1000 tickets",
+        "price": 130000000
+      }
+    ]
+  },
+  {
+    "name": "CastleWars",
+    "emoji": "<:Castle_wars_ticket:1332628074486956093>",
+    "aliases": [
+      "castlewars",
+      "cw"
+    ],
+    "items": [
+      {
+        "name": "Per ticket",
+        "price": 500000
+      }
+    ]
+  },
+  {
+    "name": "Champions Cape",
+    "aliases": [
+      "champ",
+      "chcape"
+    ],
+    "emoji": "<:Champions_cape:1332628232112967740>",
+    "items": [
+      {
+        "name": "Imp Scroll",
+        "price": 50000000
+      },
+      {
+        "name": "Goblin Scroll",
+        "price": 10000000
+      },
+      {
+        "name": "Skeleton Scroll",
+        "price": 20000000
+      },
+      {
+        "name": "Zombie Scroll",
+        "price": 20000000
+      },
+      {
+        "name": "Giant Scroll",
+        "price": 25000000
+      },
+      {
+        "name": "Hobgoblin Scroll",
+        "price": 20000000
+      },
+      {
+        "name": "Ghoul Scroll",
+        "price": 35000000
+      },
+      {
+        "name": "Earth Warrior Scroll",
+        "price": 55000000
+      },
+      {
+        "name": "Jogre Scroll",
+        "price": 40000000
+      },
+      {
+        "name": "Lesser Demons",
+        "price": 5000000
+      },
+      {
+        "name": "Full Cape",
+        "price": 3250000000
+      }
+    ]
+  },
+  {
+    "name": "Chompy Bird Kills",
+    "emoji": "<:Chompy_bird:1333064065005912126>",
+    "aliases": [
+      "chompy",
+      "chomp"
+    ],
+    "items": [
+      {
+        "name": "Per kill",
+        "price": 50000
+      }
+    ]
+  },
+  {
+    "name": "Giant's Foundry",
+    "emoji": "<:Colossal_blade:1333064331432038462>",
+    "aliases": [
+      "giants",
+      "gfoundry"
+    ],
+    "caption": "All prices are per point, and assumes bars are banked. 5% Extra if using metal items",
+    "items": [
+      {
+        "name": "Lvl 30 to 55 Smithing - 50% Iron + 50% Steel",
+        "price": 55000
+      },
+      {
+        "name": "Lvl 30 to 55 Smithing - 70% Iron + 30% Steel",
+        "price": 60000
+      },
+      {
+        "name": "Lvl 55 to 70 Smithing - 50% Steel + 50% Mithril",
+        "price": 45000
+      },
+      {
+        "name": "Lvl 55 to 70 Smithing - 70% Steel + 30% Mithril",
+        "price": 50000
+      },
+      {
+        "name": "Lvl 70 to 85 Smithing - 50% Mithril + 50% Adamant",
+        "price": 35000
+      },
+      {
+        "name": "Lvl 70 to 85 Smithing - 70% Mithril + 30% Adamant",
+        "price": 40000
+      },
+      {
+        "name": "Lvl 85 Smithing - 50% Adamant + 50% Rune",
+        "price": 25000
+      },
+      {
+        "name": "Lvl 85 Smithing - 70% Adamant + 30% Rune",
+        "price": 30000
+      }
+    ]
+  },
+  {
+    "name": "Guardian's of the Rift (Points)",
+    "emoji": "<:Abyssal_protector:1333064738611134655>",
+    "aliases": [
+      "gotr"
+    ],
+    "items": [
+      {
+        "name": "Lvl 35 to 44",
+        "price": 1000000
+      },
+      {
+        "name": "Lvl 44 to 54",
+        "price": 850000
+      },
+      {
+        "name": "Lvl 54 to 65",
+        "price": 750000
+      },
+      {
+        "name": "Lvl 65 to 77",
+        "price": 650000
+      },
+      {
+        "name": "Lvl 77 to 99",
+        "price": 550000
+      }
+    ]
+  },
+  {
+    "name": "Hallowed Sepulchre",
+    "emoji": "<:Hallowed_mark:1333065000033583115>",
+    "aliases": [
+      "sep",
+      "hw"
+    ],
+    "caption": "Prices are per mark",
+    "items": [
+      {
+        "name": "Floor 1 - 52 Agility",
+        "price": 400000
+      },
+      {
+        "name": "Floor 2 - 62 Agility",
+        "price": 350000
+      },
+      {
+        "name": "Floor 3 - 72 Agility",
+        "price": 300000
+      },
+      {
+        "name": "Floor 4 - 82 Agility",
+        "price": 250000
+      },
+      {
+        "name": "Floor 5 - 92 Agility",
+        "price": 225000
+      }
+    ]
+  },
+  {
+    "name": "Last Man Standing (LMS)",
+    "emoji": "<:LMS:1332628181684977707>",
+    "aliases": [
+      "lms"
+    ],
+    "caption": "650k when ordering over 100 points",
+    "items": [
+      {
+        "name": "Per point",
+        "price": 700000
+      },
+      {
+        "name": "Rune Pouch",
+        "price": 50000000
+      }
+    ]
+  },
+  {
+    "name": "Magic Arena 1 / 2",
+    "emoji": "<:Imbued_saradomin_cape:1332628270524530754>",
+    "aliases": [
+      "ma1",
+      "ma2"
+    ],
+    "caption": "200% extra for HCIM.",
+    "items": [
+      {
+        "name": "MA 1 - with 43+ pray",
+        "price": 5000000
+      },
+      {
+        "name": "MA 1 - without 43 pray",
+        "price": 12000000
+      },
+      {
+        "name": "MA 2 - one cape only",
+        "price": 45000000
+      },
+      {
+        "name": "Additional MA 2 Cape",
+        "price": 7000000
+      },
+      {
+        "name": "Spells unlocked",
+        "price": 15000000
+      }
+    ]
+  },
+  {
+    "name": "Magic Training Arena",
+    "emoji": "<:Bones_to_Peaches:1333066694616420435>",
+    "aliases": [
+      "mta"
+    ],
+    "items": [
+      {
+        "name": "Bones to Peaches Unlock",
+        "price": 70000000
+      },
+      {
+        "name": "Infinity Hat",
+        "price": 55000000
+      },
+      {
+        "name": "Infinity Top",
+        "price": 65000000
+      },
+      {
+        "name": "Infinity Bottom",
+        "price": 75000000
+      },
+      {
+        "name": "Infinity Gloves",
+        "price": 30000000
+      },
+      {
+        "name": "Infinity Boots",
+        "price": 25000000
+      },
+      {
+        "name": "Full Infinity Outfit",
+        "price": 250000000
+      },
+      {
+        "name": "Mage's Book",
+        "price": 120000000
+      },
+      {
+        "name": "Beginner Wand",
+        "price": 13000000
+      },
+      {
+        "name": "Apprentice Wand",
+        "price": 18000000
+      },
+      {
+        "name": "Teacher Wand",
+        "price": 31000000
+      },
+      {
+        "name": "Master Wand",
+        "price": 43000000
+      },
+      {
+        "name": "Beginner Wand to Master",
+        "price": 105000000
+      }
+    ]
+  },
+  {
+    "name": "Nightmare Zone (NMZ)",
+    "emoji": "<:Overload:1333067733264367696>",
+    "aliases": [
+      "nmz",
+      "nightmarezone"
+    ],
+    "caption": "Prices below are per 1m points",
+    "items": [
+      {
+        "name": "60-80 combat skill levels with ds2 done",
+        "price": 2500000
+      },
+      {
+        "name": "80-99 combat skill levels with ds2 done",
+        "price": 15000000
+      },
+      {
+        "name": "60-80 combat skill levels without ds2",
+        "price": 40000000
+      },
+      {
+        "name": "80-99 combat skill levels without ds2",
+        "price": 30000000
+      }
+    ]
+  },
+  {
+    "name": "Pest Control (PC)",
+    "emoji": "<:Elite_void_robe:1332628371099750411>",
+    "aliases": [
+      "pc",
+      "pestcontrol"
+    ],
+    "caption": "Prices below are per point",
+    "items": [
+      {
+        "name": "Low",
+        "price": 65000
+      },
+      {
+        "name": "Med",
+        "price": 55000
+      },
+      {
+        "name": "High",
+        "price": 45000
+      }
+    ]
+  },
+  {
+    "name": "Pets",
+    "aliases": [
+      "pets",
+      "pethunt"
+    ],
+    "emoji": "<:Abyssal_Sire:1332733623484420179>",
+    "caption": "Create a ticket and we will quote prices for you"
+  },
+  {
+    "name": "Pyramid Plunder",
+    "emoji": "<:Pharaohs_sceptre:1333067752134676560>",
+    "aliases": [
+      "plunder",
+      "pyramid"
+    ],
+    "items": [
+      {
+        "name": "Pharoah's Sceptre",
+        "price": 55000000
+      }
+    ]
+  },
+  {
+    "name": "Soul Wars (SW)",
+    "emoji": "<:Soul_cape_red:1332629617785442407>",
+    "aliases": [
+      "sw",
+      "soulwars"
+    ],
+    "caption": "Prices below are per point",
+    "items": [
+      {
+        "name": "1-500",
+        "price": 70000
+      },
+      {
+        "name": "500-2500",
+        "price": 60000
+      },
+      {
+        "name": "2500+",
+        "price": 50000
+      }
+    ]
+  },
+  {
+    "name": "Tithe Farm Items",
+    "emoji": "<:TitheFarm:1333068179282460764>",
+    "aliases": [
+      "Tithe farm",
+      "Tithe"
+    ],
+    "caption": "",
+    "items": [
+      {
+        "name": "Farming outfit",
+        "price": 80000000
+      },
+      {
+        "name": "Seed box",
+        "price": 50000000
+      },
+      {
+        "name": "Herb sack",
+        "price": 50000000
+      },
+      {
+        "name": "Gricoller's can",
+        "price": 40000000
+      }
+    ]
+  },
+  {
+    "name": "Warrior Guild",
+    "emoji": "<:Dragon_defender:1333068521545924729>",
+    "aliases": [
+      "ddef",
+      "tokens"
+    ],
+    "items": [
+      {
+        "name": "None to Rune defender",
+        "price": 20000000
+      },
+      {
+        "name": "None to Dragon",
+        "price": 30000000
+      },
+      {
+        "name": "Extra Dragon Defenders",
+        "price": 5000000
+      },
+      {
+        "name": "100 Warrior guild tokens",
+        "price": 250000
+      }
+    ]
+  }
+]
