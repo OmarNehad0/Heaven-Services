@@ -33,6 +33,53 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Load minigame data
+with open("minigames.json", "r") as file:
+    minigames = json.load(file)
+
+# Helper function to find a minigame by name or alias
+def get_minigame(name):
+    for game in minigames:
+        if name.lower() == game["name"].lower() or name.lower() in game.get("aliases", []):
+            return game
+    return None
+
+@bot.command(name="m")
+async def minigame(ctx, *, minigame_name: str):
+    # Find minigame
+    game = get_minigame(minigame_name)
+    if not game:
+        await ctx.send(f"Minigame '{minigame_name}' not found!")
+        return
+
+    # Create embed
+    embed = discord.Embed(
+        title=game["name"],
+        description=game["caption"],
+        color=discord.Color.blue(),
+    )
+    embed.set_author(
+        name="Omar Bot",
+        icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+    )
+    embed.set_thumbnail(url=game["emoji"])
+    embed.set_footer(text="Omar Bot")
+    embed.set_image(
+        url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&="
+    )
+
+    # Add items and prices to embed
+    for item in game["items"]:
+        embed.add_field(
+            name=item["name"],
+            value=f'{item["price"]:,} GP',
+            inline=False
+        )
+
+    # Send embed
+    await ctx.send(embed=embed)
+
+
 # Load skills JSON data
 with open("skills.json", "r") as f:
     skills_data = json.load(f)
