@@ -78,7 +78,7 @@ async def minigame(ctx, *, minigame_name: str):
     )
 
     # Set the footer
-    embed.set_footer(text="Omar Bot")
+    embed.set_footer(text="Omar Bot", icon_url="https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&=")
 
     # Add items to the embed as fields
     for item in game.get("items", []):
