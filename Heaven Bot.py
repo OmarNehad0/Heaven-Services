@@ -82,11 +82,12 @@ async def minigame(ctx, *, minigame_name: str):
 
     # Add items to the embed as fields
     for item in game.get("items", []):
-        m_price = item["price"]
+        raw_price = item["price"]
+        m_price = raw_price / 1_000_000  # Convert raw price to millions (m)
         usd_price = round(m_price * 0.2, 2)  # Convert price to USD at a rate of 0.2
         embed.add_field(
             name=item["name"],
-            value=f"<:coins:1332378895047069777> {m_price:,}m / <:btc:1332372139541528627> ${usd_price:,.2f}",
+            value=f"<:coins:1332378895047069777> {m_price:.1f}m / <:btc:1332372139541528627> ${usd_price:,.2f}",
             inline=False,
         )
 
