@@ -60,8 +60,6 @@ def format_price(price):
         return str(price)
     return price
 
-bot = commands.Bot(command_prefix="!")
-
 @bot.command()
 async def dropdown(ctx):
     banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif"
