@@ -103,7 +103,7 @@ async def dropdown(ctx):
                 quest_data = load_json("quests.json")
                 quest_items = "\n".join([f"{quest['name']} - {format_price(quest['price'])}m" for quest in quest_data])
                 embed = discord.Embed(title="Quests", description=quest_items, color=discord.Color.blue())
-                embed.set_thumbnail(url=THUMBNAIL_URL)
+                embed.set_thumbnail(url=constants.THUMBNAIL_URL)
                 embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
                 await interaction.response.send_message(embed=embed, ephemeral=True)
             else:
@@ -121,7 +121,7 @@ async def dropdown(ctx):
                     embed.add_field(name="Items & Prices", value=price_list, inline=False)
                     
                     # Add emoji if available
-                    embed.set_thumbnail(url=item_emoji if item_emoji else THUMBNAIL_URL)
+                    embed.set_thumbnail(url=constants.THUMBNAIL_URL)
                     embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
                     embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
                     
