@@ -33,12 +33,12 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Hardcoded JSON file names and corresponding emojis (use valid Unicode emojis)
+# Hardcoded JSON file names and corresponding emojis
 json_files = {
-    "minigames.json": "🎲",  # Game die
-    "skills.json": "📊",  # Bar chart
-    "quests.json": "🕵️",  # Detective
-    "diaries.json": "📘",  # Blue book
+    "minigames": "🎲",
+    "skills": "📊",
+    "quests": "🕵️",
+    "diaries": "📘",
 }
 
 @bot.command()
@@ -52,31 +52,50 @@ async def dropdown(ctx):
     banner_embed.set_image(url=banner_url)
     await ctx.send(embed=banner_embed)
 
-    # Create the dropdown for JSON categories
-    options = []
-    for name, emoji in json_files.items():
-        if emoji:  # Only include emoji if it's not empty
-            options.append(discord.SelectOption(label=name, emoji=emoji, value=name))
-        else:
-            options.append(discord.SelectOption(label=name, value=name))
-
-    select = discord.ui.Select(placeholder="Select a category", options=options)
-
-    async def select_callback(interaction):
-        selected_file = interaction.data['values'][0]
-        await interaction.response.send_message(f"You selected: {selected_file}", ephemeral=True)
-
-    select.callback = select_callback
-    view = discord.ui.View()
-    view.add_item(select)
-
+    # Create separate dropdowns for each JSON file
+    for file_name, emoji in json_files.items():
+        options = []
+        data = load_json_data(file_name)  # Function to load JSON data
+        
+        for item in data:
+            label = item.get("name", "Unknown")
+            price = item.get("price", "N/A")
+            description = f"Price: {price}"
+            
+            if "emoji" in item:
+                options.append(discord.SelectOption(label=label, description=description, emoji=item["emoji"]))
+            else:
+                options.append(discord.SelectOption(label=label, description=description))
+        
+        select = discord.ui.Select(placeholder=f"Select {file_name}", options=options)
+        
+        async def select_callback(interaction):
+            selected_item = interaction.data['values'][0]
+            await interaction.response.send_message(f"You selected: {selected_item}", ephemeral=True)
+        
+        select.callback = select_callback
+        view = discord.ui.View()
+        view.add_item(select)
+        
+        await ctx.send(f"**{file_name.capitalize()} Selection:**", view=view)
+    
     # Buttons
     ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
     voucher_button = discord.ui.Button(label="Our Sythe Vouchers", url=voucher_link, style=discord.ButtonStyle.url)
+    view = discord.ui.View()
     view.add_item(ticket_button)
     view.add_item(voucher_button)
+    
+    await ctx.send("Useful Links:", view=view)
 
-    await ctx.send("Select a category:", view=view)
+def load_json_data(file_name):
+    try:
+        with open(f"{file_name}.json", "r", encoding="utf-8") as file:
+            return json.load(file)
+    except Exception as e:
+        print(f"Error loading {file_name}.json: {e}")
+        return []
+
 
 
 # Load minigame data
