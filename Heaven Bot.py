@@ -33,9 +33,11 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Image URLs
 THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
 AUTHOR_ICON_URL = "https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif"
 
+# JSON Files Mapping
 json_files = {
     "minigames.json": "🎲",
     "skills.json": "📊",
@@ -43,6 +45,7 @@ json_files = {
     "diaries.json": "📘"
 }
 
+# Function to Load JSON Data
 def load_json(file_name):
     try:
         with open(file_name, "r", encoding="utf-8") as file:
@@ -50,6 +53,7 @@ def load_json(file_name):
     except FileNotFoundError:
         return []
 
+# Format Price Function
 def format_price(price):
     """ Converts price into formatted string with K or M. """
     try:
@@ -64,13 +68,14 @@ def format_price(price):
     else:
         return f"{price} GP"
 
+# Dropdown Command
 @bot.command()
 async def dropdown(ctx):
     banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif"
     ticket_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
     voucher_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
 
-    # Send banner before dropdowns
+    # Send Banner Before Dropdowns
     banner_embed = discord.Embed()
     banner_embed.set_image(url=banner_url)
     await ctx.send(embed=banner_embed)
@@ -93,70 +98,63 @@ async def dropdown(ctx):
                     value=item_name
                 ))
 
-        # Dropdown selection
+        # Dropdown Selection
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
 
         async def select_callback(interaction):
             selected_value = interaction.data['values'][0]
             item_data = next((item for item in data if item["name"] == selected_value), None)
 
-            if item_data:
-                embed = discord.Embed(
-                    title=f"{item_data.get('emoji', '')} {item_data['name']}",
-                    description=item_data.get("caption", "No description provided"),
-                    color=discord.Color.blue()
-                )
+            if not item_data:
+                await interaction.response.send_message("Error: Item not found.", ephemeral=True)
+                return  # Stop execution if item_data is None
 
-                # Skills Formatting (e.g., Agility)
+            embed = discord.Embed(
+                title=f"{item_data.get('emoji', '')} {item_data['name']}",
+                description=item_data.get("caption", "No description provided"),
+                color=discord.Color.blue()
+            )
+
+            # Skills Formatting (e.g., Agility)
             if file_name == "skills.json":
-                  methods = "\n".join([
-                  f"**Level {method['req']}+**: {method['title']} - {format_price(int(method.get('gpxp', 0)))} gp/xp"
-                  for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
-                  ])
-                  if methods:  # Prevent sending empty fields
-                   embed.add_field(name="Training Methods", value=methods, inline=False)
-                  else:
-                   embed.add_field(name="Training Methods", value="No methods available.", inline=False)
+                methods = "\n".join([
+                    f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
+                    for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
+                ])
+                embed.add_field(name="Training Methods", value=methods if methods else "No methods available.", inline=False)
 
-
-
-                # Diaries Formatting (e.g., Falador Diary)
+            # Diaries Formatting (e.g., Falador Diary)
             elif file_name == "diaries.json":
-                    diary_items = "\n".join([
-                    f"**{sub_item['name']}** - {format_price(int(sub_item.get('price', 0)))} 🪙"
+                diary_items = "\n".join([
+                    f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🪙"
                     for sub_item in item_data.get("items", [])
-                    ])
+                ])
+                embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
 
-                    embed.add_field(name="Diaries & Prices", value=diary_items, inline=False)
-
-                # Minigames Formatting (e.g., Barbarian Assault)
+            # Minigames Formatting (e.g., Barbarian Assault)
             elif file_name == "minigames.json":
                 minigame_items = "\n".join([
-                f"**{sub_item['name']}** - {format_price(int(sub_item.get('price', 0)))} 🎲"
-                for sub_item in item_data.get("items", [])
+                    f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
+                    for sub_item in item_data.get("items", [])
                 ])
-                if minigame_items:
-                  embed.add_field(name="Minigame Rewards", value=minigame_items, inline=False)
-                else:
-                  embed.add_field(name="Minigame Rewards", value="No rewards available.", inline=False)
+                embed.add_field(name="Minigame Rewards", value=minigame_items if minigame_items else "No rewards available.", inline=False)
 
+            embed.set_thumbnail(url=THUMBNAIL_URL)
+            embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
+            embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
 
-                embed.set_thumbnail(url=THUMBNAIL_URL)
-                embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
-                embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
-
-                await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
         select.callback = select_callback
         view = discord.ui.View()
         view.add_item(select)
         views.append(view)
 
-    # Send dropdowns
+    # Send Dropdowns
     for view in views:
         await ctx.send(view=view)
 
-    # Ticket & voucher buttons
+    # Ticket & Voucher Buttons
     button_view = discord.ui.View()
     ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
     voucher_button = discord.ui.Button(label="Our Sythe Vouchers", url=voucher_link, style=discord.ButtonStyle.url)
@@ -164,7 +162,6 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
 
     await ctx.send(view=button_view)
-
     
 
 # Load minigame data
