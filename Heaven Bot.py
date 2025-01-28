@@ -56,8 +56,8 @@ def load_json(file_name):
 def format_price(price):
     """Converts price to a formatted string with K/M/GP."""
     try:
-        # Convert price to integer if it's not already
-        price = int(price)
+        # Force price to be an integer, even if it's a string
+        price = int(float(price))
     except (ValueError, TypeError):
         # If price is invalid or missing, return a placeholder
         return "N/A 🪙"
@@ -69,6 +69,7 @@ def format_price(price):
         return f"{price / 1_000:.2f}K"
     else:
         return f"{price} GP"
+
 
 
 # Dropdown Command
@@ -136,6 +137,7 @@ async def dropdown(ctx):
                 f"**{sub_item.get('name', 'Unknown')}** - {format_price(sub_item.get('price', 0))} 🪙"
                 for sub_item in item_data.get("items", [])
                 ])
+
                 embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
 
             elif file_name == "minigames.json":
