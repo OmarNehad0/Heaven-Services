@@ -77,6 +77,10 @@ async def dropdown(ctx):
                 for sub_item in item["items"]:
                     item_name = sub_item["name"]
                     price = sub_item["price"]
+                    try:
+                        price = int(price)  # Ensure the price is an integer
+                    except ValueError:
+                        continue  # Skip if conversion fails
                     price_m = price / 1000000  # Convert to millions
                     price_usd = price_m * 0.2  # USD price based on 0.2$/m
                     
@@ -88,6 +92,10 @@ async def dropdown(ctx):
             elif "price" in item:
                 item_name = item["name"]
                 price = item["price"]
+                try:
+                    price = int(price)  # Ensure the price is an integer
+                except ValueError:
+                    continue  # Skip if conversion fails
                 price_m = price / 1000000  # Convert to millions
                 price_usd = price_m * 0.2  # USD price
                 
@@ -109,6 +117,12 @@ async def dropdown(ctx):
                 item_emoji = item_details.get("emoji", "")
                 caption = item_details.get("caption", "No description provided")
                 price = item_details.get("price", 0)
+                
+                # Ensure price is an integer
+                try:
+                    price = int(price)
+                except ValueError:
+                    price = 0
                 
                 # Price formatting
                 price_m = price / 1000000  # Convert price to millions
