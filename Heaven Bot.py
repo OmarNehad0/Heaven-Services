@@ -33,11 +33,15 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Constants
+THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
+AUTHOR_ICON_URL = "https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+
 json_files = {
-    "minigames.json": ":game_die:",  # :game_die:
-    "skills.json": ":bar_chart:",  # :bar_chart:
-    "quests.json": ":man_detective:",  # :man_detective:
-    "diaries.json": ":blue_book:"  # :blue_book:
+    "minigames.json": "\U0001F3B2",  # :game_die:
+    "skills.json": "\U0001F4CA",  # :bar_chart:
+    "quests.json": "\U0001F575",  # :man_detective:
+    "diaries.json": "\U0001F4D7"  # :blue_book:
 }
 
 def load_json(file_name):
@@ -59,13 +63,14 @@ async def dropdown(ctx):
     await ctx.send(embed=banner_embed)
 
     views = []  # Store multiple views for separate dropdowns
+
     for file_name, emoji in json_files.items():
         data = load_json(file_name)  # Load items from JSON
         category_name = file_name.replace(".json", "").title()  # Remove .json
-        
+
         if not data:
             continue  # Skip if the JSON file is empty
-        
+
         options = []
         for item in data:
             item_name = item.get("name", "Unknown Item")
@@ -73,8 +78,8 @@ async def dropdown(ctx):
             if item_emoji:
                 options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
             else:
-                options.append(discord.SelectOption(label=item_name, emoji=emoji, value=f"{file_name}:{item_name}"))  # Default emoji from json_files
-
+                options.append(discord.SelectOption(label=item_name, value=f"{file_name}:{item_name}"))
+        
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
         
         async def select_callback(interaction):
@@ -85,28 +90,31 @@ async def dropdown(ctx):
             item_details = next((i for i in data_selected if i.get("name") == item_selected), None)
             
             if item_details:
-                price = item_details.get("price", "Unknown Price")
-                description = item_details.get("description", "No description available.")
+                price_m = item_details.get("price", 0) / 1000000  # Convert price to millions
+                price_usd = price_m * 0.2  # Calculate price in USD
+
+                embed = discord.Embed(title=item_selected, color=discord.Color.blue())
+                embed.add_field(name="Price in M", value=f"{price_m}m", inline=True)
+                embed.add_field(name="Price in $", value=f"${price_usd:.2f}", inline=True)
                 
-                embed = discord.Embed(title=item_selected, description=description, color=discord.Color.blue())
-                embed.add_field(name="Price", value=price, inline=True)
-                
-                # Use the provided static thumbnail URL for all items
-                embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&=")
-                
+                embed.set_thumbnail(url=THUMBNAIL_URL)
+                embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
+                embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
+
                 await interaction.response.send_message(embed=embed, ephemeral=True)
             else:
                 await interaction.response.send_message("Item not found!", ephemeral=True)
-        
+
         select.callback = select_callback
         
         view = discord.ui.View()
         view.add_item(select)
         views.append(view)
     
+    # Send dropdowns for each file
     for view in views:
         await ctx.send("Select an item:", view=view)
-    
+
     # Buttons for tickets & vouchers
     button_view = discord.ui.View()
     ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
