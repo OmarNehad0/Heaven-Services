@@ -103,7 +103,12 @@ async def dropdown(ctx):
 
         async def select_callback(interaction):
             selected_value = interaction.data['values'][0]
-            item_data = next((item for item in data if item["name"] == selected_value), None)
+
+            # Find the matching item (by name OR aliases)
+            item_data = next(
+                (item for item in data if item["name"].lower() == selected_value.lower() or
+                 any(alias.lower() == selected_value.lower() for alias in item.get("aliases", []))), None
+            )
 
             if not item_data:
                 await interaction.response.send_message("Error: Item not found.", ephemeral=True)
@@ -115,7 +120,7 @@ async def dropdown(ctx):
                 color=discord.Color.blue()
             )
 
-            # Skills Formatting (e.g., Agility)
+            # Add fields based on category type
             if file_name == "skills.json":
                 methods = "\n".join([
                     f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
@@ -123,7 +128,6 @@ async def dropdown(ctx):
                 ])
                 embed.add_field(name="Training Methods", value=methods if methods else "No methods available.", inline=False)
 
-            # Diaries Formatting (e.g., Falador Diary)
             elif file_name == "diaries.json":
                 diary_items = "\n".join([
                     f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🪙"
@@ -131,7 +135,6 @@ async def dropdown(ctx):
                 ])
                 embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
 
-            # Minigames Formatting (e.g., Barbarian Assault)
             elif file_name == "minigames.json":
                 minigame_items = "\n".join([
                     f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
@@ -139,7 +142,7 @@ async def dropdown(ctx):
                 ])
                 embed.add_field(name="Minigame Rewards", value=minigame_items if minigame_items else "No rewards available.", inline=False)
 
-            embed.set_thumbnail(url=THUMBNAIL_URL)
+            embed.set_thumbnail(url=item_data.get("image", THUMBNAIL_URL))
             embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
             embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
 
@@ -162,6 +165,7 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
 
     await ctx.send(view=button_view)
+
     
 
 # Load minigame data
