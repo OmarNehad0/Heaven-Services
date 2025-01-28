@@ -33,12 +33,12 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Hardcoded JSON file names and corresponding emojis
+# Hardcoded JSON file names and corresponding emojis (use valid Unicode emojis)
 json_files = {
-    "minigames.json": ":game_die:",
-    "skills.json": ":bar_chart:",
-    "quests.json": ":man_detective:",
-    "diaries.json": ":blue_book:",
+    "minigames.json": "🎲",  # Game die
+    "skills.json": "📊",  # Bar chart
+    "quests.json": "🕵️",  # Detective
+    "diaries.json": "📘",  # Blue book
 }
 
 @bot.command()
@@ -53,29 +53,30 @@ async def dropdown(ctx):
     await ctx.send(embed=banner_embed)
 
     # Create the dropdown for JSON categories
-    options = [
-        discord.SelectOption(label=name, emoji=emoji, value=name)
-        for name, emoji in json_files.items()
-    ]
-    
+    options = []
+    for name, emoji in json_files.items():
+        if emoji:  # Only include emoji if it's not empty
+            options.append(discord.SelectOption(label=name, emoji=emoji, value=name))
+        else:
+            options.append(discord.SelectOption(label=name, value=name))
+
     select = discord.ui.Select(placeholder="Select a category", options=options)
-    
+
     async def select_callback(interaction):
         selected_file = interaction.data['values'][0]
         await interaction.response.send_message(f"You selected: {selected_file}", ephemeral=True)
-    
+
     select.callback = select_callback
     view = discord.ui.View()
     view.add_item(select)
-    
+
     # Buttons
     ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
     voucher_button = discord.ui.Button(label="Our Sythe Vouchers", url=voucher_link, style=discord.ButtonStyle.url)
     view.add_item(ticket_button)
     view.add_item(voucher_button)
-    
-    await ctx.send("Select a category:", view=view)
 
+    await ctx.send("Select a category:", view=view)
 
 
 # Load minigame data
