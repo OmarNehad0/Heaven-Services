@@ -105,29 +105,29 @@ async def dropdown(ctx):
                     color=discord.Color.blue()
                 )
 
-                if file_name == "quests.json":
-                    # Format quest pricing
-                    quest_items = "\n".join([
-                        f"{quest['name']} - {format_price(quest['price'])} 💰"
-                        for quest in load_json("quests.json")
+                # Skills Formatting (e.g., Agility)
+                if file_name == "skills.json":
+                    methods = "\n".join([
+                        f"**Level {method['req']}+**: {method['title']} **{method['gpxp']}gp/xp**"
+                        for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
                     ])
-                    embed.add_field(name="Quests & Prices", value=quest_items, inline=False)
+                    embed.add_field(name="Training Methods", value=methods, inline=False)
 
+                # Diaries Formatting (e.g., Falador Diary)
                 elif file_name == "diaries.json":
-                    # Format diaries with prices
                     diary_items = "\n".join([
-                        f"**{sub_item['name']}** - {format_price(sub_item['price'])} 🪙 | 🟠"
+                        f"**{sub_item['name']}** - {format_price(sub_item['price'])} 🪙"
                         for sub_item in item_data.get("items", [])
                     ])
                     embed.add_field(name="Diaries & Prices", value=diary_items, inline=False)
 
-                elif file_name == "skills.json":
-                    # Format skills like Cynx
-                    methods = "\n".join([
-                        f"**Level {method['req']}+**: {method['title']} **{method['gpxp']}gp/xp**"
-                        for method in item_data.get("methods", [])
+                # Minigames Formatting (e.g., Barbarian Assault)
+                elif file_name == "minigames.json":
+                    minigame_items = "\n".join([
+                        f"**{sub_item['name']}** - {format_price(sub_item['price'])} 🎲"
+                        for sub_item in item_data.get("items", [])
                     ])
-                    embed.add_field(name="Training Methods", value=methods, inline=False)
+                    embed.add_field(name="Minigame Rewards", value=minigame_items, inline=False)
 
                 embed.set_thumbnail(url=THUMBNAIL_URL)
                 embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
@@ -152,6 +152,7 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
 
     await ctx.send("Need help?", view=button_view)
+
     
 
 # Load minigame data
