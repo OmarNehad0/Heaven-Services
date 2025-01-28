@@ -1,0 +1,353 @@
+[
+   {
+      "name":"Ardougne Diary",
+      "emoji":"1062159692853411961",
+      "aliases":[
+         "ardy",
+         "ardougne"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":5000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":7000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":11000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":17000000
+         }
+      ]
+   },
+   {
+      "name":"Desert Diary",
+      "emoji":"1062159688705257572",
+      "aliases":[
+         "desert",
+         "ddiary"
+      ],
+      "caption": "Slayer helm/KQ Head required",
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":5000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":7000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":13000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":19000000
+         }
+      ]
+   },
+   {
+      "name":"Falador Diary",
+      "emoji":"1062159717796958228",
+      "aliases":[
+         "fally",
+         "fdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":5000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":7000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":16000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":20000000
+         },
+         {
+            "name":"Price per Black Knight kill (1300 required )",
+            "price":"12000"
+         }
+      ]
+   },
+   {
+      "name":"Fremennik Diary",
+      "emoji":"1062159699945984061",
+      "aliases":[
+         "frem",
+         "frdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":5000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":7000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":13000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":17000000
+         }
+      ]
+   },
+   {
+      "name":"Kandarin Diary",
+      "emoji":"1062159726084898886",
+      "aliases":[
+         "kandarin",
+         "kand"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":7000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":9000000
+         },
+         {
+            "name":"Hard Diary Without Granite body",
+            "price":26000000
+         },
+         {
+            "name":"Hard Diary With Granite body",
+            "price":11000000
+         },
+         {
+            "name":"Elite Diary and level 5 for every role",
+            "price":210000000
+         },
+         {
+            "name":"Elite Diary if lvl 5 roles completed",
+            "price":30000000
+         }
+      ]
+   },
+   {
+      "name":"Karamja Diary",
+      "emoji":"1062159657860354068",
+      "aliases":[
+         "karamja",
+         "karam",
+         "kjdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":7000000
+         },
+         {
+            "name":"Medium Diary and gout tuber",
+            "price":20000000
+         },
+         {
+            "name":"Medium Diary if you got gout tuber",
+            "price":10000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":12000000
+         },
+         {
+            "name":"Elite Diary - Firecape required",
+            "price":17000000
+         }
+      ]
+   },
+   {
+      "name":"Kourend & Kebos Diary",
+      "emoji":"1062159681897910372",
+      "aliases":[
+         "kourend",
+         "kebos",
+         "kkdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":5000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":7000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":13000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":33000000
+         }
+      ]
+   },
+   {
+      "name":"Lumbridge & Draynor Diary",
+      "emoji":"1062159706291965972",
+      "aliases":[
+         "lum",
+         "draynor",
+         "ldiary",
+         "lumdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":7000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":10000000
+         },
+         {
+            "name":"Hard Diary and bones to peaches",
+            "price":65000000
+         },
+         {
+           "name":"Hard Diary if bones to peaches unlocked",
+           "price":15000000
+        },
+         {
+            "name":"Elite Diary",
+            "price":17000000
+         }
+      ]
+   },
+   {
+      "name":"Morytania Diary",
+      "emoji":"1062159662008516610",
+      "aliases":[
+         "morytania",
+         "mory",
+         "mdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":7000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":9000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":13000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":17000000
+         }
+      ]
+   },
+   {
+      "name":"Varrock Diary",
+      "emoji":"1062159676592103474",
+      "aliases":[
+         "varrock",
+         "vdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":6000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":10000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":12000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":15000000
+         }
+      ]
+   },
+   {
+      "name":"Western Provinces Diary",
+      "emoji":"1062159670665543811",
+      "aliases":[
+         "west",
+         "wpdiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":8000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":14000000
+         },
+         {
+            "name":"Hard Diary includes chompy kills",
+            "price":40000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":25000000
+         },
+         {
+            "name":"Elite Diary includes chompy kills/void required",
+            "price":70000000
+         },
+         {
+            "name":"Elite Diary Void required",
+            "price":20000000
+         },
+         {
+            "name":"price per Chompy Kill",
+            "price":50000
+         }
+      ]
+   },
+   {
+      "name":"Wilderness Diary",
+      "emoji":"1062159672670441492",
+      "aliases":[
+         "wildy",
+         "wdiary",
+         "wildydiary"
+      ],
+      "items":[
+         {
+            "name":"Easy Diary",
+            "price":7000000
+         },
+         {
+            "name":"Medium Diary",
+            "price":10000000
+         },
+         {
+            "name":"Hard Diary",
+            "price":15000000
+         },
+         {
+            "name":"Elite Diary",
+            "price":18000000
+         }
+      ]
+   }
+]
