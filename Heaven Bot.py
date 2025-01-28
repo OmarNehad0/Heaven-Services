@@ -63,7 +63,6 @@ async def dropdown(ctx):
     await ctx.send(embed=banner_embed)
 
     views = []  # Store multiple views for separate dropdowns
-
     for file_name, emoji in json_files.items():
         data = load_json(file_name)  # Load items from JSON
         category_name = file_name.replace(".json", "").title()  # Remove .json
@@ -73,16 +72,27 @@ async def dropdown(ctx):
 
         options = []
         for item in data:
-            item_name = item.get("name", "Unknown Item")
-            item_emoji = item.get("emoji", "")  # Use emoji if available
-            caption = item.get("caption", "No description provided")  # Get caption if available
-            price = item.get("price", 0)
-            
-            # Convert price to millions (m) and USD
-            price_m = price / 1000000  # Price in millions
-            price_usd = price_m * 0.2  # USD price based on 0.2$/m
-            
-            options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
+            # Handle minigames and skilling items
+            if "items" in item:
+                for sub_item in item["items"]:
+                    item_name = sub_item["name"]
+                    price = sub_item["price"]
+                    price_m = price / 1000000  # Convert to millions
+                    price_usd = price_m * 0.2  # USD price based on 0.2$/m
+                    
+                    # Validate emoji and set a fallback if invalid
+                    item_emoji = item.get("emoji", emoji)
+                    options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
+
+            # Handle quests items (just showing list with prices)
+            elif "price" in item:
+                item_name = item["name"]
+                price = item["price"]
+                price_m = price / 1000000  # Convert to millions
+                price_usd = price_m * 0.2  # USD price
+                
+                # Display item name and price
+                options.append(discord.SelectOption(label=f"{item_name} - {price_m}m ({price_usd:.2f}$)", value=f"{file_name}:{item_name}"))
 
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
 
