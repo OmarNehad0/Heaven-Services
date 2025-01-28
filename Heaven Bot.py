@@ -51,6 +51,16 @@ def load_json(file_name):
     except FileNotFoundError:
         return {}
 
+def format_price(price):
+    """Helper function to format prices with 'k' or 'm'."""
+    if isinstance(price, int):
+        if price >= 1000000:
+            return f"{price // 1000000}M"
+        elif price >= 1000:
+            return f"{price // 1000}K"
+        return str(price)
+    return price
+
 @bot.command()
 async def dropdown(ctx):
     banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif"
@@ -91,7 +101,7 @@ async def dropdown(ctx):
             if selected_value == "quests":
                 # Show all quests items
                 quest_data = load_json("quests.json")
-                quest_items = "\n".join([f"{quest['name']} - {quest['price']}m" for quest in quest_data])
+                quest_items = "\n".join([f"{quest['name']} - {format_price(quest['price'])}m" for quest in quest_data])
                 embed = discord.Embed(title="Quests", description=quest_items, color=discord.Color.blue())
                 embed.set_thumbnail(url=THUMBNAIL_URL)
                 embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
@@ -105,9 +115,9 @@ async def dropdown(ctx):
                     item_emoji = item_data.get("emoji", "")
                     items_list = item_data.get("items", [])
                     caption = item_data.get("caption", "No description provided")
-                    price_list = "\n".join([f"{sub_item['name']} - {sub_item['price']}m" for sub_item in items_list])
+                    price_list = "\n".join([f"{sub_item['name']} - {format_price(sub_item['price'])} <:coins:1332378895047069777> : {format_price(sub_item['price'])} <:btc:1332372139541528627>" for sub_item in items_list])
                     
-                    embed = discord.Embed(title=item_name, description=caption, color=discord.Color.blue())
+                    embed = discord.Embed(title=f"{item_emoji} {item_name}", description=caption, color=discord.Color.blue())
                     embed.add_field(name="Items & Prices", value=price_list, inline=False)
                     
                     # Add emoji if available
