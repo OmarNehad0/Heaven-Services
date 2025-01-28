@@ -52,7 +52,10 @@ def load_json(file_name):
 
 def format_price(price):
     """ Converts price into formatted string with K or M. """
-    price = int(price)  # Convert string to integer
+    try:
+        price = int(price)  # Ensure price is an integer
+    except ValueError:
+        return "N/A"  # Handle cases where price is not a number
 
     if price >= 1_000_000:
         return f"{price / 1_000_000:.2f}M"
@@ -107,25 +110,28 @@ async def dropdown(ctx):
                 # Skills Formatting (e.g., Agility)
                 if file_name == "skills.json":
                     methods = "\n".join([
-                        f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
-                        for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
+                    f"**Level {method['req']}+**: {method['title']} - {format_price(int(method.get('gpxp', 0)))} gp/xp"
+                    for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
                     ])
+
                     embed.add_field(name="Training Methods", value=methods, inline=False)
 
                 # Diaries Formatting (e.g., Falador Diary)
                 elif file_name == "diaries.json":
                     diary_items = "\n".join([
-                        f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🪙"
-                        for sub_item in item_data.get("items", [])
+                    f"**{sub_item['name']}** - {format_price(int(sub_item.get('price', 0)))} 🪙"
+                    for sub_item in item_data.get("items", [])
                     ])
+
                     embed.add_field(name="Diaries & Prices", value=diary_items, inline=False)
 
                 # Minigames Formatting (e.g., Barbarian Assault)
                 elif file_name == "minigames.json":
                     minigame_items = "\n".join([
-                        f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
-                        for sub_item in item_data.get("items", [])
+                    f"**{sub_item['name']}** - {format_price(int(sub_item.get('price', 0)))} 🎲"
+                    for sub_item in item_data.get("items", [])
                     ])
+
                     embed.add_field(name="Minigame Rewards", value=minigame_items, inline=False)
 
                 embed.set_thumbnail(url=THUMBNAIL_URL)
