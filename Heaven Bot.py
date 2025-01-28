@@ -51,16 +51,15 @@ def load_json(file_name):
         return []
 
 def format_price(price):
-    """Convert GP to formatted price & USD equivalent."""
-    if isinstance(price, str):
-        price = int(price.replace("m", "000000").replace("k", "000"))
-    
-    usd_value = round(price / 5_000_000, 2)  # Example: 5M GP = $1
+    """ Converts price into formatted string with K or M. """
+    price = int(price)  # Convert string to integer
+
     if price >= 1_000_000:
-        return f"{price // 1_000_000}M ($ {usd_value})"
+        return f"{price / 1_000_000:.2f}M"
     elif price >= 1_000:
-        return f"{price // 1_000}K ($ {usd_value})"
-    return f"{price} ($ {usd_value})"
+        return f"{price / 1_000:.2f}K"
+    else:
+        return f"{price} GP"
 
 @bot.command()
 async def dropdown(ctx):
@@ -108,7 +107,7 @@ async def dropdown(ctx):
                 # Skills Formatting (e.g., Agility)
                 if file_name == "skills.json":
                     methods = "\n".join([
-                        f"**Level {method['req']}+**: {method['title']} **{method['gpxp']}gp/xp**"
+                        f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
                         for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
                     ])
                     embed.add_field(name="Training Methods", value=methods, inline=False)
@@ -116,7 +115,7 @@ async def dropdown(ctx):
                 # Diaries Formatting (e.g., Falador Diary)
                 elif file_name == "diaries.json":
                     diary_items = "\n".join([
-                        f"**{sub_item['name']}** - {format_price(sub_item['price'])} 🪙"
+                        f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🪙"
                         for sub_item in item_data.get("items", [])
                     ])
                     embed.add_field(name="Diaries & Prices", value=diary_items, inline=False)
@@ -124,7 +123,7 @@ async def dropdown(ctx):
                 # Minigames Formatting (e.g., Barbarian Assault)
                 elif file_name == "minigames.json":
                     minigame_items = "\n".join([
-                        f"**{sub_item['name']}** - {format_price(sub_item['price'])} 🎲"
+                        f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
                         for sub_item in item_data.get("items", [])
                     ])
                     embed.add_field(name="Minigame Rewards", value=minigame_items, inline=False)
