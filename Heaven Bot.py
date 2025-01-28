@@ -109,15 +109,18 @@ async def dropdown(ctx):
 
                 # Skills Formatting (e.g., Agility)
                 if file_name == "skills.json":
-                    methods = "\n".join([
-                    f"**Level {method['req']}+**: {method['title']} - {format_price(int(method.get('gpxp', 0)))} gp/xp"
-                    for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
-                    ])
+                methods = "\n".join([
+                f"**Level {method['req']}+**: {method['title']} - {format_price(int(method.get('gpxp', 0)))} gp/xp"
+                for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
+                ])
+              if methods:  # Prevent sending empty fields
+                embed.add_field(name="Training Methods", value=methods, inline=False)
+              else:
+                embed.add_field(name="Training Methods", value="No methods available.", inline=False)
 
-                    embed.add_field(name="Training Methods", value=methods, inline=False)
 
                 # Diaries Formatting (e.g., Falador Diary)
-                elif file_name == "diaries.json":
+             elif file_name == "diaries.json":
                     diary_items = "\n".join([
                     f"**{sub_item['name']}** - {format_price(int(sub_item.get('price', 0)))} 🪙"
                     for sub_item in item_data.get("items", [])
@@ -126,13 +129,16 @@ async def dropdown(ctx):
                     embed.add_field(name="Diaries & Prices", value=diary_items, inline=False)
 
                 # Minigames Formatting (e.g., Barbarian Assault)
-                elif file_name == "minigames.json":
-                    minigame_items = "\n".join([
-                    f"**{sub_item['name']}** - {format_price(int(sub_item.get('price', 0)))} 🎲"
-                    for sub_item in item_data.get("items", [])
-                    ])
+             elif file_name == "minigames.json":
+                minigame_items = "\n".join([
+                f"**{sub_item['name']}** - {format_price(int(sub_item.get('price', 0)))} 🎲"
+                for sub_item in item_data.get("items", [])
+                ])
+                if minigame_items:
+                embed.add_field(name="Minigame Rewards", value=minigame_items, inline=False)
+                else:
+                embed.add_field(name="Minigame Rewards", value="No rewards available.", inline=False)
 
-                    embed.add_field(name="Minigame Rewards", value=minigame_items, inline=False)
 
                 embed.set_thumbnail(url=THUMBNAIL_URL)
                 embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
