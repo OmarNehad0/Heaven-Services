@@ -147,7 +147,7 @@ async def dropdown(ctx):
 
     # Send dropdowns
     for view in views:
-        await ctx.send("Select an option:", view=view)
+        await ctx.send(view=view)
 
     # Ticket & voucher buttons
     button_view = discord.ui.View()
@@ -156,7 +156,7 @@ async def dropdown(ctx):
     button_view.add_item(ticket_button)
     button_view.add_item(voucher_button)
 
-    await ctx.send("Need help?", view=button_view)
+    await ctx.send(view=button_view)
 
     
 
