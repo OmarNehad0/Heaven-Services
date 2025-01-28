@@ -33,12 +33,11 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Hardcoded JSON file names and corresponding emojis
 json_files = {
-    "minigames.json": "\U0001F3B2",  # :game_die:
-    "skills.json": "\U0001F4CA",  # :bar_chart:
-    "quests.json": "\U0001F575",  # :man_detective:
-    "diaries.json": "\U0001F4D7"  # :blue_book:
+    "minigames.json": ":game_die:",  # :game_die:
+    "skills.json": ":bar_chart:",  # :bar_chart:
+    "quests.json": ":man_detective:",  # :man_detective:
+    "diaries.json": ":blue_book:"  # :blue_book:
 }
 
 def load_json(file_name):
@@ -60,7 +59,6 @@ async def dropdown(ctx):
     await ctx.send(embed=banner_embed)
 
     views = []  # Store multiple views for separate dropdowns
-    
     for file_name, emoji in json_files.items():
         data = load_json(file_name)  # Load items from JSON
         category_name = file_name.replace(".json", "").title()  # Remove .json
@@ -75,8 +73,8 @@ async def dropdown(ctx):
             if item_emoji:
                 options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
             else:
-                options.append(discord.SelectOption(label=item_name, value=f"{file_name}:{item_name}"))
-        
+                options.append(discord.SelectOption(label=item_name, emoji=emoji, value=f"{file_name}:{item_name}"))  # Default emoji from json_files
+
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
         
         async def select_callback(interaction):
@@ -92,8 +90,9 @@ async def dropdown(ctx):
                 
                 embed = discord.Embed(title=item_selected, description=description, color=discord.Color.blue())
                 embed.add_field(name="Price", value=price, inline=True)
-                if "emoji" in item_details:
-                    embed.set_thumbnail(url=item_details["emoji"])  # Use emoji as thumbnail if it's a URL
+                
+                # Use the provided static thumbnail URL for all items
+                embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&=")
                 
                 await interaction.response.send_message(embed=embed, ephemeral=True)
             else:
@@ -116,7 +115,6 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
     
     await ctx.send("Need help?", view=button_view)
-
 
 
 # Load minigame data
