@@ -55,11 +55,11 @@ def load_json(file_name):
 
 # Format Price Function
 def format_price(price):
-    """ Converts price into formatted string with K or M. """
+    """Converts price into formatted string with K or M."""
     try:
-        price = int(price)  # Ensure price is an integer
-    except ValueError:
-        return "N/A"  # Handle cases where price is not a number
+        price = int(price)  # Ensure price is always an integer
+    except (ValueError, TypeError):
+        return "N/A"  # Return N/A for invalid or missing price
 
     if price >= 1_000_000:
         return f"{price / 1_000_000:.2f}M"
@@ -67,6 +67,7 @@ def format_price(price):
         return f"{price / 1_000:.2f}K"
     else:
         return f"{price} GP"
+
 
 # Dropdown Command
 @bot.command()
@@ -130,8 +131,8 @@ async def dropdown(ctx):
 
             elif file_name == "diaries.json":
                 diary_items = "\n".join([
-                    f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🪙"
-                    for sub_item in item_data.get("items", [])
+                f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🪙"
+                for sub_item in item_data.get("items", [])
                 ])
                 embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
 
