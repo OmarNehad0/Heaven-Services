@@ -57,12 +57,14 @@ async def dropdown(ctx):
     ticket_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
     voucher_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
 
-    # Send banner first
+    # Send banner only once before dropdowns
     banner_embed = discord.Embed()
     banner_embed.set_image(url=banner_url)
     await ctx.send(embed=banner_embed)
 
     views = []  # Store multiple views for separate dropdowns
+    seen_values = set()  # Track used option values to avoid duplicates
+
     for file_name, emoji in json_files.items():
         data = load_json(file_name)  # Load items from JSON
         category_name = file_name.replace(".json", "").title()  # Remove .json
@@ -86,7 +88,12 @@ async def dropdown(ctx):
                     
                     # Validate emoji and set a fallback if invalid
                     item_emoji = item.get("emoji", emoji)
-                    options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
+                    option_value = f"{file_name}:{item_name}"
+                    
+                    # Ensure option value is unique
+                    if option_value not in seen_values:
+                        seen_values.add(option_value)
+                        options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=option_value))
 
             # Handle quests items (just showing list with prices)
             elif "price" in item:
@@ -101,7 +108,10 @@ async def dropdown(ctx):
                 price_usd = price_m * 0.2  # USD price
                 
                 # Display item name and price
-                options.append(discord.SelectOption(label=f"{item_name} - {price_m}m ({price_usd:.2f}$)", value=f"{file_name}:{item_name}"))
+                option_value = f"{file_name}:{item_name}"
+                if option_value not in seen_values:
+                    seen_values.add(option_value)
+                    options.append(discord.SelectOption(label=f"{item_name} - {price_m}m ({price_usd:.2f}$)", value=option_value))
 
         # Break options into multiple dropdowns if there are too many
         max_options_per_dropdown = 25
@@ -167,6 +177,7 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
     
     await ctx.send("Need help?", view=button_view)
+
     
 
 # Load minigame data
