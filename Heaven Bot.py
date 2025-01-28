@@ -33,6 +33,51 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Hardcoded JSON file names and corresponding emojis
+json_files = {
+    "minigames.json": ":game_die:",
+    "skills.json": ":bar_chart:",
+    "quests.json": ":man_detective:",
+    "diaries.json": ":blue_book:",
+}
+
+@bot.command()
+async def dropdown(ctx):
+    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif?ex=6799e457&is=679892d7&hm=3a21c2b66e42df3008c578f4e6e009e488943757f6df0572d40dd4890962d336&="
+    ticket_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
+    voucher_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
+
+    # Send banner image first
+    banner_embed = discord.Embed()
+    banner_embed.set_image(url=banner_url)
+    await ctx.send(embed=banner_embed)
+
+    # Create the dropdown for JSON categories
+    options = [
+        discord.SelectOption(label=name, emoji=emoji, value=name)
+        for name, emoji in json_files.items()
+    ]
+    
+    select = discord.ui.Select(placeholder="Select a category", options=options)
+    
+    async def select_callback(interaction):
+        selected_file = interaction.data['values'][0]
+        await interaction.response.send_message(f"You selected: {selected_file}", ephemeral=True)
+    
+    select.callback = select_callback
+    view = discord.ui.View()
+    view.add_item(select)
+    
+    # Buttons
+    ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
+    voucher_button = discord.ui.Button(label="Our Sythe Vouchers", url=voucher_link, style=discord.ButtonStyle.url)
+    view.add_item(ticket_button)
+    view.add_item(voucher_button)
+    
+    await ctx.send("Select a category:", view=view)
+
+
+
 # Load minigame data
 with open("minigames.json", "r") as file:
     minigames = json.load(file)
