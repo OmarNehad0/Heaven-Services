@@ -75,13 +75,17 @@ async def dropdown(ctx):
         for item in data:
             item_name = item.get("name", "Unknown Item")
             item_emoji = item.get("emoji", "")  # Use emoji if available
-            if item_emoji:
-                options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
-            else:
-                options.append(discord.SelectOption(label=item_name, value=f"{file_name}:{item_name}"))
-        
+            caption = item.get("caption", "No description provided")  # Get caption if available
+            price = item.get("price", 0)
+            
+            # Convert price to millions (m) and USD
+            price_m = price / 1000000  # Price in millions
+            price_usd = price_m * 0.2  # USD price based on 0.2$/m
+            
+            options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
+
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
-        
+
         async def select_callback(interaction):
             selected_value = interaction.data['values'][0]
             file_selected, item_selected = selected_value.split(":")
@@ -90,14 +94,27 @@ async def dropdown(ctx):
             item_details = next((i for i in data_selected if i.get("name") == item_selected), None)
             
             if item_details:
-                price_m = item_details.get("price", 0) / 1000000  # Convert price to millions
-                price_usd = price_m * 0.2  # Calculate price in USD
-
-                embed = discord.Embed(title=item_selected, color=discord.Color.blue())
+                # Extracting item details
+                item_name = item_details.get("name", "Unknown Item")
+                item_emoji = item_details.get("emoji", "")
+                caption = item_details.get("caption", "No description provided")
+                price = item_details.get("price", 0)
+                
+                # Price formatting
+                price_m = price / 1000000  # Convert price to millions
+                price_usd = price_m * 0.2  # Calculate USD
+                
+                # Build the embed
+                embed = discord.Embed(title=item_name, description=caption, color=discord.Color.blue())
                 embed.add_field(name="Price in M", value=f"{price_m}m", inline=True)
                 embed.add_field(name="Price in $", value=f"${price_usd:.2f}", inline=True)
                 
-                embed.set_thumbnail(url=THUMBNAIL_URL)
+                # Adding emoji if available
+                if item_emoji:
+                    embed.set_thumbnail(url=item_emoji)
+                else:
+                    embed.set_thumbnail(url=THUMBNAIL_URL)
+
                 embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
                 embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
 
@@ -123,7 +140,7 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
     
     await ctx.send("Need help?", view=button_view)
-
+    
 
 # Load minigame data
 with open("minigames.json", "r") as file:
