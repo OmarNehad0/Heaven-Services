@@ -35,66 +35,87 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Hardcoded JSON file names and corresponding emojis
 json_files = {
-    "minigames": "🎲",
-    "skills": "📊",
-    "quests": "🕵️",
-    "diaries": "📘",
+    "minigames.json": "\U0001F3B2",  # :game_die:
+    "skills.json": "\U0001F4CA",  # :bar_chart:
+    "quests.json": "\U0001F575",  # :man_detective:
+    "diaries.json": "\U0001F4D7"  # :blue_book:
 }
+
+def load_json(file_name):
+    try:
+        with open(file_name, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
 
 @bot.command()
 async def dropdown(ctx):
-    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif?ex=6799e457&is=679892d7&hm=3a21c2b66e42df3008c578f4e6e009e488943757f6df0572d40dd4890962d336&="
+    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif"
     ticket_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
     voucher_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
 
-    # Send banner image first
+    # Send banner first
     banner_embed = discord.Embed()
     banner_embed.set_image(url=banner_url)
     await ctx.send(embed=banner_embed)
 
-    # Create separate dropdowns for each JSON file
+    views = []  # Store multiple views for separate dropdowns
+    
     for file_name, emoji in json_files.items():
+        data = load_json(file_name)  # Load items from JSON
+        category_name = file_name.replace(".json", "").title()  # Remove .json
+        
+        if not data:
+            continue  # Skip if the JSON file is empty
+        
         options = []
-        data = load_json_data(file_name)  # Function to load JSON data
-        
         for item in data:
-            label = item.get("name", "Unknown")
-            price = item.get("price", "N/A")
-            description = f"Price: {price}"
-            
-            if "emoji" in item:
-                options.append(discord.SelectOption(label=label, description=description, emoji=item["emoji"]))
+            item_name = item.get("name", "Unknown Item")
+            item_emoji = item.get("emoji", "")  # Use emoji if available
+            if item_emoji:
+                options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=f"{file_name}:{item_name}"))
             else:
-                options.append(discord.SelectOption(label=label, description=description))
+                options.append(discord.SelectOption(label=item_name, value=f"{file_name}:{item_name}"))
         
-        select = discord.ui.Select(placeholder=f"Select {file_name}", options=options)
+        select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
         
         async def select_callback(interaction):
-            selected_item = interaction.data['values'][0]
-            await interaction.response.send_message(f"You selected: {selected_item}", ephemeral=True)
+            selected_value = interaction.data['values'][0]
+            file_selected, item_selected = selected_value.split(":")
+            
+            data_selected = load_json(file_selected)
+            item_details = next((i for i in data_selected if i.get("name") == item_selected), None)
+            
+            if item_details:
+                price = item_details.get("price", "Unknown Price")
+                description = item_details.get("description", "No description available.")
+                
+                embed = discord.Embed(title=item_selected, description=description, color=discord.Color.blue())
+                embed.add_field(name="Price", value=price, inline=True)
+                if "emoji" in item_details:
+                    embed.set_thumbnail(url=item_details["emoji"])  # Use emoji as thumbnail if it's a URL
+                
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+            else:
+                await interaction.response.send_message("Item not found!", ephemeral=True)
         
         select.callback = select_callback
+        
         view = discord.ui.View()
         view.add_item(select)
-        
-        await ctx.send(f"**{file_name.capitalize()} Selection:**", view=view)
+        views.append(view)
     
-    # Buttons
+    for view in views:
+        await ctx.send("Select an item:", view=view)
+    
+    # Buttons for tickets & vouchers
+    button_view = discord.ui.View()
     ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
     voucher_button = discord.ui.Button(label="Our Sythe Vouchers", url=voucher_link, style=discord.ButtonStyle.url)
-    view = discord.ui.View()
-    view.add_item(ticket_button)
-    view.add_item(voucher_button)
+    button_view.add_item(ticket_button)
+    button_view.add_item(voucher_button)
     
-    await ctx.send("Useful Links:", view=view)
-
-def load_json_data(file_name):
-    try:
-        with open(f"{file_name}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
-    except Exception as e:
-        print(f"Error loading {file_name}.json: {e}")
-        return []
+    await ctx.send("Need help?", view=button_view)
 
 
 
