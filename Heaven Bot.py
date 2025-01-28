@@ -23,7 +23,6 @@ import gspread
 from google.auth.transport.requests import Request
 from google.auth import exceptions
 from google.auth.exceptions import DefaultCredentialsError
-import constants
 # Define intents
 intents = discord.Intents.default()
 intents.message_content = True
@@ -37,7 +36,6 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # Constants
 THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
 AUTHOR_ICON_URL = "https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
-
 json_files = {
     "minigames.json": ":game_die:",  # :game_die:
     "skills.json": ":bar_chart:",  # :bar_chart:
@@ -104,7 +102,7 @@ async def dropdown(ctx):
                 quest_data = load_json("quests.json")
                 quest_items = "\n".join([f"{quest['name']} - {format_price(quest['price'])}m" for quest in quest_data])
                 embed = discord.Embed(title="Quests", description=quest_items, color=discord.Color.blue())
-                embed.set_thumbnail(url=constants.THUMBNAIL_URL)
+                embed.set_thumbnail(url=THUMBNAIL_URL)
                 embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
                 await interaction.response.send_message(embed=embed, ephemeral=True)
             else:
@@ -122,7 +120,7 @@ async def dropdown(ctx):
                     embed.add_field(name="Items & Prices", value=price_list, inline=False)
                     
                     # Add emoji if available
-                    embed.set_thumbnail(url=constants.THUMBNAIL_URL)
+                    embed.set_thumbnail(url=THUMBNAIL_URL)
                     embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
                     embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
                     
