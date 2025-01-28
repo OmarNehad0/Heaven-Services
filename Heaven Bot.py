@@ -38,10 +38,10 @@ THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/13
 AUTHOR_ICON_URL = "https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
 
 json_files = {
-    "minigames.json": "\U0001F3B2",  # :game_die:
-    "skills.json": "\U0001F4CA",  # :bar_chart:
-    "quests.json": "\U0001F575",  # :man_detective:
-    "diaries.json": "\U0001F4D7"  # :blue_book:
+    "minigames.json": ":game_die:",  # :game_die:
+    "skills.json": ":bar_chart:",  # :bar_chart:
+    "quests.json": ":man_detective:",  # :man_detective:
+    "diaries.json": ":blue_book:"  # :blue_book:
 }
 
 def load_json(file_name):
@@ -73,98 +73,109 @@ async def dropdown(ctx):
             continue  # Skip if the JSON file is empty
 
         options = []
-        for item in data:
-            # Handle minigames and skilling items
-            if "items" in item:
-                for sub_item in item["items"]:
-                    item_name = sub_item["name"]
-                    price = sub_item["price"]
-                    try:
-                        price = int(price)  # Ensure the price is an integer
-                    except ValueError:
-                        continue  # Skip if conversion fails
-                    price_m = price / 1000000  # Convert to millions
-                    price_usd = price_m * 0.2  # USD price based on 0.2$/m
-                    
-                    # Validate emoji and set a fallback if invalid
-                    item_emoji = item.get("emoji", emoji)
-                    option_value = f"{file_name}:{item_name}"
-                    
-                    # Ensure option value is unique
-                    if option_value not in seen_values:
-                        seen_values.add(option_value)
-                        options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=option_value))
+        if file_name == "quests.json":
+            # For quests, we only show a single option for the quests sub-menu
+            options.append(discord.SelectOption(label="Quests", emoji=emoji, value="quests"))
+        else:
+            # For other files, show the main items
+            for item in data:
+                # Handle minigames and skilling items
+                if "items" in item:
+                    for sub_item in item["items"]:
+                        item_name = sub_item["name"]
+                        price = sub_item["price"]
+                        try:
+                            price = int(price)  # Ensure the price is an integer
+                        except ValueError:
+                            continue  # Skip if conversion fails
+                        price_m = price / 1000000  # Convert to millions
+                        price_usd = price_m * 0.2  # USD price based on 0.2$/m
+                        
+                        # Validate emoji and set a fallback if invalid
+                        item_emoji = item.get("emoji", emoji)
+                        option_value = f"{file_name}:{item_name}"
+                        
+                        # Ensure option value is unique
+                        if option_value not in seen_values:
+                            seen_values.add(option_value)
+                            options.append(discord.SelectOption(label=item_name, emoji=item_emoji, value=option_value))
 
-            # Handle quests items (just showing list with prices)
-            elif "price" in item:
-                item_name = item["name"]
-                price = item["price"]
-                try:
-                    price = int(price)  # Ensure the price is an integer
-                except ValueError:
-                    price = 0
-                
-                price_m = price / 1000000  # Convert price to millions
-                price_usd = price_m * 0.2  # USD price
-                
-                # Display item name and price
-                option_value = f"{file_name}:{item_name}"
-                if option_value not in seen_values:
-                    seen_values.add(option_value)
-                    options.append(discord.SelectOption(label=f"{item_name} - {price_m}m ({price_usd:.2f}$)", value=option_value))
+            # Break options into multiple dropdowns if there are too many
+            max_options_per_dropdown = 25
+            for i in range(0, len(options), max_options_per_dropdown):
+                select = discord.ui.Select(placeholder=f"Select {category_name}", options=options[i:i + max_options_per_dropdown])
 
-        # Break options into multiple dropdowns if there are too many
-        max_options_per_dropdown = 25
-        for i in range(0, len(options), max_options_per_dropdown):
-            select = discord.ui.Select(placeholder=f"Select {category_name}", options=options[i:i + max_options_per_dropdown])
+                async def select_callback(interaction):
+                    selected_value = interaction.data['values'][0]
+                    file_selected, item_selected = selected_value.split(":")
+                    
+                    data_selected = load_json(file_selected)
+                    item_details = next((i for i in data_selected if i.get("name") == item_selected), None)
+                    
+                    if item_details:
+                        # Extracting item details
+                        item_name = item_details.get("name", "Unknown Item")
+                        item_emoji = item_details.get("emoji", "")
+                        caption = item_details.get("caption", "No description provided")
+                        price = item_details.get("price", 0)
+                        
+                        # Ensure price is an integer
+                        try:
+                            price = int(price)
+                        except ValueError:
+                            price = 0
+                        
+                        # Price formatting
+                        price_m = price / 1000000  # Convert price to millions
+                        price_usd = price_m * 0.2  # Calculate USD
+                        
+                        # Build the embed
+                        embed = discord.Embed(title=item_name, description=caption, color=discord.Color.blue())
+                        embed.add_field(name="Price in M", value=f"{price_m}m", inline=True)
+                        embed.add_field(name="Price in $", value=f"${price_usd:.2f}", inline=True)
+                        
+                        # Adding emoji if available
+                        if item_emoji:
+                            embed.set_thumbnail(url=item_emoji)
+                        else:
+                            embed.set_thumbnail(url=THUMBNAIL_URL)
+
+                        embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
+                        embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
+
+                        await interaction.response.send_message(embed=embed, ephemeral=True)
+                    else:
+                        await interaction.response.send_message("Item not found!", ephemeral=True)
+
+                select.callback = select_callback
+                view = discord.ui.View()
+                view.add_item(select)
+                views.append(view)
+
+        # For quests, handle sub-menu (to show all items when clicked)
+        if file_name == "quests.json":
+            # Add sub-menu items for quests
+            select = discord.ui.Select(placeholder=f"Select {category_name} (Quests)", options=options)
 
             async def select_callback(interaction):
-                selected_value = interaction.data['values'][0]
-                file_selected, item_selected = selected_value.split(":")
+                # For quests, display the full list of quests and their prices
+                quest_details = load_json("quests.json")
+                embed = discord.Embed(title="Quest List", description="Here are the available quests:", color=discord.Color.green())
                 
-                data_selected = load_json(file_selected)
-                item_details = next((i for i in data_selected if i.get("name") == item_selected), None)
+                for quest in quest_details:
+                    quest_name = quest.get("name", "Unknown Quest")
+                    price = quest.get("price", 0)
+                    price_m = price / 1000000
+                    price_usd = price_m * 0.2
+                    embed.add_field(name=quest_name, value=f"{price_m}m ({price_usd:.2f}$)", inline=False)
                 
-                if item_details:
-                    # Extracting item details
-                    item_name = item_details.get("name", "Unknown Item")
-                    item_emoji = item_details.get("emoji", "")
-                    caption = item_details.get("caption", "No description provided")
-                    price = item_details.get("price", 0)
-                    
-                    # Ensure price is an integer
-                    try:
-                        price = int(price)
-                    except ValueError:
-                        price = 0
-                    
-                    # Price formatting
-                    price_m = price / 1000000  # Convert price to millions
-                    price_usd = price_m * 0.2  # Calculate USD
-                    
-                    # Build the embed
-                    embed = discord.Embed(title=item_name, description=caption, color=discord.Color.blue())
-                    embed.add_field(name="Price in M", value=f"{price_m}m", inline=True)
-                    embed.add_field(name="Price in $", value=f"${price_usd:.2f}", inline=True)
-                    
-                    # Adding emoji if available
-                    if item_emoji:
-                        embed.set_thumbnail(url=item_emoji)
-                    else:
-                        embed.set_thumbnail(url=THUMBNAIL_URL)
-
-                    embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
-                    embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
-
-                    await interaction.response.send_message(embed=embed, ephemeral=True)
-                else:
-                    await interaction.response.send_message("Item not found!", ephemeral=True)
+                await interaction.response.send_message(embed=embed, ephemeral=True)
 
             select.callback = select_callback
             view = discord.ui.View()
             view.add_item(select)
             views.append(view)
-    
+
     # Send dropdowns for each file (pagination handled by splitting into multiple dropdowns)
     for view in views:
         await ctx.send("Select an item:", view=view)
