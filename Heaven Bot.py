@@ -33,14 +33,14 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Constants
-THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
-AUTHOR_ICON_URL = "https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif?ex=6797412d&is=6795efad&hm=2ab9ee82437a63d21a62fc094b6b926ab30133b8b91633d45a96ce9c44205e99&="
+THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
+AUTHOR_ICON_URL = "https://media.discordapp.net/attachments/1332341372333723732/1332806658031747082/avatar.gif"
+
 json_files = {
-    "minigames.json": ":game_die:",  # :game_die:
-    "skills.json": ":bar_chart:",  # :bar_chart:
-    "quests.json": ":man_detective:",  # :man_detective:
-    "diaries.json": ":blue_book:"  # :blue_book:
+    "minigames.json": "🎲",
+    "skills.json": "📊",
+    "quests.json": "🕵️",
+    "diaries.json": "📘"
 }
 
 def load_json(file_name):
@@ -48,17 +48,19 @@ def load_json(file_name):
         with open(file_name, "r", encoding="utf-8") as file:
             return json.load(file)
     except FileNotFoundError:
-        return {}
+        return []
 
 def format_price(price):
-    """Helper function to format prices with 'k' or 'm'."""
-    if isinstance(price, int):
-        if price >= 1000000:
-            return f"{price // 1000000}M"
-        elif price >= 1000:
-            return f"{price // 1000}K"
-        return str(price)
-    return price
+    """Convert GP to formatted price & USD equivalent."""
+    if isinstance(price, str):
+        price = int(price.replace("m", "000000").replace("k", "000"))
+    
+    usd_value = round(price / 5_000_000, 2)  # Example: 5M GP = $1
+    if price >= 1_000_000:
+        return f"{price // 1_000_000}M ($ {usd_value})"
+    elif price >= 1_000:
+        return f"{price // 1_000}K ($ {usd_value})"
+    return f"{price} ($ {usd_value})"
 
 @bot.command()
 async def dropdown(ctx):
@@ -66,68 +68,83 @@ async def dropdown(ctx):
     ticket_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
     voucher_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
 
-    # Send banner embed
+    # Send banner before dropdowns
     banner_embed = discord.Embed()
     banner_embed.set_image(url=banner_url)
     await ctx.send(embed=banner_embed)
 
-    views = []
-
+    views = []  # Store dropdown views
     for file_name, emoji in json_files.items():
         data = load_json(file_name)
         category_name = file_name.replace(".json", "").title()
 
         if not data:
-            continue
+            continue  # Skip empty files
 
         options = []
-        if file_name == "quests.json":
-            options.append(discord.SelectOption(label="Quests", emoji=emoji, value="quests"))
-        else:
-            for item in data:
-                item_name = item.get("name")
-                if item_name:
-                    options.append(discord.SelectOption(label=item_name, emoji=item.get("emoji", emoji), value=item_name))
+        for item in data:
+            item_name = item.get("name")
+            if item_name:
+                options.append(discord.SelectOption(
+                    label=item_name,
+                    emoji=item.get("emoji", emoji),
+                    value=item_name
+                ))
 
-        select = discord.ui.Select(
-            placeholder=f"Select {category_name}", options=options
-        )
+        # Dropdown selection
+        select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
 
         async def select_callback(interaction):
             selected_value = interaction.data['values'][0]
+            item_data = next((item for item in data if item["name"] == selected_value), None)
 
-            if selected_value == "quests":
-                quest_data = load_json("quests.json")
-                quest_items = "\n".join([f"{quest['name']} - {format_price(quest['price'])}m" for quest in quest_data])
-                embed = discord.Embed(title="Quests", description=quest_items, color=discord.Color.blue())
+            if item_data:
+                embed = discord.Embed(
+                    title=f"{item_data.get('emoji', '')} {item_data['name']}",
+                    description=item_data.get("caption", "No description provided"),
+                    color=discord.Color.blue()
+                )
+
+                if file_name == "quests.json":
+                    # Format quest pricing
+                    quest_items = "\n".join([
+                        f"{quest['name']} - {format_price(quest['price'])} 💰"
+                        for quest in load_json("quests.json")
+                    ])
+                    embed.add_field(name="Quests & Prices", value=quest_items, inline=False)
+
+                elif file_name == "diaries.json":
+                    # Format diaries with prices
+                    diary_items = "\n".join([
+                        f"**{sub_item['name']}** - {format_price(sub_item['price'])} 🪙 | 🟠"
+                        for sub_item in item_data.get("items", [])
+                    ])
+                    embed.add_field(name="Diaries & Prices", value=diary_items, inline=False)
+
+                elif file_name == "skills.json":
+                    # Format skills like Cynx
+                    methods = "\n".join([
+                        f"**Level {method['req']}+**: {method['title']} **{method['gpxp']}gp/xp**"
+                        for method in item_data.get("methods", [])
+                    ])
+                    embed.add_field(name="Training Methods", value=methods, inline=False)
+
                 embed.set_thumbnail(url=THUMBNAIL_URL)
                 embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
+                embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
+
                 await interaction.response.send_message(embed=embed, ephemeral=True)
-            else:
-                item_data = next((item for item in data if item["name"] == selected_value), None)
-                if item_data:
-                    item_name = item_data["name"]
-                    item_emoji = item_data.get("emoji", "")
-                    items_list = item_data.get("items", [])
-                    caption = item_data.get("caption", "No description provided")
-                    price_list = "\n".join([f"{sub_item['name']} - {format_price(sub_item['price'])} <:coins:1332378895047069777> : {format_price(sub_item['price'])} <:btc:1332372139541528627>" for sub_item in items_list])
-
-                    embed = discord.Embed(title=f"{item_emoji} {item_name}", description=caption, color=discord.Color.blue())
-                    embed.add_field(name="Items & Prices", value=price_list, inline=False)
-                    embed.set_thumbnail(url=THUMBNAIL_URL)
-                    embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
-                    embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
-
-                    await interaction.response.send_message(embed=embed, ephemeral=True)
 
         select.callback = select_callback
         view = discord.ui.View()
         view.add_item(select)
         views.append(view)
 
+    # Send dropdowns
     for view in views:
-        await ctx.send("Select an item:", view=view)
+        await ctx.send("Select an option:", view=view)
 
+    # Ticket & voucher buttons
     button_view = discord.ui.View()
     ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
     voucher_button = discord.ui.Button(label="Our Sythe Vouchers", url=voucher_link, style=discord.ButtonStyle.url)
@@ -135,7 +152,6 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
 
     await ctx.send("Need help?", view=button_view)
-
     
 
 # Load minigame data
