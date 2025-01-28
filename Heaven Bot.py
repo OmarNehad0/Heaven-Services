@@ -57,18 +57,19 @@ def format_price(price):
     """Converts price to a formatted string with K/M/GP."""
     try:
         # Force price to be an integer, even if it's a string
-        price = int(float(price))
+        price = float(price)
     except (ValueError, TypeError):
         # If price is invalid or missing, return a placeholder
         return "N/A 🪙"
 
-    # Format price based on its value
+    # Now we safely compare the price as a float
     if price >= 1_000_000:
         return f"{price / 1_000_000:.2f}M"
     elif price >= 1_000:
         return f"{price / 1_000:.2f}K"
     else:
-        return f"{price} GP"
+        return f"{int(price)} GP"
+
 
 
 
