@@ -71,19 +71,29 @@ def format_price(price):
 def find_category(category_name, file_name):
     """Finds the category inside the correct JSON file."""
     data = load_json(file_name)
-    print(f"File selected: {file_name}, Category searched: {selected_value}")
-    print(f"Searching for '{category_name}' in {json_file}")
+    print(f"Searching for '{category_name}' in {file_name}")
+
     for category in data:
+        print(f"Checking category: {category['name']} (Aliases: {category.get('aliases', [])})")
         if category_name.lower() == category["name"].lower() or category_name.lower() in category.get("aliases", []):
+            print(f"Match found: {category['name']}")
             return category
+
+    print(f"No match found for {category_name}")
     return None  # If not found
+
 
 async def select_callback(interaction: discord.Interaction):
     selected_value = interaction.data['values'][0]  # Get selected value from dropdown
     print(f"Dropdown selected: {selected_value}")  # Debugging log
 
     # Find the associated JSON file
-    file_name = next((key for key in json_files if key.replace(".json", "").lower() in interaction.message.content.lower()), None)
+    file_name = None
+    for key in json_files:
+      if key.replace(".json", "").lower() in interaction.message.embeds[0].title.lower():
+        file_name = key
+        break
+
 
     if not file_name:
         await interaction.response.send_message("Error: Category not found.", ephemeral=True)
@@ -107,10 +117,11 @@ async def select_callback(interaction: discord.Interaction):
     # Extracting and formatting items with prices
     if "items" in category_data:
         items_list = "\n".join([
-            f"• **{item['name']}**: {format_price(item.get('price', 0))}"
-            for item in category_data["items"]
+          f"• **{item['name']}**: {format_price(item.get('price', 0))}"
+          for item in category_data["items"]
         ])
         embed.add_field(name="Available Options", value=items_list, inline=False)
+
     else:
         embed.add_field(name="Available Options", value="No items found.", inline=False)
 
