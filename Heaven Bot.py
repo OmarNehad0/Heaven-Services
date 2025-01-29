@@ -78,10 +78,9 @@ def find_category(category_name, file_name):
 
 async def select_callback(interaction: discord.Interaction):
     selected_value = interaction.data['values'][0]  # Get selected value from dropdown
-
     print(f"Dropdown selected: {selected_value}")  # Debugging log
 
-    # Detect the JSON file associated with this dropdown
+    # Find the associated JSON file
     file_name = next((key for key in json_files if key.replace(".json", "").lower() in interaction.message.content.lower()), None)
 
     if not file_name:
@@ -94,7 +93,7 @@ async def select_callback(interaction: discord.Interaction):
         await interaction.response.send_message("Error: Item not found.", ephemeral=True)
         return
 
-    print(f"Category detected: {category_data}")  # Debugging log
+    print(f"Category Data: {category_data}")  # Debugging log
 
     # Embed setup
     embed = discord.Embed(
@@ -103,31 +102,19 @@ async def select_callback(interaction: discord.Interaction):
         color=discord.Color.blue()
     )
 
-    # Add specific fields based on category
-    if file_name == "skills.json":
-        methods = "\n".join([
-            f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
-            for method in sorted(category_data.get("methods", []), key=lambda x: x["req"])
+    # Extracting and formatting items with prices
+    if "items" in category_data:
+        items_list = "\n".join([
+            f"• **{item['name']}**: {format_price(item.get('price', 0))}"
+            for item in category_data["items"]
         ])
-        embed.add_field(name="Training Methods", value=methods if methods else "No methods available.", inline=False)
-
-    elif file_name == "diaries.json":
-        diary_items = "\n".join([
-            f"**{sub_item.get('name', 'Unknown')}** - {format_price(sub_item.get('price', 0))} 🪙"
-            for sub_item in category_data.get("items", [])
-        ])
-        embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
-
-    elif file_name == "minigames.json":
-        minigame_items = "\n".join([
-            f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
-            for sub_item in category_data.get("items", [])
-        ])
-        embed.add_field(name="Minigame Rewards", value=minigame_items if minigame_items else "No rewards available.", inline=False)
+        embed.add_field(name="Available Options", value=items_list, inline=False)
+    else:
+        embed.add_field(name="Available Options", value="No items found.", inline=False)
 
     embed.set_thumbnail(url=category_data.get("image", THUMBNAIL_URL))
-    embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
-    embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
+    embed.set_author(name="CYNX Services", icon_url=AUTHOR_ICON_URL)
+    embed.set_footer(text="CYNX Services", icon_url=AUTHOR_ICON_URL)
 
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
