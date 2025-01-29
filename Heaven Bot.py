@@ -113,8 +113,14 @@ async def select_callback(interaction: discord.Interaction):
         color=discord.Color.blue()
     )
 
-    # Extracting and formatting items with prices
-    if "items" in category_data:
+    # Special case for skills.json
+    if file_name == "skills.json" and "methods" in category_data:
+        methods_list = "\n".join([
+            f"• **{method['title']}**: {method['gpxp']} GP/XP (Req: {method['req']})"
+            for method in category_data["methods"]
+        ])
+        embed.add_field(name="Training Methods", value=methods_list, inline=False)
+    elif "items" in category_data:
         items_list = "\n".join([
             f"• **{item['name']}**: {format_price(item.get('price', 0))}"
             for item in category_data["items"]
@@ -128,6 +134,7 @@ async def select_callback(interaction: discord.Interaction):
     embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
 
     await interaction.response.send_message(embed=embed, ephemeral=True)
+
 
 
 # Dropdown Command
