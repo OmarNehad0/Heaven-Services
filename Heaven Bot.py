@@ -87,23 +87,18 @@ async def select_callback(interaction: discord.Interaction):
     selected_value = interaction.data['values'][0]  # Get selected value from dropdown
     print(f"Dropdown selected: {selected_value}")  # Debugging log
 
-    # Check if the interaction message has any embeds before accessing them
-    if not interaction.message.embeds:
-        await interaction.response.send_message("Error: No embed found in the message.", ephemeral=True)
+    # Extract file_name and item_name
+    try:
+        file_name, item_name = selected_value.split("|", 1)
+    except ValueError:
+        await interaction.response.send_message("Error: Invalid selection format.", ephemeral=True)
         return
 
-    # Find the associated JSON file
-    file_name = None
-    for key in json_files:
-        if key.replace(".json", "").lower() in interaction.message.embeds[0].title.lower():
-            file_name = key
-            break
-
-    if not file_name:
-        await interaction.response.send_message("Error: Category not found.", ephemeral=True)
+    if not file_name or not item_name:
+        await interaction.response.send_message("Error: Category or item missing.", ephemeral=True)
         return
 
-    category_data = find_category(selected_value, file_name)
+    category_data = find_category(item_name, file_name)
 
     if not category_data:
         await interaction.response.send_message("Error: Item not found.", ephemeral=True)
@@ -159,7 +154,7 @@ async def dropdown(ctx):
             discord.SelectOption(
                 label=item["name"],
                 emoji=item.get("emoji", emoji),
-                value=item["name"]
+                value=f"{file_name}|{item['name']}"  # Store both file and name
             ) for item in data if "name" in item
         ]
 
