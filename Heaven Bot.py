@@ -165,16 +165,14 @@ async def dropdown(ctx):
         # Dropdown Selection
         select = discord.ui.Select(
           placeholder=f"Select {category_name}",
-          options=options
+          options=options,
+          custom_id=f"{file_name}_select"  # Set custom_id for the select menu itself
         )
-        # Set custom ID for the view or items
-        for option in select.options:
-          option.custom_id = f"{file_name}|{option.label}"  # Set unique custom ID for each option
-
         select.callback = select_callback  # Attach the callback
 
         view = discord.ui.View(timeout=None)  # Make View persistent
         view.add_item(select)
+
 
 
         if not hasattr(bot, "persistent_views_added"):
