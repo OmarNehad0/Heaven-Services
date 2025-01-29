@@ -87,13 +87,17 @@ async def select_callback(interaction: discord.Interaction):
     selected_value = interaction.data['values'][0]  # Get selected value from dropdown
     print(f"Dropdown selected: {selected_value}")  # Debugging log
 
+    # Check if the interaction message has any embeds before accessing them
+    if not interaction.message.embeds:
+        await interaction.response.send_message("Error: No embed found in the message.", ephemeral=True)
+        return
+
     # Find the associated JSON file
     file_name = None
     for key in json_files:
-      if key.replace(".json", "").lower() in interaction.message.embeds[0].title.lower():
-        file_name = key
-        break
-
+        if key.replace(".json", "").lower() in interaction.message.embeds[0].title.lower():
+            file_name = key
+            break
 
     if not file_name:
         await interaction.response.send_message("Error: Category not found.", ephemeral=True)
@@ -117,19 +121,19 @@ async def select_callback(interaction: discord.Interaction):
     # Extracting and formatting items with prices
     if "items" in category_data:
         items_list = "\n".join([
-          f"• **{item['name']}**: {format_price(item.get('price', 0))}"
-          for item in category_data["items"]
+            f"• **{item['name']}**: {format_price(item.get('price', 0))}"
+            for item in category_data["items"]
         ])
         embed.add_field(name="Available Options", value=items_list, inline=False)
-
     else:
         embed.add_field(name="Available Options", value="No items found.", inline=False)
 
     embed.set_thumbnail(url=category_data.get("image", THUMBNAIL_URL))
-    embed.set_author(name="CYNX Services", icon_url=AUTHOR_ICON_URL)
-    embed.set_footer(text="CYNX Services", icon_url=AUTHOR_ICON_URL)
+    embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
+    embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
 
     await interaction.response.send_message(embed=embed, ephemeral=True)
+
 
 # Dropdown Command
 @bot.command()
