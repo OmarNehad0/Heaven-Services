@@ -73,6 +73,63 @@ def format_price(price):
 
 
 
+# Define select_callback function separately
+async def select_callback(interaction: discord.Interaction):
+    selected_value = interaction.data['values'][0]
+    category = interaction.message.content  # This gets the category (Minigames, Skills, etc.)
+    
+    # Find the correct JSON file based on category
+    file_name = next((key for key in json_files if category.lower().startswith(key.replace(".json", "").lower())), None)
+    if not file_name:
+        await interaction.response.send_message("Error: Category not found.", ephemeral=True)
+        return
+    
+    data = load_json(file_name)
+
+    # Find the matching item
+    item_data = next(
+        (item for item in data if item["name"].lower() == selected_value.lower() or
+         any(alias.lower() == selected_value.lower() for alias in item.get("aliases", []))), None
+    )
+
+    if not item_data:
+        await interaction.response.send_message("Error: Item not found.", ephemeral=True)
+        return  # Stop execution if item_data is None
+
+    embed = discord.Embed(
+        title=f"{item_data.get('emoji', '')} {item_data['name']}",
+        description=item_data.get("caption", "No description provided"),
+        color=discord.Color.blue()
+    )
+
+    # Add fields based on category type
+    if file_name == "skills.json":
+        methods = "\n".join([
+            f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
+            for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
+        ])
+        embed.add_field(name="Training Methods", value=methods if methods else "No methods available.", inline=False)
+
+    elif file_name == "diaries.json":
+        diary_items = "\n".join([
+            f"**{sub_item.get('name', 'Unknown')}** - {format_price(sub_item.get('price', 0))} 🪙"
+            for sub_item in item_data.get("items", [])
+        ])
+        embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
+
+    elif file_name == "minigames.json":
+        minigame_items = "\n".join([
+            f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
+            for sub_item in item_data.get("items", [])
+        ])
+        embed.add_field(name="Minigame Rewards", value=minigame_items if minigame_items else "No rewards available.", inline=False)
+
+    embed.set_thumbnail(url=item_data.get("image", THUMBNAIL_URL))
+    embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
+    embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
+
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
 # Dropdown Command
 @bot.command()
 async def dropdown(ctx):
@@ -105,56 +162,8 @@ async def dropdown(ctx):
 
         # Dropdown Selection
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
+        select.callback = select_callback  # Attach the callback
 
-        async def select_callback(interaction):
-            selected_value = interaction.data['values'][0]
-
-            # Find the matching item (by name OR aliases)
-            item_data = next(
-                (item for item in data if item["name"].lower() == selected_value.lower() or
-                 any(alias.lower() == selected_value.lower() for alias in item.get("aliases", []))), None
-            )
-
-            if not item_data:
-                await interaction.response.send_message("Error: Item not found.", ephemeral=True)
-                return  # Stop execution if item_data is None
-
-            embed = discord.Embed(
-                title=f"{item_data.get('emoji', '')} {item_data['name']}",
-                description=item_data.get("caption", "No description provided"),
-                color=discord.Color.blue()
-            )
-
-            # Add fields based on category type
-            if file_name == "skills.json":
-                methods = "\n".join([
-                    f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
-                    for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
-                ])
-                embed.add_field(name="Training Methods", value=methods if methods else "No methods available.", inline=False)
-
-            elif file_name == "diaries.json":
-                diary_items = "\n".join([
-                f"**{sub_item.get('name', 'Unknown')}** - {format_price(sub_item.get('price', 0))} 🪙"
-                for sub_item in item_data.get("items", [])
-                ])
-
-                embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
-
-            elif file_name == "minigames.json":
-                minigame_items = "\n".join([
-                    f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
-                    for sub_item in item_data.get("items", [])
-                ])
-                embed.add_field(name="Minigame Rewards", value=minigame_items if minigame_items else "No rewards available.", inline=False)
-
-            embed.set_thumbnail(url=item_data.get("image", THUMBNAIL_URL))
-            embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
-            embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
-
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-
-        select.callback = select_callback
         view = discord.ui.View()
         view.add_item(select)
         views.append(view)
@@ -171,6 +180,7 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
 
     await ctx.send(view=button_view)
+
 
     
 
