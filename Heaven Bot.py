@@ -71,6 +71,8 @@ def format_price(price):
 def find_category(category_name, file_name):
     """Finds the category inside the correct JSON file."""
     data = load_json(file_name)
+    print(f"File selected: {file_name}, Category searched: {selected_value}")
+    print(f"Searching for '{category_name}' in {json_file}")
     for category in data:
         if category_name.lower() == category["name"].lower() or category_name.lower() in category.get("aliases", []):
             return category
