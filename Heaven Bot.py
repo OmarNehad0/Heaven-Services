@@ -56,13 +56,10 @@ def load_json(file_name):
 def format_price(price):
     """Converts price to a formatted string with K/M/GP."""
     try:
-        # Force price to be an integer, even if it's a string
         price = float(price)
     except (ValueError, TypeError):
-        # If price is invalid or missing, return a placeholder
         return "N/A 🪙"
 
-    # Now we safely compare the price as a float
     if price >= 1_000_000:
         return f"{price / 1_000_000:.2f}M"
     elif price >= 1_000:
@@ -70,35 +67,40 @@ def format_price(price):
     else:
         return f"{int(price)} GP"
 
-
 def find_category(category_name, data):
+    category_name = category_name.lower()
     for category in data:
-        if category_name.lower() == category["name"].lower() or category_name.lower() in category.get("aliases", []):
+        if category_name == category["name"].lower() or category_name in [alias.lower() for alias in category.get("aliases", [])]:
             return category
     return None  # If not found
 
-# Define select_callback function separately
+# Dropdown Selection Callback
 async def select_callback(interaction: discord.Interaction):
     selected_value = interaction.data['values'][0]
-    category = interaction.message.content  # This gets the category (Minigames, Skills, etc.)
-    
-    # Find the correct JSON file based on category
-    file_name = next((key for key in json_files if category.lower().startswith(key.replace(".json", "").lower())), None)
+    category_name = interaction.message.content.strip()
+
+    # Debugging: Show selected value and category name
+    print(f"Dropdown selected: {selected_value}")
+    print(f"Category detected: {category_name}")
+
+    # Find JSON file from category name
+    file_name = None
+    for key in json_files:
+        if category_name.lower() == key.replace(".json", "").lower():
+            file_name = key
+            break
+
     if not file_name:
         await interaction.response.send_message("Error: Category not found.", ephemeral=True)
         return
-    
+
     data = load_json(file_name)
 
-    # Find the matching item
-    item_data = next(
-        (item for item in data if item["name"].lower() == selected_value.lower() or
-         any(alias.lower() == selected_value.lower() for alias in item.get("aliases", []))), None
-    )
-
+    # Find matching item
+    item_data = find_category(selected_value, data)
     if not item_data:
-        await interaction.response.send_message("Error: Item not found.", ephemeral=True)
-        return  # Stop execution if item_data is None
+        await interaction.response.send_message(f"Error: '{selected_value}' not found in {category_name}.", ephemeral=True)
+        return
 
     embed = discord.Embed(
         title=f"{item_data.get('emoji', '')} {item_data['name']}",
@@ -106,7 +108,7 @@ async def select_callback(interaction: discord.Interaction):
         color=discord.Color.blue()
     )
 
-    # Add fields based on category type
+    # Handling each category separately
     if file_name == "skills.json":
         methods = "\n".join([
             f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
@@ -184,16 +186,6 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
 
     await ctx.send(view=button_view)
-
-@bot.event
-async def on_dropdown_select(interaction):
-    selected_value = interaction.data["values"][0]  # Get the selected item
-    print(f"User selected: {selected_value}")  # Debugging
-
-    category = find_category(selected_value, skills_json + minigames_json + diaries_json)
-    if not category:
-        await interaction.response.send_message("Category not found!", ephemeral=True)
-        return
 
     
 
