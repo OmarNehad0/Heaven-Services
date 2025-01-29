@@ -41,7 +41,7 @@ AUTHOR_ICON_URL = "https://media.discordapp.net/attachments/1332341372333723732/
 json_files = {
     "minigames.json": "🎲",
     "skills.json": "📊",
-    "quests.json": "🕵️",
+    "quests-members.json": "🕵️",
     "diaries.json": "📘"
 }
 
