@@ -71,7 +71,11 @@ def format_price(price):
         return f"{int(price)} GP"
 
 
-
+def find_category(category_name, data):
+    for category in data:
+        if category_name.lower() == category["name"].lower() or category_name.lower() in category.get("aliases", []):
+            return category
+    return None  # If not found
 
 # Define select_callback function separately
 async def select_callback(interaction: discord.Interaction):
@@ -181,6 +185,15 @@ async def dropdown(ctx):
 
     await ctx.send(view=button_view)
 
+@bot.event
+async def on_dropdown_select(interaction):
+    selected_value = interaction.data["values"][0]  # Get the selected item
+    print(f"User selected: {selected_value}")  # Debugging
+
+    category = find_category(selected_value, skills_json + minigames_json + diaries_json)
+    if not category:
+        await interaction.response.send_message("Category not found!", ephemeral=True)
+        return
 
     
 
