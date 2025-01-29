@@ -51,6 +51,7 @@ def load_json(file_name):
         with open(file_name, "r", encoding="utf-8") as file:
             return json.load(file)
     except FileNotFoundError:
+        print(f"Error: {file_name} not found.")  # Debugging log
         return []
 
 def format_price(price):
@@ -67,70 +68,64 @@ def format_price(price):
     else:
         return f"{int(price)} GP"
 
-def find_category(category_name, data):
-    category_name = category_name.lower()
+def find_category(category_name, file_name):
+    """Finds the category inside the correct JSON file."""
+    data = load_json(file_name)
     for category in data:
-        if category_name == category["name"].lower() or category_name in [alias.lower() for alias in category.get("aliases", [])]:
+        if category_name.lower() == category["name"].lower() or category_name.lower() in category.get("aliases", []):
             return category
     return None  # If not found
 
-# Dropdown Selection Callback
 async def select_callback(interaction: discord.Interaction):
-    selected_value = interaction.data['values'][0]
-    category_name = interaction.message.content.strip()
+    selected_value = interaction.data['values'][0]  # Get selected value from dropdown
 
-    # Debugging: Show selected value and category name
-    print(f"Dropdown selected: {selected_value}")
-    print(f"Category detected: {category_name}")
+    print(f"Dropdown selected: {selected_value}")  # Debugging log
 
-    # Find JSON file from category name
-    file_name = None
-    for key in json_files:
-        if category_name.lower() == key.replace(".json", "").lower():
-            file_name = key
-            break
+    # Detect the JSON file associated with this dropdown
+    file_name = next((key for key in json_files if key.replace(".json", "").lower() in interaction.message.content.lower()), None)
 
     if not file_name:
         await interaction.response.send_message("Error: Category not found.", ephemeral=True)
         return
 
-    data = load_json(file_name)
+    category_data = find_category(selected_value, file_name)
 
-    # Find matching item
-    item_data = find_category(selected_value, data)
-    if not item_data:
-        await interaction.response.send_message(f"Error: '{selected_value}' not found in {category_name}.", ephemeral=True)
+    if not category_data:
+        await interaction.response.send_message("Error: Item not found.", ephemeral=True)
         return
 
+    print(f"Category detected: {category_data}")  # Debugging log
+
+    # Embed setup
     embed = discord.Embed(
-        title=f"{item_data.get('emoji', '')} {item_data['name']}",
-        description=item_data.get("caption", "No description provided"),
+        title=f"{category_data.get('emoji', '')} {category_data['name']}",
+        description=category_data.get("caption", "No description provided"),
         color=discord.Color.blue()
     )
 
-    # Handling each category separately
+    # Add specific fields based on category
     if file_name == "skills.json":
         methods = "\n".join([
             f"**Level {method['req']}+**: {method['title']} - {format_price(method.get('gpxp', 0))} gp/xp"
-            for method in sorted(item_data.get("methods", []), key=lambda x: x["req"])
+            for method in sorted(category_data.get("methods", []), key=lambda x: x["req"])
         ])
         embed.add_field(name="Training Methods", value=methods if methods else "No methods available.", inline=False)
 
     elif file_name == "diaries.json":
         diary_items = "\n".join([
             f"**{sub_item.get('name', 'Unknown')}** - {format_price(sub_item.get('price', 0))} 🪙"
-            for sub_item in item_data.get("items", [])
+            for sub_item in category_data.get("items", [])
         ])
         embed.add_field(name="Diaries & Prices", value=diary_items if diary_items else "No items available.", inline=False)
 
     elif file_name == "minigames.json":
         minigame_items = "\n".join([
             f"**{sub_item['name']}** - {format_price(sub_item.get('price', 0))} 🎲"
-            for sub_item in item_data.get("items", [])
+            for sub_item in category_data.get("items", [])
         ])
         embed.add_field(name="Minigame Rewards", value=minigame_items if minigame_items else "No rewards available.", inline=False)
 
-    embed.set_thumbnail(url=item_data.get("image", THUMBNAIL_URL))
+    embed.set_thumbnail(url=category_data.get("image", THUMBNAIL_URL))
     embed.set_author(name="Heaven Services", icon_url=AUTHOR_ICON_URL)
     embed.set_footer(text="Heaven Services", icon_url=AUTHOR_ICON_URL)
 
@@ -156,15 +151,13 @@ async def dropdown(ctx):
         if not data:
             continue  # Skip empty files
 
-        options = []
-        for item in data:
-            item_name = item.get("name")
-            if item_name:
-                options.append(discord.SelectOption(
-                    label=item_name,
-                    emoji=item.get("emoji", emoji),
-                    value=item_name
-                ))
+        options = [
+            discord.SelectOption(
+                label=item["name"],
+                emoji=item.get("emoji", emoji),
+                value=item["name"]
+            ) for item in data if "name" in item
+        ]
 
         # Dropdown Selection
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
@@ -186,7 +179,6 @@ async def dropdown(ctx):
     button_view.add_item(voucher_button)
 
     await ctx.send(view=button_view)
-
     
 
 # Load minigame data
