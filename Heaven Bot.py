@@ -134,9 +134,6 @@ async def select_callback(interaction: discord.Interaction):
 
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
-
-
-# Dropdown Command
 @bot.command()
 async def dropdown(ctx):
     banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif"
@@ -149,6 +146,7 @@ async def dropdown(ctx):
     await ctx.send(embed=banner_embed)
 
     views = []  # Store dropdown views
+
     for file_name, emoji in json_files.items():
         data = load_json(file_name)
         category_name = file_name.replace(".json", "").title()
@@ -168,8 +166,12 @@ async def dropdown(ctx):
         select = discord.ui.Select(placeholder=f"Select {category_name}", options=options)
         select.callback = select_callback  # Attach the callback
 
-        view = discord.ui.View()
+        view = discord.ui.View(timeout=None)  # Make View persistent
         view.add_item(select)
+
+        if not hasattr(bot, "persistent_views_added"):
+            bot.add_view(view)  # Add view so it persists across reboots
+
         views.append(view)
 
     # Send Dropdowns
@@ -177,13 +179,19 @@ async def dropdown(ctx):
         await ctx.send(view=view)
 
     # Ticket & Voucher Buttons
-    button_view = discord.ui.View()
+    button_view = discord.ui.View(timeout=None)  # Persistent view
     ticket_button = discord.ui.Button(label="Open a ticket - Click Here", url=ticket_link, style=discord.ButtonStyle.url)
     voucher_button = discord.ui.Button(label="Our Sythe Vouchers", url=voucher_link, style=discord.ButtonStyle.url)
     button_view.add_item(ticket_button)
     button_view.add_item(voucher_button)
 
+    if not hasattr(bot, "persistent_views_added"):
+        bot.add_view(button_view)  # Ensure the button view persists
+
     await ctx.send(view=button_view)
+
+    bot.persistent_views_added = True  # Mark persistent views added
+
     
 
 # Load minigame data
