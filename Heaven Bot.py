@@ -39,6 +39,18 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
 
 if firebase_credentials:
+    print("✅ Firebase credentials loaded!")
+else:
+    print("❌ Firebase credentials not found!")
+
+
+try:
+    cred_dict = json.loads(firebase_credentials)  # Attempt to parse JSON
+    print("✅ Firebase credentials parsed successfully!")
+except json.JSONDecodeError as e:
+    print(f"❌ JSON decoding error: {e}")
+    
+if firebase_credentials:
     cred_dict = json.loads(firebase_credentials)  # Convert JSON string to dictionary
     cred = credentials.Certificate(cred_dict)
     firebase_admin.initialize_app(cred)
