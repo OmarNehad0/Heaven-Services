@@ -35,10 +35,16 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-cred = credentials.Certificate("heaven-bot-705df-firebase-adminsdk-fbsvc-0a48993f37.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+# Load Firebase credentials from environment variable
+firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
 
+if firebase_credentials:
+    cred_dict = json.loads(firebase_credentials)  # Convert JSON string to dictionary
+    cred = credentials.Certificate(cred_dict)
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+else:
+    print("❌ Firebase credentials not found. Make sure they are set in Railway environment variables.")
 
 # Syncing command tree for slash commands
 @bot.event
