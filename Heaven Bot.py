@@ -58,6 +58,14 @@ if firebase_credentials:
 else:
     print("❌ Firebase credentials not found. Make sure they are set in Railway environment variables.")
 
+try:
+    doc_ref = db.collection("test").document("test_doc")
+    doc_ref.set({"test": "success"})
+    print("✅ Firestore is working!")
+except Exception as e:
+    print(f"❌ Firestore error: {e}")
+
+
 # Syncing command tree for slash commands
 @bot.event
 async def on_ready():
