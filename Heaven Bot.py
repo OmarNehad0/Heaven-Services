@@ -164,7 +164,7 @@ async def dropdown(ctx):
 
         # Dropdown Selection
         select = discord.ui.Select(
-          placeholder=f"Select {category_name}",
+          placeholder=f"📘 | {category_name}",
           options=options,
           custom_id=f"{file_name}_select"  # Set custom_id for the select menu itself
         )
@@ -942,7 +942,7 @@ class BossSelectView(View):
 @bot.command()
 async def start(ctx):
     # Direct URL to the banner image
-    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif?ex=679b35d7&is=6799e457&hm=7ea4bb7224779a137358cd80a86d9f922d5d8cce3c2f9698f1342c27b48d3255&="
+    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif?ex=679c8757&is=679b35d7&hm=ca456672c6c7daadd273a7144b9533aece23d25450ed21f8fa579e7c0d2f6f57&=&width=400&height=225"
     import io
 
     # Download and send the banner image
