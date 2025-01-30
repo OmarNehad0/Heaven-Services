@@ -35,7 +35,7 @@ intents.members = True
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-cred = credentials.Certificate("heaven-bot-705df-firebase-adminsdk-fbsvc-073b909b39.json")
+cred = credentials.Certificate("heaven-bot-705df-firebase-adminsdk-fbsvc-0a48993f37.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
