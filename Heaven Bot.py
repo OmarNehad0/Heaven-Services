@@ -23,6 +23,8 @@ import gspread
 from google.auth.transport.requests import Request
 from google.auth import exceptions
 from google.auth.exceptions import DefaultCredentialsError
+import firebase_admin
+from firebase_admin import credentials, firestore
 # Define intents
 intents = discord.Intents.default()
 intents.message_content = True
@@ -32,6 +34,146 @@ intents.members = True
 
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+cred = credentials.Certificate("heaven-bot-705df-firebase-adminsdk-fbsvc-073b909b39.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+
+# Syncing command tree for slash commands
+@bot.event
+async def on_ready():
+    try:
+        synced = await bot.tree.sync()
+        print(f"Synced {len(synced)} commands.")
+    except Exception as e:
+        print(f"Error syncing commands: {e}")
+
+# Function to get wallet data
+def get_wallet(user_id):
+    doc_ref = db.collection("wallets").document(str(user_id))
+    doc = doc_ref.get()
+    return doc.to_dict() if doc.exists else {"deposit": 0, "wallet": 0, "spent": 0}
+
+# Function to update wallet
+def update_wallet(user_id, field, value):
+    doc_ref = db.collection("wallets").document(str(user_id))
+    doc_ref.set({field: firestore.Increment(value)}, merge=True)
+
+# 📌 /wallet {user}
+@bot.tree.command(name="wallet", description="Check a user's wallet balance.")
+@app_commands.describe(user="The user whose wallet you want to check.")
+async def wallet(interaction: discord.Interaction, user: discord.Member):
+    user_wallet = get_wallet(user.id)
+
+    embed = discord.Embed(title=f"{user.name}'s Wallet", color=0x00ff00)
+    embed.set_thumbnail(url=user.avatar.url)
+    embed.add_field(name="Deposit", value=f"{user_wallet['deposit']}M", inline=True)
+    embed.add_field(name="Wallet", value=f"{user_wallet['wallet']}M", inline=True)
+    embed.add_field(name="Spent", value=f"{user_wallet['spent']}M", inline=True)
+
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+# 📌 /wallet add-remove {user} {add/remove} {value}
+@bot.tree.command(name="wallet_add_remove", description="Modify a user's wallet balance.")
+@app_commands.describe(user="User to modify", action="Add or remove", value="Value in M")
+@app_commands.choices(action=[app_commands.Choice(name="Add", value="add"), app_commands.Choice(name="Remove", value="remove")])
+async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
+    update_wallet(user.id, "wallet", value if action == "add" else -value)
+    await interaction.response.send_message(f"Updated {user.name}'s wallet by {value}M.", ephemeral=True)
+
+# 📌 /deposit {user} {set/remove} {value}
+@bot.tree.command(name="deposit", description="Set or remove deposit balance.")
+@app_commands.describe(user="User to modify", action="Set or remove deposit", value="Value in M")
+@app_commands.choices(action=[app_commands.Choice(name="Set", value="set"), app_commands.Choice(name="Remove", value="remove")])
+async def deposit(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
+    update_wallet(user.id, "deposit", value if action == "set" else -value)
+    await interaction.response.send_message(f"{action.capitalize()} deposit for {user.name} by {value}M.", ephemeral=True)
+
+# 📌 /tip {user} {value}
+@bot.tree.command(name="tip", description="Tip M to another user.")
+@app_commands.describe(user="User to tip", value="Value in M")
+async def tip(interaction: discord.Interaction, user: discord.Member, value: int):
+    sender_id = interaction.user.id
+    sender_wallet = get_wallet(sender_id)
+
+    if sender_wallet["wallet"] < value:
+        await interaction.response.send_message("You don't have enough M to tip!", ephemeral=True)
+        return
+
+    update_wallet(sender_id, "wallet", -value)
+    update_wallet(user.id, "wallet", value)
+    await interaction.response.send_message(f"{interaction.user.name} tipped {user.name} {value}M!", ephemeral=True)
+
+# 📌 /post {customer} {value} {required role} {holder}
+@bot.tree.command(name="post", description="Post a new order.")
+@app_commands.describe(customer="Customer placing the order", value="Order value in M", required_role="Required role", holder="Order holder")
+async def post(interaction: discord.Interaction, customer: discord.Member, value: int, required_role: discord.Role, holder: discord.Member):
+    channel_id = 1332354894597853346  # Order channel ID
+    order_id = str(interaction.id)
+
+    embed = discord.Embed(title="New Order", color=0xffa500)
+    embed.add_field(name="Customer", value=customer.mention, inline=True)
+    embed.add_field(name="Value", value=f"{value}M", inline=True)
+    embed.add_field(name="Required Role", value=required_role.mention, inline=True)
+    embed.add_field(name="Holder", value=holder.mention, inline=True)
+    embed.set_footer(text=f"Order ID: {order_id}")
+
+    channel = bot.get_channel(channel_id)
+    if channel:
+        message = await channel.send(embed=embed)
+        await message.add_reaction("✅")  # Claim button
+
+        db.collection("orders").document(order_id).set({
+            "customer": customer.id,
+            "worker": None,
+            "value": value,
+            "required_role": required_role.id,
+            "holder": holder.id,
+            "message_id": message.id,
+            "channel_id": channel_id
+        })
+        await interaction.response.send_message(f"Order posted in <#{channel_id}>!", ephemeral=True)
+    else:
+        await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
+
+# 📌 /complete {order id}
+@bot.tree.command(name="complete", description="Complete an order and update balances.")
+@app_commands.describe(order_id="Order ID to complete")
+async def complete(interaction: discord.Interaction, order_id: str):
+    doc_ref = db.collection("orders").document(order_id)
+    order = doc_ref.get()
+
+    if not order.exists:
+        await interaction.response.send_message("Order not found!", ephemeral=True)
+        return
+
+    order_data = order.to_dict()
+    customer_id = order_data["customer"]
+    worker_id = interaction.user.id
+    value = order_data["value"]
+
+    update_wallet(worker_id, "wallet", value)
+    update_wallet(customer_id, "spent", value)
+
+    doc_ref.delete()  # Remove order after completion
+    await interaction.response.send_message(f"Order {order_id} completed! {value}M added to {interaction.user.name}.", ephemeral=True)
+
+# 📌 /order deletion {order id}
+@bot.tree.command(name="order_deletion", description="Delete an order.")
+@app_commands.describe(order_id="Order ID to delete")
+async def order_deletion(interaction: discord.Interaction, order_id: str):
+    doc_ref = db.collection("orders").document(order_id)
+    order = doc_ref.get()
+
+    if not order.exists:
+        await interaction.response.send_message("Order not found!", ephemeral=True)
+        return
+
+    doc_ref.delete()
+    await interaction.response.send_message(f"Order {order_id} deleted.", ephemeral=True)
+
+
 
 # Image URLs
 THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
