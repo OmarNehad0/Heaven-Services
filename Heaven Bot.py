@@ -87,13 +87,6 @@ async def on_ready():
         await asyncio.sleep(1800)  # Check every 30 minutes
 
 
-
-cred = credentials.Certificate("firebase_credentials")
-firebase_admin.initialize_app(cred)
-
-print("Firebase authentication successful!")
-
-
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
 
@@ -129,16 +122,6 @@ try:
 except Exception as e:
     print(f"❌ Firestore error: {e}")
 
-firebase_env = os.getenv("FIREBASE_CREDENTIALS")
-if firebase_env:
-    try:
-        json.loads(firebase_env)
-        print("✅ Environment variable is valid JSON")
-    except json.JSONDecodeError:
-        print("❌ Environment variable contains invalid JSON")
-else:
-    print("❌ FIREBASE_CREDENTIALS not found")
-
 # Syncing command tree for slash commands
 @bot.event
 async def on_ready():
@@ -160,35 +143,60 @@ def update_wallet(user_id, field, value):
     doc_ref.set({field: firestore.Increment(value)}, merge=True)
 
 # 📌 /wallet {user}
-@bot.tree.command(name="wallet", description="Check a user's wallet balance.")
-@app_commands.describe(user="The user whose wallet you want to check.")
+# Wallet command
+@app_commands.command(name="wallet", description="Check a user's wallet balance")
 async def wallet(interaction: discord.Interaction, user: discord.Member):
-    user_wallet = get_wallet(user.id)
+    doc_ref = db.collection("wallets").document(str(user.id))
+    doc = doc_ref.get()
+    wallet_data = doc.to_dict() if doc.exists else {"wallet": 0, "deposit": 0, "spent": 0}
 
-    embed = discord.Embed(title=f"{user.name}'s Wallet", color=0x00ff00)
-    embed.set_thumbnail(url=user.avatar.url)
-    embed.add_field(name="Deposit", value=f"{user_wallet['deposit']}M", inline=True)
-    embed.add_field(name="Wallet", value=f"{user_wallet['wallet']}M", inline=True)
-    embed.add_field(name="Spent", value=f"{user_wallet['spent']}M", inline=True)
+    embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
+    embed.set_thumbnail(url=user.display_avatar.url)
+    embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
+    embed.add_field(name="📥 Deposit", value=f"{wallet_data['deposit']}M", inline=False)
+    embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
+    
+    await interaction.response.send_message(embed=embed)
 
-    await interaction.response.send_message(embed=embed, ephemeral=True)
-
-# 📌 /wallet add-remove {user} {add/remove} {value}
-@bot.tree.command(name="wallet_add_remove", description="Modify a user's wallet balance.")
-@app_commands.describe(user="User to modify", action="Add or remove", value="Value in M")
-@app_commands.choices(action=[app_commands.Choice(name="Add", value="add"), app_commands.Choice(name="Remove", value="remove")])
+# Wallet Add/Remove command
+@app_commands.command(name="wallet_add_remove", description="Add or remove value from a user's wallet")
+@app_commands.choices(action=[
+    discord.app_commands.Choice(name="Add", value="add"),
+    discord.app_commands.Choice(name="Remove", value="remove")
+])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    update_wallet(user.id, "wallet", value if action == "add" else -value)
-    await interaction.response.send_message(f"Updated {user.name}'s wallet by {value}M.", ephemeral=True)
+    doc_ref = db.collection("wallets").document(str(user.id))
+    doc = doc_ref.get()
+    wallet_data = doc.to_dict() if doc.exists else {"wallet": 0, "deposit": 0, "spent": 0}
 
-# 📌 /deposit {user} {set/remove} {value}
-@bot.tree.command(name="deposit", description="Set or remove deposit balance.")
-@app_commands.describe(user="User to modify", action="Set or remove deposit", value="Value in M")
-@app_commands.choices(action=[app_commands.Choice(name="Set", value="set"), app_commands.Choice(name="Remove", value="remove")])
+    if action == "add":
+        wallet_data["wallet"] += value
+    elif action == "remove":
+        wallet_data["wallet"] -= value
+        if wallet_data["wallet"] < 0:
+            wallet_data["wallet"] = 0
+    
+    doc_ref.set(wallet_data)
+    await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.")
+
+# Deposit Set/Remove command
+@app_commands.command(name="deposit", description="Set or remove a user's deposit value")
+@app_commands.choices(action=[
+    discord.app_commands.Choice(name="Set", value="set"),
+    discord.app_commands.Choice(name="Remove", value="remove")
+])
 async def deposit(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    update_wallet(user.id, "deposit", value if action == "set" else -value)
-    await interaction.response.send_message(f"{action.capitalize()} deposit for {user.name} by {value}M.", ephemeral=True)
+    doc_ref = db.collection("wallets").document(str(user.id))
+    doc = doc_ref.get()
+    wallet_data = doc.to_dict() if doc.exists else {"wallet": 0, "deposit": 0, "spent": 0}
 
+    if action == "set":
+        wallet_data["deposit"] = value
+    elif action == "remove":
+        wallet_data["deposit"] = 0
+    
+    doc_ref.set(wallet_data)
+    await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} to {value}M.")
 # 📌 /tip {user} {value}
 @bot.tree.command(name="tip", description="Tip M to another user.")
 @app_commands.describe(user="User to tip", value="Value in M")
