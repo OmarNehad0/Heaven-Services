@@ -87,6 +87,13 @@ async def on_ready():
         await asyncio.sleep(1800)  # Check every 30 minutes
 
 
+
+cred = credentials.Certificate("FIREBASE_CREDENTIALS")
+firebase_admin.initialize_app(cred)
+
+print("Firebase authentication successful!")
+
+
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
 
