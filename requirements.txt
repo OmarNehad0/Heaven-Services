@@ -7,3 +7,5 @@ google-api-python-client
 gspread
 firebase-admin
 aiohttp
+requests
+beautifulsoup4
