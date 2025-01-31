@@ -87,7 +87,6 @@ async def on_ready():
         await asyncio.sleep(1800)  # Check every 30 minutes
 
 
-
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
 
@@ -96,7 +95,12 @@ if firebase_credentials:
 else:
     print("❌ Firebase credentials not found!")
 
-
+try:
+    json.loads(firebase_credentials)  # If this fails, your JSON is invalid
+    print("✅ Firebase credentials are valid JSON")
+except json.JSONDecodeError:
+    print("❌ Invalid JSON format in credentials")
+    
 try:
     cred_dict = json.loads(firebase_credentials)  # Attempt to parse JSON
     print("✅ Firebase credentials parsed successfully!")
@@ -118,6 +122,15 @@ try:
 except Exception as e:
     print(f"❌ Firestore error: {e}")
 
+firebase_env = os.getenv("FIREBASE_CREDENTIALS")
+if firebase_env:
+    try:
+        json.loads(firebase_env)
+        print("✅ Environment variable is valid JSON")
+    except json.JSONDecodeError:
+        print("❌ Environment variable contains invalid JSON")
+else:
+    print("❌ FIREBASE_CREDENTIALS not found")
 
 # Syncing command tree for slash commands
 @bot.event
