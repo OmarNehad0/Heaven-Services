@@ -88,7 +88,7 @@ async def on_ready():
 
 
 
-cred = credentials.Certificate("FIREBASE_CREDENTIALS")
+cred = credentials.Certificate("firebase_credentials")
 firebase_admin.initialize_app(cred)
 
 print("Firebase authentication successful!")
