@@ -25,6 +25,8 @@ from google.auth import exceptions
 from google.auth.exceptions import DefaultCredentialsError
 import firebase_admin
 from firebase_admin import credentials, firestore
+import requests
+from bs4 import BeautifulSoup
 # Define intents
 intents = discord.Intents.default()
 intents.message_content = True
@@ -34,6 +36,57 @@ intents.members = True
 
 # Create bot instance with intents
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+
+CHANNEL_ID = 1332354894597853346  # Replace with your channel ID
+BANNER_URL = 'https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif'
+
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+
+last_buy_rate = None
+last_sell_rate = None
+
+async def fetch_gp_rates():
+    url = 'https://chicksgold.com/currency/buy-osrs-gold'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Locate the buy rate on the page
+    # This selector may need to be updated if the website's structure changes
+    rate_element = soup.select_one('.css-selector-for-rate')  # Replace with the actual CSS selector
+    if rate_element:
+        buy_rate = float(rate_element.text.strip().replace('$', '').replace('/M', ''))
+        sell_rate = buy_rate - 0.04
+        return {'buy': buy_rate, 'sell': sell_rate}
+    else:
+        return None
+
+async def post_gp_rate(channel):
+    global last_buy_rate, last_sell_rate
+    rates = await fetch_gp_rates()
+
+    if rates and (rates['buy'] != last_buy_rate or rates['sell'] != last_sell_rate):
+        embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
+        embed.add_field(name="Buy Rate", value=f"${rates['buy']}/M", inline=True)
+        embed.add_field(name="Sell Rate", value=f"${rates['sell']}/M", inline=True)
+        embed.set_image(url=BANNER_URL)
+
+        await channel.send(embed=embed)
+
+        last_buy_rate = rates['buy']
+        last_sell_rate = rates['sell']
+
+@client.event
+async def on_ready():
+    print(f"Logged in as {client.user}")
+    channel = client.get_channel(CHANNEL_ID)
+    
+    while True:
+        await post_gp_rate(channel)
+        await asyncio.sleep(1800)  # Check every 30 minutes
+
+
 
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
