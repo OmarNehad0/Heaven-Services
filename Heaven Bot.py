@@ -126,19 +126,20 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
     user_id = str(user.id)
-    wallet_data = get_wallet(user_id)  # Fetch latest wallet data
+    
+    # Fetch the latest wallet data from MongoDB
+    wallet_data = get_wallet(user_id)
+    if not wallet_data:
+        wallet_data = {"wallet": 0, "deposit": 0, "spent": 0}  # Default values if user isn't found
 
-    # Ensure fields exist
+    # Extract current wallet balance
     wallet_balance = wallet_data.get("wallet", 0)
-    deposit_balance = wallet_data.get("deposit", 0)
-    spent_balance = wallet_data.get("spent", 0)
 
-    # Handle adding funds
+    # Handle "Add" action
     if action == "add":
         new_wallet_balance = wallet_balance + value
-        update_wallet(user_id, "wallet", new_wallet_balance)
 
-    # Handle removing funds
+    # Handle "Remove" action
     elif action == "remove":
         if wallet_balance <= 0:
             await interaction.response.send_message(f"❌ {user.name}'s wallet is already empty!", ephemeral=True)
@@ -147,13 +148,15 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
             await interaction.response.send_message(f"❌ {user.name} does not have enough M to remove!", ephemeral=True)
             return
         new_wallet_balance = wallet_balance - value
-        update_wallet(user_id, "wallet", new_wallet_balance)
 
-    # **Re-fetch wallet after updating to ensure accuracy**
+    # Update MongoDB with the new balance
+    update_wallet(user_id, "wallet", new_wallet_balance)
+
+    # **Re-fetch wallet after update to confirm the changes applied correctly**
     updated_wallet = get_wallet(user_id)
 
-    # **Check if the update actually worked**
-    if updated_wallet.get("wallet", 0) == wallet_balance:
+    # **Validation: Make sure the update actually worked**
+    if updated_wallet.get("wallet", 0) != new_wallet_balance:
         await interaction.response.send_message(f"⚠ Update failed. Please try again.", ephemeral=True)
         return
 
@@ -165,7 +168,6 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     embed.add_field(name="💸 Spent", value=f"{updated_wallet.get('spent', 0)}M", inline=False)
 
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.", embed=embed)
-
 
 
 # 📌 /deposit {user} {set or remove} {value}
