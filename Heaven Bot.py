@@ -91,7 +91,7 @@ if rates:
 async def send_or_update_rate(channel):
     global last_rate_message
 
-    gold_rate = await fetch_gold_rate()
+    gold_rate = fetch_and_adjust_gold_rates()
 
     if gold_rate is None:
         print("❌ Failed to fetch gold rate.")
@@ -127,7 +127,20 @@ async def rate(ctx):
     """Command to manually fetch and send the OSRS gold rate."""
     global last_rate_message
     last_rate_message = await ctx.send("🔄 Fetching latest rates...")
-    await send_or_update_rate(ctx.channel)
+    
+    rates = fetch_and_adjust_gold_rates()
+    
+    if rates is None:
+        await ctx.send("❌ Failed to fetch OSRS gold rates.")
+        return
+
+    embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
+    embed.add_field(name="Buy Rate", value=f"${rates['buy_rate']:.2f}/M", inline=True)
+    embed.add_field(name="Sell Rate", value=f"${rates['sell_rate']:.2f}/M", inline=True)
+    embed.set_image(url=BANNER_URL)
+
+    last_rate_message = await ctx.send(embed=embed)
+
 
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
