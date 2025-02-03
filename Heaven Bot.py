@@ -62,20 +62,22 @@ async def on_ready():
         print(f"Error syncing commands: {e}")
 
 def get_wallet(user_id):
-    # Fetch the user's wallet data
+    # Attempt to fetch the user's wallet data from MongoDB
     wallet_data = wallets_collection.find_one({"user_id": user_id})
 
+    # If the wallet doesn't exist in the database, create a new one with default values
     if not wallet_data:
-        # If no wallet exists, return a default structure with initialized fields
+        print(f"Wallet not found for {user_id}, creating new wallet...")
         wallet_data = {
             "user_id": user_id,
-            "wallet": 0,
-            "spent": 0,
-            "deposit": 0  # Ensure deposit is initialized
+            "wallet": 0,    # Initialize with 0M
+            "spent": 0,     # Initialize with 0M
+            "deposit": 0    # Initialize with 0M
         }
-        # Insert a new wallet if it doesn't exist
+        # Insert the new wallet into the database
         wallets_collection.insert_one(wallet_data)
-    
+        print(f"New wallet created for {user_id}: {wallet_data}")
+
     return wallet_data
 
 
@@ -98,18 +100,20 @@ def update_wallet(user_id, field, value):
 
 
 @bot.tree.command(name="wallet", description="Check a user's wallet balance")
-async def wallet(interaction: discord.Interaction, user: discord.Member):
-    wallet_data = get_wallet(user.id)
+async def wallet(interaction, user_id):
+    # Get wallet data using the updated function
+    wallet_data = get_wallet(user_id)
 
-    # Ensure 'deposit' field exists and avoid KeyError
+    # Ensure 'deposit' field exists and avoid KeyError by using .get()
     deposit_value = wallet_data.get('deposit', 0)  # Default to 0 if the field is missing
-    
-    embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
-    embed.set_thumbnail(url=user.display_avatar.url)
+
+    # Create the embed for the wallet display
+    embed = discord.Embed(title=f"{user_id}'s Wallet")
+    embed.add_field(name="📥 Deposit", value=f"{deposit_value}M", inline=False)
     embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
-    embed.add_field(name="📥 Deposit", value=f"{wallet_data['deposit']}M", inline=False)
     embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
-    
+
+    # Send the embed
     await interaction.response.send_message(embed=embed)
 
 @bot.tree.command(name="wallet_add_remove", description="Add or remove value from a user's wallet")
