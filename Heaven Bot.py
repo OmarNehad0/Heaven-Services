@@ -27,7 +27,6 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import requests
 from bs4 import BeautifulSoup
-
 # Define intents
 intents = discord.Intents.default()
 intents.message_content = True
@@ -58,12 +57,16 @@ async def fetch_and_adjust_gold_rates():
     # Run Selenium in a separate thread
     def scrape():
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")  # Run without UI
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Fixes memory issues in some environments
 
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-        driver.get(url)
+        # Get the Chrome binary and driver paths from the environment variables
+        chrome_options.binary_location = os.environ.get("CHROME_BIN", "/usr/bin/chromium")
+        chrome_driver_path = os.environ.get("CHROME_DRIVER", "/usr/lib/chromium-driver/chromedriver")
+
+        driver = webdriver.Chrome(service=Service(chrome_driver_path), options=chrome_options)
 
         try:
             price_elements = WebDriverWait(driver, 10).until(
