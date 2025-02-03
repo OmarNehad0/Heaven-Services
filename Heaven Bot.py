@@ -38,11 +38,8 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
-CHANNEL_ID = 1332354894597853346  # Replace with your channel ID
+CHANNEL_ID = 1332354894597853346  # Replace with your actual channel ID
 BANNER_URL = 'https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif'
-
-intents = discord.Intents.default()
-client = discord.Client(intents=intents)
 
 last_buy_rate = None
 last_sell_rate = None
@@ -53,17 +50,22 @@ async def fetch_gp_rates():
     soup = BeautifulSoup(response.text, 'html.parser')
     
     # Locate the buy rate on the page
-    # This selector may need to be updated if the website's structure changes
     rate_element = soup.select_one('.css-selector-for-rate')  # Replace with the actual CSS selector
     if rate_element:
         buy_rate = float(rate_element.text.strip().replace('$', '').replace('/M', ''))
         sell_rate = buy_rate - 0.04
         return {'buy': buy_rate, 'sell': sell_rate}
-    else:
-        return None
+    return None
 
-async def post_gp_rate(channel):
+@tasks.loop(minutes=30)
+async def update_gp_rates():
     global last_buy_rate, last_sell_rate
+
+    channel = bot.get_channel(CHANNEL_ID)
+    if channel is None:
+        print(f"❌ Error: Could not find channel {CHANNEL_ID}")
+        return
+    
     rates = await fetch_gp_rates()
 
     if rates and (rates['buy'] != last_buy_rate or rates['sell'] != last_sell_rate):
@@ -77,15 +79,10 @@ async def post_gp_rate(channel):
         last_buy_rate = rates['buy']
         last_sell_rate = rates['sell']
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f"Logged in as {client.user}")
-    channel = client.get_channel(CHANNEL_ID)
-    
-    while True:
-        await post_gp_rate(channel)
-        await asyncio.sleep(1800)  # Check every 30 minutes
-
+    print(f"✅ Logged in as {bot.user}")
+    update_gp_rates.start()  # Start the loop when bot is ready
 
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
