@@ -72,6 +72,13 @@ def get_wallet(user_id):
 
 # Function to update wallet in MongoDB
 def update_wallet(user_id, field, value):
+    # Make sure the wallet document exists before updating
+    wallet_data = get_wallet(user_id)
+    
+    # If the wallet does not contain the required field, we initialize it with the correct value
+    if field not in wallet_data:
+        wallet_data[field] = 0  # Initialize the field if missing
+    
     # Update wallet data by incrementing the field value
     wallets_collection.update_one(
         {"user_id": user_id},
