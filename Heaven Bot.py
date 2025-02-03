@@ -125,55 +125,39 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    user_id = str(user.id)
-    
-    # Fetch the latest wallet data from MongoDB
-    wallet_data = get_wallet(user_id)
-    if not wallet_data:
-        wallet_data = {"wallet": 0, "deposit": 0, "spent": 0}  # Default if user isn't found
+    user_id = str(user.id)  # Ensure MongoDB lookup is consistent
+    wallet_data = get_wallet(user_id)  
 
-    # Extract current wallet balance
-    wallet_balance = wallet_data.get("wallet", 0)
+    # Ensure all required fields exist and are set to 0 if missing
+    wallet_data["wallet"] = wallet_data.get("wallet", 0)
+    wallet_data["deposit"] = wallet_data.get("deposit", 0)
+    wallet_data["spent"] = wallet_data.get("spent", 0)
 
-    # Handle "Add" action
-    if action == "add":
-        new_wallet_balance = wallet_balance + value
-
-    # Handle "Remove" action
-    elif action == "remove":
-        if wallet_balance <= 0:
-            await interaction.response.send_message(f"❌ {user.name}'s wallet is already empty!", ephemeral=True)
+    # Check for negative balance when removing
+    if action == "remove":
+        if wallet_data["wallet"] <= 0:
+            await interaction.response.send_message("⚠ The wallet balance is already at 0. Cannot remove further.", ephemeral=True)
             return
-        if wallet_balance < value:
-            await interaction.response.send_message(f"❌ {user.name} does not have enough M to remove!", ephemeral=True)
-            return
-        new_wallet_balance = wallet_balance - value
+        # Prevent going below 0 by subtracting only what is available
+        wallet_data["wallet"] = max(0, wallet_data["wallet"] - value)
+        update_wallet(user_id, "wallet", wallet_data["wallet"])
 
-    # Debugging logs (remove later if needed)
-    print(f"USER: {user.name} ({user_id})")
-    print(f"BEFORE UPDATE - Wallet: {wallet_balance}M")
-    print(f"NEW VALUE - Wallet: {new_wallet_balance}M")
+    elif action == "add":
+        # Simply add the value
+        wallet_data["wallet"] += value
+        update_wallet(user_id, "wallet", wallet_data["wallet"])
 
-    # Ensure the new value is forced in MongoDB
-    update_wallet(user_id, "wallet", int(new_wallet_balance))  # Explicitly set the type
-
-    # **Re-fetch wallet after update to confirm the changes applied correctly**
-    updated_wallet = get_wallet(user_id)
-
-    # **Validation: Make sure the update actually worked**
-    if updated_wallet.get("wallet", 0) != new_wallet_balance:
-        print(f"ERROR: MISMATCH! Expected {new_wallet_balance}M but got {updated_wallet.get('wallet', 0)}M")
-        await interaction.response.send_message(f"⚠ Update failed. Please try again.", ephemeral=True)
-        return
-
-    # **Create updated embed**
+    # Create updated embed to reflect changes
     embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
     embed.set_thumbnail(url=user.display_avatar.url)
-    embed.add_field(name="💰 Wallet", value=f"{updated_wallet.get('wallet', 0)}M", inline=False)
-    embed.add_field(name="📥 Deposit", value=f"{updated_wallet.get('deposit', 0)}M", inline=False)
-    embed.add_field(name="💸 Spent", value=f"{updated_wallet.get('spent', 0)}M", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
+    embed.add_field(name="📥 Deposit", value=f"{wallet_data['deposit']}M", inline=False)
+    embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
 
-    await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.", embed=embed)
+    # Respond with the appropriate success message
+    action_msg = f"{action.capitalize()}ed {value}M to {user.name}'s wallet."
+    await interaction.response.send_message(f"✅ {action_msg}", embed=embed)
+
 
 
 # 📌 /deposit {user} {set or remove} {value}
