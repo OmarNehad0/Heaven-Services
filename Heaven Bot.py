@@ -44,61 +44,70 @@ BANNER_URL = 'https://media.discordapp.net/attachments/1332341372333723732/13330
 
 last_rate_message = None  # Store the last sent rate message
 
-def fetch_and_adjust_gold_rates():
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
+async def fetch_and_adjust_gold_rates():
     url = 'https://www.eldorado.gg/osrs-gold/g/10-0-0'
-    response = requests.get(url)
-    if response.status_code != 200:
-        print(f"Failed to fetch data. Status code: {response.status_code}")
-        return None
 
-    soup = BeautifulSoup(response.content, 'html.parser')
-    # Find all price elements on the page
-    price_elements = soup.find_all('div', class_='css-1b4isa7')  # Update this class based on actual HTML structure
+    # Run Selenium in a separate thread
+    def scrape():
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
 
-    if not price_elements:
-        print("No price elements found.")
-        return None
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        driver.get(url)
 
-    # Extract prices and convert to float
-    prices = []
-    for elem in price_elements:
-        price_text = elem.get_text(strip=True).replace('$', '').replace('/M', '')
         try:
-            price = float(price_text)
-            prices.append(price)
-        except ValueError:
-            continue
+            price_elements = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.CLASS_NAME, 'css-1b4isa7'))  # Update class if needed
+            )
 
-    if not prices:
-        print("No valid prices extracted.")
-        return None
+            prices = []
+            for elem in price_elements:
+                price_text = elem.text.strip().replace('$', '').replace('/M', '')
+                try:
+                    price = float(price_text)
+                    prices.append(price)
+                except ValueError:
+                    continue
 
-    # Calculate the average price from the top offers
-    average_price = sum(prices) / len(prices)
+            if not prices:
+                print("❌ No valid prices extracted.")
+                return None
 
-    # Adjust the rates
-    buy_rate = average_price + 0.01
-    sell_rate = average_price - 0.03
+            average_price = sum(prices) / len(prices)
 
-    return {'buy_rate': buy_rate, 'sell_rate': sell_rate}
+            # Adjust rates
+            return {'buy_rate': average_price + 0.01, 'sell_rate': average_price - 0.03}
 
-# Example usage
-rates = fetch_and_adjust_gold_rates()
-if rates:
-    print(f"Buy Rate: ${rates['buy_rate']:.2f}/M")
-    print(f"Sell Rate: ${rates['sell_rate']:.2f}/M")
+        except Exception as e:
+            print(f"❌ Error fetching rates: {e}")
+            return None
+
+        finally:
+            driver.quit()
+
+    return await asyncio.to_thread(scrape)  # Run in separate thread
 
 async def send_or_update_rate(channel):
     global last_rate_message
 
-    gold_rate = fetch_and_adjust_gold_rates()
-
-    if gold_rate is None:
+    rates = await fetch_and_adjust_gold_rates()
+    if rates is None:
         print("❌ Failed to fetch gold rate.")
         return
 
     embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
-    embed.add_field(name="Current Rate", value=f"${gold_rate}/M", inline=True)
+    embed.add_field(name="Buy Rate", value=f"${rates['buy_rate']:.2f}/M", inline=True)
+    embed.add_field(name="Sell Rate", value=f"${rates['sell_rate']:.2f}/M", inline=True)
     embed.set_image(url=BANNER_URL)
 
     if last_rate_message:
@@ -120,16 +129,16 @@ async def update_gp_rates():
 @bot.event
 async def on_ready():
     print(f"✅ Logged in as {bot.user}")
-    update_gp_rates.start()  # Start auto-updating rates
+    update_gp_rates.start()
 
 @bot.command()
 async def rate(ctx):
     """Command to manually fetch and send the OSRS gold rate."""
     global last_rate_message
     last_rate_message = await ctx.send("🔄 Fetching latest rates...")
-    
-    rates = fetch_and_adjust_gold_rates()
-    
+
+    rates = await fetch_and_adjust_gold_rates()
+
     if rates is None:
         await ctx.send("❌ Failed to fetch OSRS gold rates.")
         return
