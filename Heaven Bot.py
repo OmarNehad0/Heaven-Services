@@ -179,7 +179,7 @@ async def deposit(interaction: discord.Interaction, user: discord.Member, action
 @bot.tree.command(name="tip", description="Tip M to another user.")
 @app_commands.describe(user="User to tip", value="Value in M")
 async def tip(interaction: discord.Interaction, user: discord.Member, value: int):
-    sender_id = str(interaction.user.id)  # Ensure consistent ID format
+    sender_id = str(interaction.user.id)  # Convert IDs to strings for MongoDB
     recipient_id = str(user.id)
 
     sender_wallet = get_wallet(sender_id)
@@ -199,12 +199,15 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
         return
 
     # Update wallets in MongoDB
-    update_wallet(sender_id, "wallet", sender_wallet["wallet"] - value)
-    update_wallet(recipient_id, "wallet", recipient_wallet["wallet"] + value)
+    update_wallet(sender_id, "wallet", -value)  # Subtract from sender
+    update_wallet(recipient_id, "wallet", value)  # Add to recipient
 
-    # Fetch updated wallet data
+    # Fetch updated wallet data after update
     sender_wallet = get_wallet(sender_id)
     recipient_wallet = get_wallet(recipient_id)
+
+    # Tip message (visible to all)
+    tip_message = f"💸 {interaction.user.mention} tipped {user.mention} **{value}M**!"
 
     # Embed for sender
     sender_embed = discord.Embed(title=f"{interaction.user.name}'s Wallet", color=discord.Color.blue())
@@ -213,12 +216,6 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     sender_embed.add_field(name="📥 Deposit", value=f"{sender_wallet['deposit']}M", inline=False)
     sender_embed.add_field(name="💸 Spent", value=f"{sender_wallet['spent']}M", inline=False)
 
-    await interaction.response.send_message(
-        f"✅ {interaction.user.name} tipped {user.name} {value}M!", 
-        embed=sender_embed, 
-        ephemeral=True
-    )
-
     # Embed for recipient
     recipient_embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
     recipient_embed.set_thumbnail(url=user.display_avatar.url)
@@ -226,9 +223,10 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     recipient_embed.add_field(name="📥 Deposit", value=f"{recipient_wallet['deposit']}M", inline=False)
     recipient_embed.add_field(name="💸 Spent", value=f"{recipient_wallet['spent']}M", inline=False)
 
-    await interaction.followup.send(embed=recipient_embed, ephemeral=True)
-
-
+    # Send message & embeds
+    await interaction.response.send_message(tip_message)
+    await interaction.channel.send(embed=sender_embed)
+    await interaction.channel.send(embed=recipient_embed)
 
 
 @bot.tree.command(name="post", description="Post a new order.")
