@@ -100,7 +100,7 @@ def update_wallet(user_id, field, value):
 
 
 @bot.tree.command(name="wallet", description="Check a user's wallet balance")
-async def wallet(interaction, user_id):
+async def wallet(interaction: discord.Interaction, user_id: str):  # Added type annotations
     # Get wallet data using the updated function
     wallet_data = get_wallet(user_id)
 
@@ -110,8 +110,8 @@ async def wallet(interaction, user_id):
     # Create the embed for the wallet display
     embed = discord.Embed(title=f"{user_id}'s Wallet")
     embed.add_field(name="📥 Deposit", value=f"{deposit_value}M", inline=False)
-    embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
-    embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"{wallet_data.get('wallet', 0)}M", inline=False)
+    embed.add_field(name="💸 Spent", value=f"{wallet_data.get('spent', 0)}M", inline=False)
 
     # Send the embed
     await interaction.response.send_message(embed=embed)
