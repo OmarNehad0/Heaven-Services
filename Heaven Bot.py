@@ -176,43 +176,58 @@ async def deposit(interaction: discord.Interaction, user: discord.Member, action
 
     await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} to {value}M.", embed=embed)
 
-# 📌 /tip {user} {value}
 @bot.tree.command(name="tip", description="Tip M to another user.")
 @app_commands.describe(user="User to tip", value="Value in M")
 async def tip(interaction: discord.Interaction, user: discord.Member, value: int):
-    sender_id = interaction.user.id
+    sender_id = str(interaction.user.id)  # Ensure consistent ID format
+    recipient_id = str(user.id)
+
     sender_wallet = get_wallet(sender_id)
+    recipient_wallet = get_wallet(recipient_id)
+
+    # Ensure all required fields exist
+    sender_wallet["wallet"] = sender_wallet.get("wallet", 0)
+    sender_wallet["deposit"] = sender_wallet.get("deposit", 0)
+    sender_wallet["spent"] = sender_wallet.get("spent", 0)
+
+    recipient_wallet["wallet"] = recipient_wallet.get("wallet", 0)
+    recipient_wallet["deposit"] = recipient_wallet.get("deposit", 0)
+    recipient_wallet["spent"] = recipient_wallet.get("spent", 0)
 
     if sender_wallet["wallet"] < value:
-        await interaction.response.send_message("You don't have enough M to tip!", ephemeral=True)
+        await interaction.response.send_message("❌ You don't have enough M to tip!", ephemeral=True)
         return
 
-    # Update the sender's wallet (subtract the tip amount)
-    update_wallet(sender_id, "wallet", -value)
-    
-    # Update the recipient's wallet (add the tip amount)
-    update_wallet(user.id, "wallet", value)
+    # Update wallets in MongoDB
+    update_wallet(sender_id, "wallet", sender_wallet["wallet"] - value)
+    update_wallet(recipient_id, "wallet", recipient_wallet["wallet"] + value)
 
-    # Send an updated wallet embed for both users
+    # Fetch updated wallet data
     sender_wallet = get_wallet(sender_id)
-    recipient_wallet = get_wallet(user.id)
+    recipient_wallet = get_wallet(recipient_id)
 
-    embed = discord.Embed(title=f"{interaction.user.name}'s Wallet", color=discord.Color.blue())
-    embed.set_thumbnail(url=interaction.user.display_avatar.url)
-    embed.add_field(name="💰 Wallet", value=f"{sender_wallet['wallet']}M", inline=False)
-    embed.add_field(name="📥 Deposit", value=f"{sender_wallet['deposit']}M", inline=False)
-    embed.add_field(name="💸 Spent", value=f"{sender_wallet['spent']}M", inline=False)
+    # Embed for sender
+    sender_embed = discord.Embed(title=f"{interaction.user.name}'s Wallet", color=discord.Color.blue())
+    sender_embed.set_thumbnail(url=interaction.user.display_avatar.url)
+    sender_embed.add_field(name="💰 Wallet", value=f"{sender_wallet['wallet']}M", inline=False)
+    sender_embed.add_field(name="📥 Deposit", value=f"{sender_wallet['deposit']}M", inline=False)
+    sender_embed.add_field(name="💸 Spent", value=f"{sender_wallet['spent']}M", inline=False)
 
-    await interaction.response.send_message(f"{interaction.user.name} tipped {user.name} {value}M!", ephemeral=True, embed=embed)
-    
-    # Update recipient wallet embed
-    recipient_wallet_embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
-    recipient_wallet_embed.set_thumbnail(url=user.display_avatar.url)
-    recipient_wallet_embed.add_field(name="💰 Wallet", value=f"{recipient_wallet['wallet']}M", inline=False)
-    recipient_wallet_embed.add_field(name="📥 Deposit", value=f"{recipient_wallet['deposit']}M", inline=False)
-    recipient_wallet_embed.add_field(name="💸 Spent", value=f"{recipient_wallet['spent']}M", inline=False)
+    await interaction.response.send_message(
+        f"✅ {interaction.user.name} tipped {user.name} {value}M!", 
+        embed=sender_embed, 
+        ephemeral=True
+    )
 
-    await interaction.followup.send(embed=recipient_wallet_embed, ephemeral=True)
+    # Embed for recipient
+    recipient_embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
+    recipient_embed.set_thumbnail(url=user.display_avatar.url)
+    recipient_embed.add_field(name="💰 Wallet", value=f"{recipient_wallet['wallet']}M", inline=False)
+    recipient_embed.add_field(name="📥 Deposit", value=f"{recipient_wallet['deposit']}M", inline=False)
+    recipient_embed.add_field(name="💸 Spent", value=f"{recipient_wallet['spent']}M", inline=False)
+
+    await interaction.followup.send(embed=recipient_embed, ephemeral=True)
+
 
 
 
