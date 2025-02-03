@@ -80,7 +80,7 @@ def update_wallet(user_id, field, value):
     )
 
 
-@app_commands.command(name="wallet", description="Check a user's wallet balance")
+@bot.tree.command(name="wallet", description="Check a user's wallet balance")
 async def wallet(interaction: discord.Interaction, user: discord.Member):
     wallet_data = get_wallet(user.id)
 
@@ -92,7 +92,7 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
     
     await interaction.response.send_message(embed=embed)
 
-@app_commands.command(name="wallet_add_remove", description="Add or remove value from a user's wallet")
+@bot.tree.command(name="wallet_add_remove", description="Add or remove value from a user's wallet")
 @app_commands.choices(action=[
     discord.app_commands.Choice(name="Add", value="add"),
     discord.app_commands.Choice(name="Remove", value="remove")
@@ -112,7 +112,7 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
 
 
 # 📌 /deposit {user} {set or remove} {value}
-@app_commands.command(name="deposit", description="Set or remove a user's deposit value")
+@bot.tree.command(name="deposit", description="Set or remove a user's deposit value")
 @app_commands.choices(action=[
     discord.app_commands.Choice(name="Set", value="set"),
     discord.app_commands.Choice(name="Remove", value="remove")
@@ -153,7 +153,7 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     await interaction.response.send_message(f"{interaction.user.name} tipped {user.name} {value}M!", ephemeral=True)
 
 
-@app_commands.command(name="post", description="Post a new order.")
+@bot.tree.command(name="post", description="Post a new order.")
 @app_commands.describe(customer="Customer placing the order", value="Order value in M", required_role="Required role", holder="Order holder")
 async def post(interaction: discord.Interaction, customer: discord.Member, value: int, required_role: discord.Role, holder: discord.Member):
     order_id = str(interaction.id)
@@ -184,7 +184,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     else:
         await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
 
-@app_commands.command(name="complete", description="Complete an order and update balances.")
+@bot.tree.command(name="complete", description="Complete an order and update balances.")
 @app_commands.describe(order_id="Order ID to complete")
 async def complete(interaction: discord.Interaction, order_id: str):
     order = orders_collection.find_one({"_id": order_id})
@@ -207,7 +207,7 @@ async def complete(interaction: discord.Interaction, order_id: str):
 
 
 # 📌 /order deletion {order id}
-@app_commands.command(name="order_deletion", description="Delete an order.")
+@bot.tree.command(name="order_deletion", description="Delete an order.")
 @app_commands.describe(order_id="Order ID to delete")
 async def order_deletion(interaction: discord.Interaction, order_id: str):
     order = orders_collection.find_one({"_id": order_id})
