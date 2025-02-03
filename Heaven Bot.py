@@ -27,6 +27,8 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import requests
 from bs4 import BeautifulSoup
+import pymongo
+from pymongo import MongoClient
 # Define intents
 intents = discord.Intents.default()
 intents.message_content = True
@@ -38,156 +40,17 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
-CHANNEL_ID = 1332354894597853346  # Replace with your actual channel ID
-BANNER_URL = 'https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif'
+# Connect to MongoDB using the provided URI from Railway
+mongo_uri = os.getenv("MONGO_URI")  # You should set this in your Railway environment variables
+client = MongoClient(mongo_uri)
 
-last_rate_message = None  # Store the last sent rate message
+# Choose your database
+db = client['MongoDB']  # Replace with the name of your database
 
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+# Access collections (equivalent to Firestore collections)
+wallets_collection = db['wallets']
+orders_collection = db['orders']
 
-async def fetch_and_adjust_gold_rates():
-    url = 'https://www.eldorado.gg/osrs-gold/g/10-0-0'
-
-    # Run Selenium in a separate thread
-    def scrape():
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run without UI
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")  # Fixes memory issues in some environments
-
-        # Get the Chrome binary and driver paths from the environment variables
-        chrome_options.binary_location = os.environ.get("CHROME_BIN", "/usr/bin/chromium")
-        chrome_driver_path = os.environ.get("CHROME_DRIVER", "/usr/lib/chromium-driver/chromedriver")
-
-        driver = webdriver.Chrome(service=Service(chrome_driver_path), options=chrome_options)
-
-        try:
-            price_elements = WebDriverWait(driver, 10).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME, 'css-1b4isa7'))  # Update class if needed
-            )
-
-            prices = []
-            for elem in price_elements:
-                price_text = elem.text.strip().replace('$', '').replace('/M', '')
-                try:
-                    price = float(price_text)
-                    prices.append(price)
-                except ValueError:
-                    continue
-
-            if not prices:
-                print("❌ No valid prices extracted.")
-                return None
-
-            average_price = sum(prices) / len(prices)
-
-            # Adjust rates
-            return {'buy_rate': average_price + 0.01, 'sell_rate': average_price - 0.03}
-
-        except Exception as e:
-            print(f"❌ Error fetching rates: {e}")
-            return None
-
-        finally:
-            driver.quit()
-
-    return await asyncio.to_thread(scrape)  # Run in separate thread
-
-async def send_or_update_rate(channel):
-    global last_rate_message
-
-    rates = await fetch_and_adjust_gold_rates()
-    if rates is None:
-        print("❌ Failed to fetch gold rate.")
-        return
-
-    embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
-    embed.add_field(name="Buy Rate", value=f"${rates['buy_rate']:.2f}/M", inline=True)
-    embed.add_field(name="Sell Rate", value=f"${rates['sell_rate']:.2f}/M", inline=True)
-    embed.set_image(url=BANNER_URL)
-
-    if last_rate_message:
-        try:
-            await last_rate_message.edit(embed=embed)
-        except discord.NotFound:
-            last_rate_message = await channel.send(embed=embed)
-    else:
-        last_rate_message = await channel.send(embed=embed)
-
-@tasks.loop(minutes=30)
-async def update_gp_rates():
-    channel = bot.get_channel(CHANNEL_ID)
-    if channel is None:
-        print(f"❌ Error: Could not find channel {CHANNEL_ID}")
-        return
-    await send_or_update_rate(channel)
-
-@bot.event
-async def on_ready():
-    print(f"✅ Logged in as {bot.user}")
-    update_gp_rates.start()
-
-@bot.command()
-async def rate(ctx):
-    """Command to manually fetch and send the OSRS gold rate."""
-    global last_rate_message
-    last_rate_message = await ctx.send("🔄 Fetching latest rates...")
-
-    rates = await fetch_and_adjust_gold_rates()
-
-    if rates is None:
-        await ctx.send("❌ Failed to fetch OSRS gold rates.")
-        return
-
-    embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
-    embed.add_field(name="Buy Rate", value=f"${rates['buy_rate']:.2f}/M", inline=True)
-    embed.add_field(name="Sell Rate", value=f"${rates['sell_rate']:.2f}/M", inline=True)
-    embed.set_image(url=BANNER_URL)
-
-    last_rate_message = await ctx.send(embed=embed)
-
-
-# Load Firebase credentials from environment variable
-firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
-
-if firebase_credentials:
-    print("✅ Firebase credentials loaded!")
-else:
-    print("❌ Firebase credentials not found!")
-
-try:
-    json.loads(firebase_credentials)  # If this fails, your JSON is invalid
-    print("✅ Firebase credentials are valid JSON")
-except json.JSONDecodeError:
-    print("❌ Invalid JSON format in credentials")
-    
-try:
-    cred_dict = json.loads(firebase_credentials)  # Attempt to parse JSON
-    print("✅ Firebase credentials parsed successfully!")
-except json.JSONDecodeError as e:
-    print(f"❌ JSON decoding error: {e}")
-    
-if firebase_credentials:
-    cred_dict = json.loads(firebase_credentials)  # Convert JSON string to dictionary
-    cred = credentials.Certificate(cred_dict)
-    firebase_admin.initialize_app(cred)
-    db = firestore.client()
-else:
-    print("❌ Firebase credentials not found. Make sure they are set in Railway environment variables.")
-
-try:
-    doc_ref = db.collection("test").document("test_doc")
-    doc_ref.set({"test": "success"})
-    print("✅ Firestore is working!")
-except Exception as e:
-    print(f"❌ Firestore error: {e}")
 
 # Syncing command tree for slash commands
 @bot.event
@@ -198,24 +61,28 @@ async def on_ready():
     except Exception as e:
         print(f"Error syncing commands: {e}")
 
-# Function to get wallet data
+# Function to get wallet data from MongoDB
 def get_wallet(user_id):
-    doc_ref = db.collection("wallets").document(str(user_id))
-    doc = doc_ref.get()
-    return doc.to_dict() if doc.exists else {"deposit": 0, "wallet": 0, "spent": 0}
+    wallet_data = wallets_collection.find_one({"user_id": user_id})
+    if wallet_data:
+        return wallet_data
+    else:
+        # Default values if no wallet data exists
+        return {"deposit": 0, "wallet": 0, "spent": 0}
 
-# Function to update wallet
+# Function to update wallet in MongoDB
 def update_wallet(user_id, field, value):
-    doc_ref = db.collection("wallets").document(str(user_id))
-    doc_ref.set({field: firestore.Increment(value)}, merge=True)
+    # Update wallet data by incrementing the field value
+    wallets_collection.update_one(
+        {"user_id": user_id},
+        {"$inc": {field: value}},  # Increment the field (e.g., wallet, deposit, spent)
+        upsert=True  # Insert a new document if one doesn't exist
+    )
 
-# 📌 /wallet {user}
-# Wallet command
+
 @app_commands.command(name="wallet", description="Check a user's wallet balance")
 async def wallet(interaction: discord.Interaction, user: discord.Member):
-    doc_ref = db.collection("wallets").document(str(user.id))
-    doc = doc_ref.get()
-    wallet_data = doc.to_dict() if doc.exists else {"wallet": 0, "deposit": 0, "spent": 0}
+    wallet_data = get_wallet(user.id)
 
     embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
     embed.set_thumbnail(url=user.display_avatar.url)
@@ -225,16 +92,13 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
     
     await interaction.response.send_message(embed=embed)
 
-# Wallet Add/Remove command
 @app_commands.command(name="wallet_add_remove", description="Add or remove value from a user's wallet")
 @app_commands.choices(action=[
     discord.app_commands.Choice(name="Add", value="add"),
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    doc_ref = db.collection("wallets").document(str(user.id))
-    doc = doc_ref.get()
-    wallet_data = doc.to_dict() if doc.exists else {"wallet": 0, "deposit": 0, "spent": 0}
+    wallet_data = get_wallet(user.id)
 
     if action == "add":
         wallet_data["wallet"] += value
@@ -242,28 +106,33 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
         wallet_data["wallet"] -= value
         if wallet_data["wallet"] < 0:
             wallet_data["wallet"] = 0
-    
-    doc_ref.set(wallet_data)
+
+    update_wallet(user.id, "wallet", value if action == "add" else -value)
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.")
 
-# Deposit Set/Remove command
+
+# 📌 /deposit {user} {set or remove} {value}
 @app_commands.command(name="deposit", description="Set or remove a user's deposit value")
 @app_commands.choices(action=[
     discord.app_commands.Choice(name="Set", value="set"),
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def deposit(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    doc_ref = db.collection("wallets").document(str(user.id))
-    doc = doc_ref.get()
-    wallet_data = doc.to_dict() if doc.exists else {"wallet": 0, "deposit": 0, "spent": 0}
+    # Get wallet data from MongoDB
+    wallet_data = get_wallet(user.id)
 
+    # Set or remove deposit value based on action
     if action == "set":
         wallet_data["deposit"] = value
     elif action == "remove":
         wallet_data["deposit"] = 0
     
-    doc_ref.set(wallet_data)
+    # Update the wallet data in MongoDB
+    update_wallet(user.id, "deposit", wallet_data["deposit"])
+
     await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} to {value}M.")
+
+
 # 📌 /tip {user} {value}
 @bot.tree.command(name="tip", description="Tip M to another user.")
 @app_commands.describe(user="User to tip", value="Value in M")
@@ -275,15 +144,18 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
         await interaction.response.send_message("You don't have enough M to tip!", ephemeral=True)
         return
 
+    # Update the sender's wallet (subtract the tip amount)
     update_wallet(sender_id, "wallet", -value)
+    
+    # Update the recipient's wallet (add the tip amount)
     update_wallet(user.id, "wallet", value)
+
     await interaction.response.send_message(f"{interaction.user.name} tipped {user.name} {value}M!", ephemeral=True)
 
-# 📌 /post {customer} {value} {required role} {holder}
-@bot.tree.command(name="post", description="Post a new order.")
+
+@app_commands.command(name="post", description="Post a new order.")
 @app_commands.describe(customer="Customer placing the order", value="Order value in M", required_role="Required role", holder="Order holder")
 async def post(interaction: discord.Interaction, customer: discord.Member, value: int, required_role: discord.Role, holder: discord.Member):
-    channel_id = 1332354894597853346  # Order channel ID
     order_id = str(interaction.id)
 
     embed = discord.Embed(title="New Order", color=0xffa500)
@@ -293,61 +165,59 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     embed.add_field(name="Holder", value=holder.mention, inline=True)
     embed.set_footer(text=f"Order ID: {order_id}")
 
-    channel = bot.get_channel(channel_id)
+    channel = bot.get_channel(1332354894597853346)  # Order channel ID
     if channel:
         message = await channel.send(embed=embed)
         await message.add_reaction("✅")  # Claim button
 
-        db.collection("orders").document(order_id).set({
+        # Store the order in MongoDB
+        orders_collection.insert_one({
             "customer": customer.id,
             "worker": None,
             "value": value,
             "required_role": required_role.id,
             "holder": holder.id,
             "message_id": message.id,
-            "channel_id": channel_id
+            "channel_id": 1332354894597853346
         })
-        await interaction.response.send_message(f"Order posted in <#{channel_id}>!", ephemeral=True)
+        await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
     else:
         await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
 
-# 📌 /complete {order id}
-@bot.tree.command(name="complete", description="Complete an order and update balances.")
+@app_commands.command(name="complete", description="Complete an order and update balances.")
 @app_commands.describe(order_id="Order ID to complete")
 async def complete(interaction: discord.Interaction, order_id: str):
-    doc_ref = db.collection("orders").document(order_id)
-    order = doc_ref.get()
+    order = orders_collection.find_one({"_id": order_id})
 
-    if not order.exists:
+    if not order:
         await interaction.response.send_message("Order not found!", ephemeral=True)
         return
 
-    order_data = order.to_dict()
-    customer_id = order_data["customer"]
+    customer_id = order["customer"]
     worker_id = interaction.user.id
-    value = order_data["value"]
+    value = order["value"]
 
     update_wallet(worker_id, "wallet", value)
     update_wallet(customer_id, "spent", value)
 
-    doc_ref.delete()  # Remove order after completion
+    # Delete the order after completion
+    orders_collection.delete_one({"_id": order_id})
+
     await interaction.response.send_message(f"Order {order_id} completed! {value}M added to {interaction.user.name}.", ephemeral=True)
 
+
 # 📌 /order deletion {order id}
-@bot.tree.command(name="order_deletion", description="Delete an order.")
+@app_commands.command(name="order_deletion", description="Delete an order.")
 @app_commands.describe(order_id="Order ID to delete")
 async def order_deletion(interaction: discord.Interaction, order_id: str):
-    doc_ref = db.collection("orders").document(order_id)
-    order = doc_ref.get()
+    order = orders_collection.find_one({"_id": order_id})
 
-    if not order.exists:
+    if not order:
         await interaction.response.send_message("Order not found!", ephemeral=True)
         return
 
-    doc_ref.delete()
+    orders_collection.delete_one({"_id": order_id})
     await interaction.response.send_message(f"Order {order_id} deleted.", ephemeral=True)
-
-
 
 # Image URLs
 THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
