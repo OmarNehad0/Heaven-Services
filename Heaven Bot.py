@@ -43,6 +43,7 @@ BANNER_URL = 'https://media.discordapp.net/attachments/1332341372333723732/13330
 
 last_buy_rate = None
 last_sell_rate = None
+last_rate_message = None  # Store the last sent rate message
 
 async def fetch_gp_rates():
     url = 'https://chicksgold.com/currency/buy-osrs-gold'
@@ -50,39 +51,66 @@ async def fetch_gp_rates():
     soup = BeautifulSoup(response.text, 'html.parser')
     
     # Locate the buy rate on the page
-    rate_element = soup.select_one('.css-selector-for-rate')  # Replace with the actual CSS selector
+    rate_element = soup.select_one('.css-selector-for-rate')  # Replace with actual selector
     if rate_element:
         buy_rate = float(rate_element.text.strip().replace('$', '').replace('/M', ''))
         sell_rate = buy_rate - 0.04
         return {'buy': buy_rate, 'sell': sell_rate}
     return None
 
+async def send_or_update_rate(channel):
+    """ Sends or updates the OSRS gold rate message. """
+    global last_buy_rate, last_sell_rate, last_rate_message
+
+    rates = await fetch_gp_rates()
+    if not rates:
+        print("❌ Failed to fetch rates.")
+        return
+    
+    embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
+    embed.add_field(name="Buy Rate", value=f"${rates['buy']}/M", inline=True)
+    embed.add_field(name="Sell Rate", value=f"${rates['sell']}/M", inline=True)
+    embed.set_image(url=BANNER_URL)
+
+    if last_rate_message:
+        try:
+            await last_rate_message.edit(embed=embed)
+        except discord.NotFound:
+            last_rate_message = await channel.send(embed=embed)
+    else:
+        last_rate_message = await channel.send(embed=embed)
+
+    last_buy_rate = rates['buy']
+    last_sell_rate = rates['sell']
+
 @tasks.loop(minutes=30)
 async def update_gp_rates():
-    global last_buy_rate, last_sell_rate
+    """ Checks for rate changes and updates the message if needed. """
+    global last_buy_rate, last_sell_rate, last_rate_message
 
     channel = bot.get_channel(CHANNEL_ID)
     if channel is None:
         print(f"❌ Error: Could not find channel {CHANNEL_ID}")
         return
-    
+
     rates = await fetch_gp_rates()
+    if not rates:
+        return
 
-    if rates and (rates['buy'] != last_buy_rate or rates['sell'] != last_sell_rate):
-        embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
-        embed.add_field(name="Buy Rate", value=f"${rates['buy']}/M", inline=True)
-        embed.add_field(name="Sell Rate", value=f"${rates['sell']}/M", inline=True)
-        embed.set_image(url=BANNER_URL)
-
-        await channel.send(embed=embed)
-
-        last_buy_rate = rates['buy']
-        last_sell_rate = rates['sell']
+    if rates['buy'] != last_buy_rate or rates['sell'] != last_sell_rate:
+        await send_or_update_rate(channel)
 
 @bot.event
 async def on_ready():
     print(f"✅ Logged in as {bot.user}")
-    update_gp_rates.start()  # Start the loop when bot is ready
+    update_gp_rates.start()  # Start auto-updating rates
+
+@bot.command()
+async def rate(ctx):
+    """ Command to manually fetch and send the OSRS gold rate. """
+    global last_rate_message
+    last_rate_message = await ctx.send("🔄 Fetching latest rates...")
+    await send_or_update_rate(ctx.channel)
 
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
