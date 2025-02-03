@@ -27,6 +27,14 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 # Define intents
 intents = discord.Intents.default()
 intents.message_content = True
@@ -46,21 +54,28 @@ last_sell_rate = None
 last_rate_message = None  # Store the last sent rate message
 
 async def fetch_gp_rates():
-    url = 'https://chicksgold.com/currency/buy-osrs-gold'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    options = Options()
+    options.add_argument("--headless")  # Run without opening a browser window
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
 
-    # Debugging: Print the entire HTML
-    print(soup.prettify())
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.get("https://chicksgold.com/currency/buy-osrs-gold")
 
-    rate_element = soup.select_one('.css-selector-for-rate')  # Replace this with actual selector
-    if rate_element:
-        buy_rate = float(rate_element.text.strip().replace('$', '').replace('/M', ''))
-        sell_rate = buy_rate - 0.04
-        return {'buy': buy_rate, 'sell': sell_rate}
+    try:
+        # Wait for the element to load (replace with the correct CSS selector)
+        rate_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".css-selector-for-rate"))
+        )
+        buy_rate = float(rate_element.text.strip().replace("$", "").replace("/M", ""))
+        sell_rate = buy_rate - 0.04  # Adjust this if needed
 
-    print("❌ Failed to find rate element")
-    return None
+        driver.quit()
+        return {"buy": buy_rate, "sell": sell_rate}
+    except Exception as e:
+        print(f"❌ Error fetching rates: {e}")
+        driver.quit()
+        return None
 
 async def send_or_update_rate(channel):
     """ Sends or updates the OSRS gold rate message. """
