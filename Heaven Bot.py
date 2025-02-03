@@ -61,7 +61,6 @@ async def on_ready():
     except Exception as e:
         print(f"Error syncing commands: {e}")
 
-# Function to get wallet data from MongoDB
 def get_wallet(user_id):
     wallet_data = wallets_collection.find_one({"user_id": user_id})
     if wallet_data:
