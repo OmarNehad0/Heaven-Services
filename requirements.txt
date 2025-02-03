@@ -11,4 +11,3 @@ requests
 beautifulsoup4
 selenium
 webdriver-manager
-chromium-browser
