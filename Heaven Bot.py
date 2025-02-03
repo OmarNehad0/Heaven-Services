@@ -137,7 +137,13 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     if action == "add":
         wallet_data["wallet"] += value
     elif action == "remove":
-        wallet_data["wallet"] = max(0, wallet_data["wallet"] - value)  # Prevent negative balance
+        if wallet_data["wallet"] <= 0:
+            await interaction.response.send_message(f"❌ {user.name}'s wallet is already empty!", ephemeral=True)
+            return
+        if wallet_data["wallet"] < value:
+            await interaction.response.send_message(f"❌ {user.name} does not have enough M to remove!", ephemeral=True)
+            return
+        wallet_data["wallet"] -= value  # Safe to subtract now
 
     # Update MongoDB
     update_wallet(user_id, "wallet", wallet_data["wallet"])
@@ -150,6 +156,7 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
 
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.", embed=embed)
+
 # 📌 /deposit {user} {set or remove} {value}
 @bot.tree.command(name="deposit", description="Set or remove a user's deposit value")
 @app_commands.choices(action=[
