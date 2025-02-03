@@ -101,6 +101,9 @@ def update_wallet(user_id, field, value):
 async def wallet(interaction: discord.Interaction, user: discord.Member):
     wallet_data = get_wallet(user.id)
 
+    # Ensure 'deposit' field exists and avoid KeyError
+    deposit_value = wallet_data.get('deposit', 0)  # Default to 0 if the field is missing
+    
     embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
     embed.set_thumbnail(url=user.display_avatar.url)
     embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
