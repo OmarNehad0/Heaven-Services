@@ -44,26 +44,49 @@ BANNER_URL = 'https://media.discordapp.net/attachments/1332341372333723732/13330
 
 last_rate_message = None  # Store the last sent rate message
 
-async def fetch_gold_rate():
-    url = "https://www.playerauctions.com/osrs-gold/osrs-market-tracker/"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            if response.status == 200:
-                html_content = await response.text()
-                soup = BeautifulSoup(html_content, 'html.parser')
-                
-                # Find the specific HTML element containing the gold rate
-                price_element = soup.find("span", class_="market-value")  # Adjust the class accordingly
-                
-                if price_element:
-                    gold_rate = price_element.text.strip().replace("$", "").replace("/M", "")
-                    return float(gold_rate)
-                else:
-                    print("❌ Could not find the gold rate on the page.")
-                    return None
-            else:
-                print(f"❌ Failed to fetch gold rate. Status Code: {response.status}")
-                return None
+def fetch_and_adjust_gold_rates():
+    url = 'https://www.eldorado.gg/osrs-gold/g/10-0-0'
+    response = requests.get(url)
+    if response.status_code != 200:
+        print(f"Failed to fetch data. Status code: {response.status_code}")
+        return None
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+    # Find all price elements on the page
+    price_elements = soup.find_all('div', class_='css-1b4isa7')  # Update this class based on actual HTML structure
+
+    if not price_elements:
+        print("No price elements found.")
+        return None
+
+    # Extract prices and convert to float
+    prices = []
+    for elem in price_elements:
+        price_text = elem.get_text(strip=True).replace('$', '').replace('/M', '')
+        try:
+            price = float(price_text)
+            prices.append(price)
+        except ValueError:
+            continue
+
+    if not prices:
+        print("No valid prices extracted.")
+        return None
+
+    # Calculate the average price from the top offers
+    average_price = sum(prices) / len(prices)
+
+    # Adjust the rates
+    buy_rate = average_price + 0.01
+    sell_rate = average_price - 0.03
+
+    return {'buy_rate': buy_rate, 'sell_rate': sell_rate}
+
+# Example usage
+rates = fetch_and_adjust_gold_rates()
+if rates:
+    print(f"Buy Rate: ${rates['buy_rate']:.2f}/M")
+    print(f"Sell Rate: ${rates['sell_rate']:.2f}/M")
 
 async def send_or_update_rate(channel):
     global last_rate_message
