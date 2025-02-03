@@ -130,7 +130,7 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     # Fetch the latest wallet data from MongoDB
     wallet_data = get_wallet(user_id)
     if not wallet_data:
-        wallet_data = {"wallet": 0, "deposit": 0, "spent": 0}  # Default values if user isn't found
+        wallet_data = {"wallet": 0, "deposit": 0, "spent": 0}  # Default if user isn't found
 
     # Extract current wallet balance
     wallet_balance = wallet_data.get("wallet", 0)
@@ -149,14 +149,20 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
             return
         new_wallet_balance = wallet_balance - value
 
-    # Update MongoDB with the new balance
-    update_wallet(user_id, "wallet", new_wallet_balance)
+    # Debugging logs (remove later if needed)
+    print(f"USER: {user.name} ({user_id})")
+    print(f"BEFORE UPDATE - Wallet: {wallet_balance}M")
+    print(f"NEW VALUE - Wallet: {new_wallet_balance}M")
+
+    # Ensure the new value is forced in MongoDB
+    update_wallet(user_id, "wallet", int(new_wallet_balance))  # Explicitly set the type
 
     # **Re-fetch wallet after update to confirm the changes applied correctly**
     updated_wallet = get_wallet(user_id)
 
     # **Validation: Make sure the update actually worked**
     if updated_wallet.get("wallet", 0) != new_wallet_balance:
+        print(f"ERROR: MISMATCH! Expected {new_wallet_balance}M but got {updated_wallet.get('wallet', 0)}M")
         await interaction.response.send_message(f"⚠ Update failed. Please try again.", ephemeral=True)
         return
 
