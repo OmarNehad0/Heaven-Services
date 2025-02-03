@@ -27,19 +27,6 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Run without UI
-options.add_argument("--no-sandbox")  # Bypass security restrictions (useful on Linux servers)
-options.add_argument("--disable-dev-shm-usage")  # Prevents crashes due to memory limitations
-
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 # Define intents
 intents = discord.Intents.default()
@@ -55,46 +42,35 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 CHANNEL_ID = 1332354894597853346  # Replace with your actual channel ID
 BANNER_URL = 'https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif'
 
-last_buy_rate = None
-last_sell_rate = None
 last_rate_message = None  # Store the last sent rate message
 
-async def fetch_gp_rates():
-    options = Options()
-    options.add_argument("--headless")  # Run without opening a browser window
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get("https://chicksgold.com/currency/buy-osrs-gold")
-
-    try:
-        # Wait for the element to load (replace with the correct CSS selector)
-        rate_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".css-selector-for-rate"))
-        )
-        buy_rate = float(rate_element.text.strip().replace("$", "").replace("/M", ""))
-        sell_rate = buy_rate - 0.04  # Adjust this if needed
-
-        driver.quit()
-        return {"buy": buy_rate, "sell": sell_rate}
-    except Exception as e:
-        print(f"❌ Error fetching rates: {e}")
-        driver.quit()
-        return None
+async def fetch_gold_rate():
+    url = "https://www.playerauctions.com/osrs-gold/osrs-market-tracker/"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status == 200:
+                # Parse the HTML content to extract the gold rate
+                text = await response.text()
+                # Implement parsing logic here to extract the gold rate from the HTML content
+                # For example, you can use BeautifulSoup to parse the HTML and extract the necessary information
+                # Ensure you handle any exceptions and edge cases appropriately
+                # Return the extracted gold rate
+                return gold_rate
+            else:
+                print(f"❌ Failed to fetch gold rate. Status Code: {response.status}")
+                return None
 
 async def send_or_update_rate(channel):
-    """ Sends or updates the OSRS gold rate message. """
-    global last_buy_rate, last_sell_rate, last_rate_message
+    global last_rate_message
 
-    rates = await fetch_gp_rates()
-    if not rates:
-        print("❌ Failed to fetch rates.")
+    gold_rate = await fetch_gold_rate()
+
+    if gold_rate is None:
+        print("❌ Failed to fetch gold rate.")
         return
-    
+
     embed = discord.Embed(title="OSRS Gold Rates", color=discord.Color.blue())
-    embed.add_field(name="Buy Rate", value=f"${rates['buy']}/M", inline=True)
-    embed.add_field(name="Sell Rate", value=f"${rates['sell']}/M", inline=True)
+    embed.add_field(name="Current Rate", value=f"${gold_rate}/M", inline=True)
     embed.set_image(url=BANNER_URL)
 
     if last_rate_message:
@@ -105,25 +81,13 @@ async def send_or_update_rate(channel):
     else:
         last_rate_message = await channel.send(embed=embed)
 
-    last_buy_rate = rates['buy']
-    last_sell_rate = rates['sell']
-
 @tasks.loop(minutes=30)
 async def update_gp_rates():
-    """ Checks for rate changes and updates the message if needed. """
-    global last_buy_rate, last_sell_rate, last_rate_message
-
     channel = bot.get_channel(CHANNEL_ID)
     if channel is None:
         print(f"❌ Error: Could not find channel {CHANNEL_ID}")
         return
-
-    rates = await fetch_gp_rates()
-    if not rates:
-        return
-
-    if rates['buy'] != last_buy_rate or rates['sell'] != last_sell_rate:
-        await send_or_update_rate(channel)
+    await send_or_update_rate(channel)
 
 @bot.event
 async def on_ready():
@@ -132,7 +96,7 @@ async def on_ready():
 
 @bot.command()
 async def rate(ctx):
-    """ Command to manually fetch and send the OSRS gold rate. """
+    """Command to manually fetch and send the OSRS gold rate."""
     global last_rate_message
     last_rate_message = await ctx.send("🔄 Fetching latest rates...")
     await send_or_update_rate(ctx.channel)
