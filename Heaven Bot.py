@@ -62,12 +62,22 @@ async def on_ready():
         print(f"Error syncing commands: {e}")
 
 def get_wallet(user_id):
+    # Fetch the user's wallet data
     wallet_data = wallets_collection.find_one({"user_id": user_id})
-    if wallet_data:
-        return wallet_data
-    else:
-        # Default values if no wallet data exists
-        return {"user_id": user_id, "deposit": 0, "wallet": 0, "spent": 0}
+
+    if not wallet_data:
+        # If no wallet exists, return a default structure with initialized fields
+        wallet_data = {
+            "user_id": user_id,
+            "wallet": 0,
+            "spent": 0,
+            "deposit": 0  # Ensure deposit is initialized
+        }
+        # Insert a new wallet if it doesn't exist
+        wallets_collection.insert_one(wallet_data)
+    
+    return wallet_data
+
 
 
 # Function to update wallet in MongoDB
