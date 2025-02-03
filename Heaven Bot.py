@@ -100,21 +100,24 @@ def update_wallet(user_id, field, value):
 
 
 @bot.tree.command(name="wallet", description="Check a user's wallet balance")
-async def wallet(interaction: discord.Interaction, user_id: str):  # Added type annotations
-    # Get wallet data using the updated function
-    wallet_data = get_wallet(user_id)
+async def wallet(interaction: discord.Interaction, user: discord.Member):
+    user_id = str(user.id)  # Convert Discord user ID to string for MongoDB lookup
+    wallet_data = get_wallet(user_id)  # Fetch wallet data
 
-    # Ensure 'deposit' field exists and avoid KeyError by using .get()
-    deposit_value = wallet_data.get('deposit', 0)  # Default to 0 if the field is missing
+    # Ensure missing fields don't cause errors
+    deposit_value = wallet_data.get('deposit', 0)
+    wallet_value = wallet_data.get('wallet', 0)
+    spent_value = wallet_data.get('spent', 0)
 
-    # Create the embed for the wallet display
-    embed = discord.Embed(title=f"{user_id}'s Wallet")
+    # Create embed
+    embed = discord.Embed(title=f"{user.display_name}'s Wallet", color=discord.Color.blue())
+    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
     embed.add_field(name="📥 Deposit", value=f"{deposit_value}M", inline=False)
-    embed.add_field(name="💰 Wallet", value=f"{wallet_data.get('wallet', 0)}M", inline=False)
-    embed.add_field(name="💸 Spent", value=f"{wallet_data.get('spent', 0)}M", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"{wallet_value}M", inline=False)
+    embed.add_field(name="💸 Spent", value=f"{spent_value}M", inline=False)
 
-    # Send the embed
     await interaction.response.send_message(embed=embed)
+
 
 @bot.tree.command(name="wallet_add_remove", description="Add or remove value from a user's wallet")
 @app_commands.choices(action=[
@@ -122,26 +125,31 @@ async def wallet(interaction: discord.Interaction, user_id: str):  # Added type 
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    wallet_data = get_wallet(user.id)
+    user_id = str(user.id)  # Ensure MongoDB lookup is consistent
+    wallet_data = get_wallet(user_id)  
 
+    # Ensure all required fields exist
+    wallet_data["wallet"] = wallet_data.get("wallet", 0)
+    wallet_data["deposit"] = wallet_data.get("deposit", 0)
+    wallet_data["spent"] = wallet_data.get("spent", 0)
+
+    # Perform add/remove action
     if action == "add":
         wallet_data["wallet"] += value
     elif action == "remove":
-        wallet_data["wallet"] -= value
-        if wallet_data["wallet"] < 0:
-            wallet_data["wallet"] = 0
+        wallet_data["wallet"] = max(0, wallet_data["wallet"] - value)  # Prevent negative balance
 
-    update_wallet(user.id, "wallet", value if action == "add" else -value)
-    
-    # Send an updated wallet embed
+    # Update MongoDB
+    update_wallet(user_id, "wallet", wallet_data["wallet"])
+
+    # Create updated embed
     embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
     embed.set_thumbnail(url=user.display_avatar.url)
     embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
     embed.add_field(name="📥 Deposit", value=f"{wallet_data['deposit']}M", inline=False)
     embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
-    
-    await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.", embed=embed)
 
+    await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.", embed=embed)
 # 📌 /deposit {user} {set or remove} {value}
 @bot.tree.command(name="deposit", description="Set or remove a user's deposit value")
 @app_commands.choices(action=[
