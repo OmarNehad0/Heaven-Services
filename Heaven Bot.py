@@ -34,6 +34,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")  # Run without UI
+options.add_argument("--no-sandbox")  # Bypass security restrictions (useful on Linux servers)
+options.add_argument("--disable-dev-shm-usage")  # Prevents crashes due to memory limitations
+
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 # Define intents
 intents = discord.Intents.default()
