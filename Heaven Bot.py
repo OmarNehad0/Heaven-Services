@@ -49,13 +49,17 @@ async def fetch_gp_rates():
     url = 'https://chicksgold.com/currency/buy-osrs-gold'
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # Locate the buy rate on the page
-    rate_element = soup.select_one('.css-selector-for-rate')  # Replace with actual selector
+
+    # Debugging: Print the entire HTML
+    print(soup.prettify())
+
+    rate_element = soup.select_one('.css-selector-for-rate')  # Replace this with actual selector
     if rate_element:
         buy_rate = float(rate_element.text.strip().replace('$', '').replace('/M', ''))
         sell_rate = buy_rate - 0.04
         return {'buy': buy_rate, 'sell': sell_rate}
+
+    print("❌ Failed to find rate element")
     return None
 
 async def send_or_update_rate(channel):
