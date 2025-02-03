@@ -11,3 +11,4 @@ requests
 beautifulsoup4
 selenium
 webdriver-manager
+pymongo>=3.12.1
