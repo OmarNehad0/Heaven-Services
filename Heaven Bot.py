@@ -49,13 +49,18 @@ async def fetch_gold_rate():
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status == 200:
-                # Parse the HTML content to extract the gold rate
-                text = await response.text()
-                # Implement parsing logic here to extract the gold rate from the HTML content
-                # For example, you can use BeautifulSoup to parse the HTML and extract the necessary information
-                # Ensure you handle any exceptions and edge cases appropriately
-                # Return the extracted gold rate
-                return gold_rate
+                html_content = await response.text()
+                soup = BeautifulSoup(html_content, 'html.parser')
+                
+                # Find the specific HTML element containing the gold rate
+                price_element = soup.find("span", class_="market-value")  # Adjust the class accordingly
+                
+                if price_element:
+                    gold_rate = price_element.text.strip().replace("$", "").replace("/M", "")
+                    return float(gold_rate)
+                else:
+                    print("❌ Could not find the gold rate on the page.")
+                    return None
             else:
                 print(f"❌ Failed to fetch gold rate. Status Code: {response.status}")
                 return None
