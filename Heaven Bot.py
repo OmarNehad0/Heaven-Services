@@ -125,17 +125,20 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    user_id = str(user.id)  # Ensure MongoDB lookup is consistent
+    user_id = str(user.id)
     wallet_data = get_wallet(user_id)  # Fetch latest wallet data
 
-    # Ensure fields exist and default to 0 if missing
+    # Ensure fields exist
     wallet_balance = wallet_data.get("wallet", 0)
     deposit_balance = wallet_data.get("deposit", 0)
     spent_balance = wallet_data.get("spent", 0)
 
+    # Handle adding funds
     if action == "add":
         new_wallet_balance = wallet_balance + value
         update_wallet(user_id, "wallet", new_wallet_balance)
+
+    # Handle removing funds
     elif action == "remove":
         if wallet_balance <= 0:
             await interaction.response.send_message(f"❌ {user.name}'s wallet is already empty!", ephemeral=True)
@@ -146,10 +149,15 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
         new_wallet_balance = wallet_balance - value
         update_wallet(user_id, "wallet", new_wallet_balance)
 
-    # Fetch updated wallet data to ensure accuracy
+    # **Re-fetch wallet after updating to ensure accuracy**
     updated_wallet = get_wallet(user_id)
 
-    # Create updated embed
+    # **Check if the update actually worked**
+    if updated_wallet.get("wallet", 0) == wallet_balance:
+        await interaction.response.send_message(f"⚠ Update failed. Please try again.", ephemeral=True)
+        return
+
+    # **Create updated embed**
     embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
     embed.set_thumbnail(url=user.display_avatar.url)
     embed.add_field(name="💰 Wallet", value=f"{updated_wallet.get('wallet', 0)}M", inline=False)
@@ -157,6 +165,7 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     embed.add_field(name="💸 Spent", value=f"{updated_wallet.get('spent', 0)}M", inline=False)
 
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M to {user.name}'s wallet.", embed=embed)
+
 
 
 # 📌 /deposit {user} {set or remove} {value}
