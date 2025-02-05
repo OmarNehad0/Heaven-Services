@@ -269,57 +269,101 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
 
 
 
-@bot.tree.command(name="post", description="Post a new order.")
-@app_commands.describe(customer="Customer placing the order", value="Order value in M", required_role="Required role", holder="Order holder")
-async def post(interaction: discord.Interaction, customer: discord.Member, value: int, required_role: discord.Role, holder: discord.Member):
-    order_id = str(interaction.id)
+class OrderButton(ui.View):
+    def __init__(self, order_id, required_role_id, customer_id, channel_id):
+        super().__init__()
+        self.order_id = order_id
+        self.required_role_id = required_role_id
+        self.customer_id = customer_id
+        self.channel_id = channel_id
 
-    embed = discord.Embed(title="New Order", color=0xffa500)
+    @ui.button(label="✅ Accept TOS & Take Job", style=discord.ButtonStyle.green)
+    async def accept_job(self, interaction: discord.Interaction, button: ui.Button):
+        order = orders_collection.find_one({"_id": self.order_id})
+        if not order:
+            await interaction.response.send_message("Order not found!", ephemeral=True)
+            return
+        
+        # Check if the user has the required role
+        if self.required_role_id not in [role.id for role in interaction.user.roles]:
+            await interaction.response.send_message("You do not have the required role to claim this order.", ephemeral=True)
+            return
+        
+        # Assign worker & delete the message
+        orders_collection.update_one({"_id": self.order_id}, {"$set": {"worker": interaction.user.id}})
+        channel = bot.get_channel(self.channel_id)
+        if channel:
+            await channel.purge(limit=1)
+            embed = Embed(title="Order Claimed", color=discord.Color.green())
+            embed.add_field(name="Worker", value=interaction.user.mention, inline=True)
+            embed.add_field(name="Customer", value=f"<@{self.customer_id}>", inline=True)
+            embed.set_footer(text=f"Order ID: {self.order_id}")
+            await channel.send(embed=embed)
+        
+        # Add worker to the order channel
+        await interaction.user.add_roles(discord.Object(id=self.channel_id))
+        await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
+
+@bot.tree.command(name="post", description="Post a new order.")
+async def post(interaction: discord.Interaction, customer: discord.Member, value: int, required_role: discord.Role, holder: discord.Member, description: str):
+    order_id = orders_collection.count_documents({}) + 1
+    embed = Embed(title="New Order", color=0xffa500)
     embed.add_field(name="Customer", value=customer.mention, inline=True)
     embed.add_field(name="Value", value=f"{value}M", inline=True)
     embed.add_field(name="Required Role", value=required_role.mention, inline=True)
     embed.add_field(name="Holder", value=holder.mention, inline=True)
+    embed.add_field(name="Description", value=description, inline=False)
     embed.set_footer(text=f"Order ID: {order_id}")
-
-    channel = bot.get_channel(1332354894597853346)  # Order channel ID
+    
+    channel = bot.get_channel(1332354894597853346)
     if channel:
-        message = await channel.send(embed=embed)
-        await message.add_reaction("✅")  # Claim button
-
-        # Store the order in MongoDB
+        message = await channel.send(embed=embed, view=OrderButton(order_id, required_role.id, customer.id, channel.id))
         orders_collection.insert_one({
+            "_id": order_id,
             "customer": customer.id,
             "worker": None,
             "value": value,
             "required_role": required_role.id,
             "holder": holder.id,
             "message_id": message.id,
-            "channel_id": 1332354894597853346
+            "channel_id": channel.id,
+            "description": description
         })
         await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
     else:
         await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
 
 @bot.tree.command(name="complete", description="Complete an order and update balances.")
-@app_commands.describe(order_id="Order ID to complete")
-async def complete(interaction: discord.Interaction, order_id: str):
+async def complete(interaction: discord.Interaction, order_id: int):
     order = orders_collection.find_one({"_id": order_id})
-
     if not order:
         await interaction.response.send_message("Order not found!", ephemeral=True)
         return
-
+    
     customer_id = order["customer"]
     worker_id = interaction.user.id
     value = order["value"]
-
-    update_wallet(worker_id, "wallet", value)
+    commission = value * 0.2
+    worker_amount = value * 0.8
+    
+    update_wallet(worker_id, "wallet", worker_amount)
     update_wallet(customer_id, "spent", value)
-
-    # Delete the order after completion
+    
     orders_collection.delete_one({"_id": order_id})
-
-    await interaction.response.send_message(f"Order {order_id} completed! {value}M added to {interaction.user.name}.", ephemeral=True)
+    
+    embed = Embed(title="Order Completed", color=discord.Color.green())
+    embed.add_field(name="Worker", value=interaction.user.mention, inline=True)
+    embed.add_field(name="Customer", value=f"<@{customer_id}>", inline=True)
+    embed.add_field(name="Total Value", value=f"{value}M", inline=True)
+    embed.add_field(name="Worker Receives", value=f"{worker_amount}M", inline=True)
+    embed.add_field(name="Commission", value=f"{commission}M", inline=True)
+    
+    await interaction.user.send(embed=embed)
+    order_channel = bot.get_channel(order["channel_id"])
+    if order_channel:
+        await order_channel.send(embed=embed)
+    
+    await interaction.response.send_message(f"Order {order_id} completed!", ephemeral=True)
 
 
 # 📌 /order deletion {order id}
