@@ -277,7 +277,7 @@ class OrderButton(View):
         self.customer_id = customer_id
         self.channel_id = channel_id
 
-    @button(label="✅ Accept TOS & Take Job", style=discord.ButtonStyle.green)
+    @discord.ui.button(label="✅ Accept TOS & Take Job", style=discord.ButtonStyle.green)
     async def accept_job(self, interaction: discord.Interaction, button: ui.Button):
         order = orders_collection.find_one({"_id": self.order_id})
         if not order:
