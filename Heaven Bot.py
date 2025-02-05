@@ -269,7 +269,7 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
 
 
 
-class OrderButton(ui.View):
+class OrderButton(View):
     def __init__(self, order_id, required_role_id, customer_id, channel_id):
         super().__init__()
         self.order_id = order_id
