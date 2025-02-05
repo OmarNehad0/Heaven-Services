@@ -167,36 +167,44 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value:,}M.", embed=embed)
 
 
-
-
-# 📌 /deposit {user} {set or remove} {value}
 @bot.tree.command(name="deposit", description="Set or remove a user's deposit value")
 @app_commands.choices(action=[
     discord.app_commands.Choice(name="Set", value="set"),
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def deposit(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    wallet_data = get_wallet(user.id)
+    user_id = str(user.id)  # Convert ID to string for MongoDB compatibility
+
+    # Fetch wallet data or default to zero if not found
+    wallet_data = get_wallet(user_id) or {"wallet": 0, "deposit": 0, "spent": 0}
 
     # Set or remove deposit value based on action
     if action == "set":
         wallet_data["deposit"] = value
     elif action == "remove":
         wallet_data["deposit"] = 0
-    
-    update_wallet(user.id, "deposit", wallet_data["deposit"])
 
-    # Send an updated wallet embed
+    # Update the database with new deposit value
+    update_wallet(user_id, "deposit", wallet_data["deposit"])
+
+    # Fetch updated wallet data
+    updated_wallet = get_wallet(user_id) or {"wallet": 0, "deposit": 0, "spent": 0}
+
+    # Format numbers with commas for better readability
+    deposit_value = f"```💵 {updated_wallet['deposit']:,}M```"
+    wallet_value = f"```💰 {updated_wallet['wallet']:,}M```"
+    spent_value = f"```🛍️ {updated_wallet['spent']:,}M```"
+
+    # Create an embed message
     embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
     embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
-
-    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
-    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
-    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
-
+    embed.add_field(name="📥 Deposit", value=deposit_value, inline=False)
+    embed.add_field(name="💰 Wallet", value=wallet_value, inline=False)
+    embed.add_field(name="💸 Spent", value=spent_value, inline=False)
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
-    await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} to {value}M.", embed=embed)
+    # Send response message
+    await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} to {value:,}M.", embed=embed)
 
 @bot.tree.command(name="tip", description="Tip M to another user.")
 @app_commands.describe(user="User to tip", value="Value in M")
