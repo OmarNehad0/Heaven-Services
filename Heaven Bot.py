@@ -110,53 +110,46 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
     spent_value = wallet_data.get('spent', 0)
 
     # Create embed
-    embed = discord.Embed(title=f"{user.display_name}'s Wallet", color=discord.Color.blue())
+    embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
     embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
-    embed.add_field(name="📥 Deposit", value=f"{deposit_value}M", inline=False)
-    embed.add_field(name="💰 Wallet", value=f"{wallet_value}M", inline=False)
-    embed.add_field(name="💸 Spent", value=f"{spent_value}M", inline=False)
+
+    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
+    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
+
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
     await interaction.response.send_message(embed=embed)
 
 
+# /wallet_add_remove command
 @bot.tree.command(name="wallet_add_remove", description="Add or remove value from a user's wallet")
 @app_commands.choices(action=[
     discord.app_commands.Choice(name="Add", value="add"),
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
-    user_id = str(user.id)  # Ensure MongoDB lookup is consistent
-    wallet_data = get_wallet(user_id)  
-
-    # Ensure all required fields exist and are set to 0 if missing
-    wallet_data["wallet"] = wallet_data.get("wallet", 0)
-    wallet_data["deposit"] = wallet_data.get("deposit", 0)
-    wallet_data["spent"] = wallet_data.get("spent", 0)
-
-    # Check for negative balance when removing
+    user_id = str(user.id)
+    wallet_data = get_wallet(user_id)
+    
     if action == "remove":
-        if wallet_data["wallet"] <= 0:
-            await interaction.response.send_message("⚠ The wallet balance is already at 0. Cannot remove further.", ephemeral=True)
+        if wallet_data["wallet"] < value:
+            await interaction.response.send_message("⚠ Insufficient balance to remove!", ephemeral=True)
             return
-        # Prevent going below 0 by subtracting only what is available
-        wallet_data["wallet"] = max(0, wallet_data["wallet"] - value)
-        update_wallet(user_id, "wallet", wallet_data["wallet"])
+        update_wallet(user_id, "wallet", -value)
+    else:
+        update_wallet(user_id, "wallet", value)
+    
+    updated_wallet = get_wallet(user_id)
+    embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
+    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
 
-    elif action == "add":
-        # Simply add the value
-        wallet_data["wallet"] += value
-        update_wallet(user_id, "wallet", wallet_data["wallet"])
+    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
+    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
 
-    # Create updated embed to reflect changes
-    embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
-    embed.set_thumbnail(url=user.display_avatar.url)
-    embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
-    embed.add_field(name="📥 Deposit", value=f"{wallet_data['deposit']}M", inline=False)
-    embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
-
-    # Respond with the appropriate success message
-    action_msg = f"{action.capitalize()}ed {value}M to {user.name}'s wallet."
-    await interaction.response.send_message(f"✅ {action_msg}", embed=embed)
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
+    await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M.", embed=embed)
 
 
 
@@ -178,11 +171,14 @@ async def deposit(interaction: discord.Interaction, user: discord.Member, action
     update_wallet(user.id, "deposit", wallet_data["deposit"])
 
     # Send an updated wallet embed
-    embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
-    embed.set_thumbnail(url=user.display_avatar.url)
-    embed.add_field(name="💰 Wallet", value=f"{wallet_data['wallet']}M", inline=False)
-    embed.add_field(name="📥 Deposit", value=f"{wallet_data['deposit']}M", inline=False)
-    embed.add_field(name="💸 Spent", value=f"{wallet_data['spent']}M", inline=False)
+    embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
+    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
+
+    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
+    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
+
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
     await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} to {value}M.", embed=embed)
 
@@ -220,18 +216,24 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     tip_message = f"💸 {interaction.user.mention} tipped {user.mention} **{value}M**!"
 
     # Embed for sender
-    sender_embed = discord.Embed(title=f"{interaction.user.name}'s Wallet", color=discord.Color.blue())
-    sender_embed.set_thumbnail(url=interaction.user.display_avatar.url)
-    sender_embed.add_field(name="💰 Wallet", value=f"{sender_wallet['wallet']}M", inline=False)
-    sender_embed.add_field(name="📥 Deposit", value=f"{sender_wallet['deposit']}M", inline=False)
-    sender_embed.add_field(name="💸 Spent", value=f"{sender_wallet['spent']}M", inline=False)
+    embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
+    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
+
+    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
+    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
+
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
     # Embed for recipient
-    recipient_embed = discord.Embed(title=f"{user.name}'s Wallet", color=discord.Color.blue())
-    recipient_embed.set_thumbnail(url=user.display_avatar.url)
-    recipient_embed.add_field(name="💰 Wallet", value=f"{recipient_wallet['wallet']}M", inline=False)
-    recipient_embed.add_field(name="📥 Deposit", value=f"{recipient_wallet['deposit']}M", inline=False)
-    recipient_embed.add_field(name="💸 Spent", value=f"{recipient_wallet['spent']}M", inline=False)
+    embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
+    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
+
+    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
+    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
+
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
     # Send message & embeds
     await interaction.response.send_message(tip_message)
