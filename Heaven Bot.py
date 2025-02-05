@@ -315,7 +315,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     embed.add_field(name="Description", value=description, inline=False)
     embed.set_footer(text=f"Order ID: {order_id}")
     
-    channel = bot.get_channel(1332354894597853346)
+    channel = bot.get_channel(1336510997145325719)
     if channel:
         message = await channel.send(embed=embed, view=OrderButton(order_id, required_role.id, customer.id, channel.id))
         orders_collection.insert_one({
