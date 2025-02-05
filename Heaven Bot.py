@@ -278,7 +278,7 @@ class OrderButton(View):
         self.channel_id = channel_id
 
     @discord.ui.button(label="✅ Accept TOS & Take Job", style=discord.ButtonStyle.green)
-    async def accept_job(self, interaction: discord.Interaction, button: ui.Button):
+    async def accept_job(self, interaction: discord.Interaction, button: discord.ui.Button):
         order = orders_collection.find_one({"_id": self.order_id})
         if not order:
             await interaction.response.send_message("Order not found!", ephemeral=True)
