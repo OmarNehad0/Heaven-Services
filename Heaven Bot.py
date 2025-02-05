@@ -204,18 +204,11 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     sender_id = str(interaction.user.id)  # Convert IDs to strings for MongoDB
     recipient_id = str(user.id)
 
-    sender_wallet = get_wallet(sender_id)
-    recipient_wallet = get_wallet(recipient_id)
+    # Fetch wallet data or default to zero if not found
+    sender_wallet = get_wallet(sender_id) or {"wallet": 0, "deposit": 0, "spent": 0}
+    recipient_wallet = get_wallet(recipient_id) or {"wallet": 0, "deposit": 0, "spent": 0}
 
-    # Ensure all required fields exist
-    sender_wallet["wallet"] = sender_wallet.get("wallet", 0)
-    sender_wallet["deposit"] = sender_wallet.get("deposit", 0)
-    sender_wallet["spent"] = sender_wallet.get("spent", 0)
-
-    recipient_wallet["wallet"] = recipient_wallet.get("wallet", 0)
-    recipient_wallet["deposit"] = recipient_wallet.get("deposit", 0)
-    recipient_wallet["spent"] = recipient_wallet.get("spent", 0)
-
+    # Ensure sender has enough balance
     if sender_wallet["wallet"] < value:
         await interaction.response.send_message("❌ You don't have enough M to tip!", ephemeral=True)
         return
@@ -224,37 +217,43 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     update_wallet(sender_id, "wallet", -value)  # Subtract from sender
     update_wallet(recipient_id, "wallet", value)  # Add to recipient
 
-    # Fetch updated wallet data after update
-    sender_wallet = get_wallet(sender_id)
-    recipient_wallet = get_wallet(recipient_id)
+    # Fetch updated data after transaction
+    sender_wallet = get_wallet(sender_id) or {"wallet": 0, "deposit": 0, "spent": 0}
+    recipient_wallet = get_wallet(recipient_id) or {"wallet": 0, "deposit": 0, "spent": 0}
 
     # Tip message (visible to all)
-    tip_message = f"💸 {interaction.user.mention} tipped {user.mention} **{value}M**!"
+    tip_message = f"💸 {interaction.user.mention} tipped {user.mention} **{value:,}M**!"
 
-    # Embed for sender
-    embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
-    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
+    # Format numbers with commas (e.g., 1,000M)
+    sender_deposit = f"```💵 {sender_wallet['deposit']:,}M```"
+    sender_wallet_value = f"```💰 {sender_wallet['wallet']:,}M```"
+    sender_spent = f"```🛍️ {sender_wallet['spent']:,}M```"
 
-    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
-    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
-    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
+    recipient_deposit = f"```💵 {recipient_wallet['deposit']:,}M```"
+    recipient_wallet_value = f"```💰 {recipient_wallet['wallet']:,}M```"
+    recipient_spent = f"```🛍️ {recipient_wallet['spent']:,}M```"
 
-    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
+    # Sender's wallet embed
+    sender_embed = discord.Embed(title=f"{interaction.user.display_name}'s Wallet 💳", color=discord.Color.red())
+    sender_embed.set_thumbnail(url=interaction.user.avatar.url if interaction.user.avatar else interaction.user.default_avatar.url)
+    sender_embed.add_field(name="📥 Deposit", value=sender_deposit, inline=False)
+    sender_embed.add_field(name="💰 Wallet", value=sender_wallet_value, inline=False)
+    sender_embed.add_field(name="💸 Spent", value=sender_spent, inline=False)
+    sender_embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
-    # Embed for recipient
-    embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
-    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
-
-    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
-    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
-    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
-
-    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
+    # Recipient's wallet embed
+    recipient_embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.green())
+    recipient_embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
+    recipient_embed.add_field(name="📥 Deposit", value=recipient_deposit, inline=False)
+    recipient_embed.add_field(name="💰 Wallet", value=recipient_wallet_value, inline=False)
+    recipient_embed.add_field(name="💸 Spent", value=recipient_spent, inline=False)
+    recipient_embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
     # Send message & embeds
     await interaction.response.send_message(tip_message)
     await interaction.channel.send(embed=sender_embed)
     await interaction.channel.send(embed=recipient_embed)
+
 
 
 @bot.tree.command(name="post", description="Post a new order.")
