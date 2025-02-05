@@ -130,26 +130,42 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
     user_id = str(user.id)
-    wallet_data = get_wallet(user_id)
     
+    # Fetch wallet data or default to zero if not found
+    wallet_data = get_wallet(user_id) or {"wallet": 0, "deposit": 0, "spent": 0}
+    
+    # Get individual values with defaults
+    wallet_value = wallet_data.get("wallet", 0)
+    deposit_value = wallet_data.get("deposit", 0)
+    spent_value = wallet_data.get("spent", 0)
+
+    # Action handling
     if action == "remove":
-        if wallet_data["wallet"] < value:
+        if wallet_value < value:
             await interaction.response.send_message("⚠ Insufficient balance to remove!", ephemeral=True)
             return
         update_wallet(user_id, "wallet", -value)
     else:
         update_wallet(user_id, "wallet", value)
-    
-    updated_wallet = get_wallet(user_id)
+
+    # Fetch updated values
+    updated_wallet = get_wallet(user_id) or {"wallet": 0, "deposit": 0, "spent": 0}
+    wallet_value = updated_wallet.get("wallet", 0)
+    deposit_value = updated_wallet.get("deposit", 0)
+    spent_value = updated_wallet.get("spent", 0)
+
+    # Embed with modern design
     embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
     embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
 
-    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
-    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
-    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
+    embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value:,}M```", inline=False)
+    embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value:,}M```", inline=False)
+    embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value:,}M```", inline=False)
 
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
-    await interaction.response.send_message(f"✅ {action.capitalize()}ed {value}M.", embed=embed)
+    
+    await interaction.response.send_message(f"✅ {action.capitalize()}ed {value:,}M.", embed=embed)
+
 
 
 
