@@ -303,6 +303,7 @@ class OrderButton(View):
             embed.add_field(name="Worker", value=interaction.user.mention, inline=True)
             embed.add_field(name="Customer", value=f"<@{self.customer_id}>", inline=True)
             embed.add_field(name="Deposit Required", value=f"{self.deposit_required}M", inline=True)
+            embed.add_field(name="Description", value=order.get("description", "No description provided."), inline=False)
             embed.set_footer(text=f"Order ID: {self.order_id}")
             await original_channel.send(embed=embed)
             
@@ -369,9 +370,10 @@ async def complete(interaction: Interaction, order_id: int):
     if original_channel:
         embed = Embed(title="Order Completed", color=discord.Color.blue())
         embed.add_field(name="Worker", value=f"<@{order['worker']}>", inline=True)
-        embed.add_field(name="Customer", value=f"<@{order['customer']}}>", inline=True)
+        embed.add_field(name="Customer", value=f"<@{order['customer']}>", inline=True)
         embed.add_field(name="Value", value=f"{order['value']}M", inline=True)
-        embed.add_field(name="Worker Payment (80%)", value=f"{worker_payment}M", inline=True)
+        embed.add_field(name="Worker Payment", value=f"{worker_payment}M", inline=True)
+        embed.add_field(name="Description", value=order.get("description", "No description provided."), inline=False)
         embed.set_footer(text=f"Order ID: {order_id}")
         await original_channel.send(embed=embed)
     
@@ -379,9 +381,10 @@ async def complete(interaction: Interaction, order_id: int):
     worker = bot.get_user(order["worker"])
     if worker:
         dm_embed = Embed(title="Order Completed", color=discord.Color.blue())
-        dm_embed.add_field(name="Customer", value=f"<@{order['customer']}}>", inline=True)
+        dm_embed.add_field(name="Customer", value=f"<@{order['customer']}>", inline=True)
         dm_embed.add_field(name="Value", value=f"{order['value']}M", inline=True)
-        dm_embed.add_field(name="Your Payment (80%)", value=f"{worker_payment}M", inline=True)
+        dm_embed.add_field(name="Worker Payment", value=f"{worker_payment}M", inline=True)
+        dm_embed.add_field(name="Description", value=order.get("description", "No description provided."), inline=False)
         dm_embed.set_footer(text=f"Order ID: {order_id}")
         await worker.send(embed=dm_embed)
     
