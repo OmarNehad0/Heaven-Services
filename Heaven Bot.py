@@ -392,7 +392,7 @@ async def complete(interaction: Interaction, order_id: int):
         embed.add_field(name="💰 Value", value=f"{order['value']}M", inline=True)
         embed.add_field(name="💵 Worker Payment", value=f"{worker_payment}M", inline=True)
         embed.add_field(name="📜 Description", value=order.get("description", "No description provided."), inline=False)
-        embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"")
+        embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
         await original_channel.send(embed=embed)
     
     # DM the worker
@@ -405,7 +405,7 @@ async def complete(interaction: Interaction, order_id: int):
         dm_embed.add_field(name="💰 Value", value=f"{order['value']}M", inline=True)
         dm_embed.add_field(name="💵 Your Payment", value=f"{worker_payment}M", inline=True)
         dm_embed.add_field(name="📜 Description", value=order.get("description", "No description provided."), inline=False)
-        dm_embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"")
+        dm_embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
         await worker.send(embed=dm_embed)
     
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
