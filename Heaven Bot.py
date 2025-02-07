@@ -358,23 +358,34 @@ async def complete(interaction: Interaction, order_id: int):
         await interaction.response.send_message("You are not the assigned worker for this order!", ephemeral=True)
         return
     
-    # Transfer funds and update the database
+    # Transfer funds
     update_wallet(str(order["customer"]), "spent", order["value"])
-    update_wallet(str(order["worker"]), "wallet", order["value"])
+    worker_payment = int(order["value"] * 0.8)  # 80% to worker
+    update_wallet(str(order["worker"]), "wallet", worker_payment)
     orders_collection.update_one({"_id": order_id}, {"$set": {"status": "completed"}})
     
     # Notify the original channel
     original_channel = bot.get_channel(order["original_channel_id"])
     if original_channel:
         embed = Embed(title="Order Completed", color=discord.Color.blue())
-        embed.add_field(name="Worker", value=f"<@{order['worker']}>", inline=True)
-        embed.add_field(name="Customer", value=f"<@{order['customer']}>", inline=True)
+        embed.add_field(name="Worker", value=f"<@{order['worker']}}>", inline=True)
+        embed.add_field(name="Customer", value=f"<@{order['customer']}}>", inline=True)
         embed.add_field(name="Value", value=f"{order['value']}M", inline=True)
+        embed.add_field(name="Worker Payment (80%)", value=f"{worker_payment}M", inline=True)
         embed.set_footer(text=f"Order ID: {order_id}")
         await original_channel.send(embed=embed)
     
+    # DM the worker
+    worker = bot.get_user(order["worker"])
+    if worker:
+        dm_embed = Embed(title="Order Completed", color=discord.Color.blue())
+        dm_embed.add_field(name="Customer", value=f"<@{order['customer']}}>", inline=True)
+        dm_embed.add_field(name="Value", value=f"{order['value']}M", inline=True)
+        dm_embed.add_field(name="Your Payment (80%)", value=f"{worker_payment}M", inline=True)
+        dm_embed.set_footer(text=f"Order ID: {order_id}")
+        await worker.send(embed=dm_embed)
+    
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
-
 
 # 📌 /order deletion {order id}
 @bot.tree.command(name="order_deletion", description="Delete an order.")
