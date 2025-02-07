@@ -346,8 +346,8 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     
     channel = bot.get_channel(ORDERS_CHANNEL_ID)
     if channel:
-    message = await channel.send(embed=embed)  # Send the message first
-    message_id = message.id  # Retrieve the message ID
+        message = await channel.send(embed=embed)  # Send the message first
+        message_id = message.id  # Retrieve the message ID
 
     await message.edit(view=OrderButton(order_id, deposit_required, customer.id, original_channel_id, message_id))  # Now pass message_id
 
