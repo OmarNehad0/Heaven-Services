@@ -308,12 +308,14 @@ class OrderButton(View):
 async def post(interaction: discord.Interaction, customer: discord.Member, value: int, required_role: discord.Role, holder: discord.Member, description: str):
     order_id = orders_collection.count_documents({}) + 1
     embed = Embed(title="New Order", color=0xffa500)
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.set_author(name="Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.add_field(name="Customer", value=customer.mention, inline=True)
     embed.add_field(name="Value", value=f"{value}M", inline=True)
     embed.add_field(name="Required Role", value=required_role.mention, inline=True)
     embed.add_field(name="Holder", value=holder.mention, inline=True)
     embed.add_field(name="Description", value=description, inline=False)
-    embed.set_footer(text=f"Order ID: {order_id}")
+    embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
     channel = bot.get_channel(1336510997145325719)
     if channel:
@@ -352,11 +354,15 @@ async def complete(interaction: discord.Interaction, order_id: int):
     orders_collection.delete_one({"_id": order_id})
     
     embed = Embed(title="Order Completed", color=discord.Color.green())
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.set_author(name="Order Completed", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.add_field(name="Worker", value=interaction.user.mention, inline=True)
     embed.add_field(name="Customer", value=f"<@{customer_id}>", inline=True)
     embed.add_field(name="Total Value", value=f"{value}M", inline=True)
-    embed.add_field(name="Worker Receives", value=f"{worker_amount}M", inline=True)
-    embed.add_field(name="Commission", value=f"{commission}M", inline=True)
+    embed.add_field(name="Worker Receives (80%)", value=f"{worker_amount}M", inline=True)
+    embed.add_field(name="Commission (20%)", value=f"{commission}M", inline=True)
+    embed.add_field(name="Customer Spent (100%)", value=f"{value}M", inline=True)
+    embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
     await interaction.user.send(embed=embed)
     order_channel = bot.get_channel(order["channel_id"])
