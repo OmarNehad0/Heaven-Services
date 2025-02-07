@@ -346,20 +346,24 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     
     channel = bot.get_channel(ORDERS_CHANNEL_ID)
     if channel:
-        message = await channel.send(embed=embed, view=OrderButton(order_id, deposit_required, customer.id, original_channel_id))
-        orders_collection.insert_one({
-            "_id": order_id,
-            "customer": customer.id,
-            "worker": None,
-            "value": value,
-            "deposit_required": deposit_required,
-            "holder": holder.id,
-            "message_id": message.id,
-            "channel_id": channel.id,
-            "original_channel_id": original_channel_id,
-            "description": description
-        })
-        await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
+    message = await channel.send(embed=embed)  # Send the message first
+    message_id = message.id  # Retrieve the message ID
+
+    await message.edit(view=OrderButton(order_id, deposit_required, customer.id, original_channel_id, message_id))  # Now pass message_id
+
+    orders_collection.insert_one({
+        "_id": order_id,
+        "customer": customer.id,
+        "worker": None,
+        "value": value,
+        "deposit_required": deposit_required,
+        "holder": holder.id,
+        "message_id": message_id,  # Store message ID
+        "channel_id": channel.id,
+        "original_channel_id": original_channel_id,
+        "description": description
+    })
+    await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
     else:
         await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
 
