@@ -365,7 +365,7 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     })
     await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
     else:
-        await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
+    await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
 
 # /complete command
 @bot.tree.command(name="complete", description="Mark an order as completed.")
