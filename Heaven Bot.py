@@ -51,6 +51,8 @@ db = client['MongoDB']  # Replace with the name of your database
 wallets_collection = db['wallets']
 orders_collection = db['orders']
 
+# The fixed orders posting channel
+ORDERS_CHANNEL_ID = 1336510997145325719
 
 # Syncing command tree for slash commands
 @bot.event
@@ -269,107 +271,109 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
 
 
 
+# Order button class
 class OrderButton(View):
-    def __init__(self, order_id, required_role_id, customer_id, channel_id):
+    def __init__(self, order_id, deposit_required, customer_id, original_channel_id):
         super().__init__()
         self.order_id = order_id
-        self.required_role_id = required_role_id
+        self.deposit_required = deposit_required
         self.customer_id = customer_id
-        self.channel_id = channel_id
+        self.original_channel_id = original_channel_id
 
     @discord.ui.button(label="✅ Accept TOS & Take Job", style=discord.ButtonStyle.green)
-    async def accept_job(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def accept_job(self, interaction: Interaction, button: ui.Button):
         order = orders_collection.find_one({"_id": self.order_id})
         if not order:
             await interaction.response.send_message("Order not found!", ephemeral=True)
             return
         
-        # Check if the user has the required role
-        if self.required_role_id not in [role.id for role in interaction.user.roles]:
-            await interaction.response.send_message("You do not have the required role to claim this order.", ephemeral=True)
+        # Check if the user has enough deposit
+        user_wallet = get_wallet(str(interaction.user.id))
+        if user_wallet.get("deposit", 0) < self.deposit_required:
+            await interaction.response.send_message("You do not have enough deposit to claim this order!", ephemeral=True)
             return
         
-        # Assign worker & delete the message
+        # Assign worker
         orders_collection.update_one({"_id": self.order_id}, {"$set": {"worker": interaction.user.id}})
-        channel = bot.get_channel(self.channel_id)
-        if channel:
-            await channel.purge(limit=1)
+        
+        # Send order claimed message in the original posting channel
+        original_channel = bot.get_channel(self.original_channel_id)
+        if original_channel:
             embed = Embed(title="Order Claimed", color=discord.Color.green())
             embed.add_field(name="Worker", value=interaction.user.mention, inline=True)
             embed.add_field(name="Customer", value=f"<@{self.customer_id}>", inline=True)
+            embed.add_field(name="Deposit Required", value=f"{self.deposit_required}M", inline=True)
             embed.set_footer(text=f"Order ID: {self.order_id}")
-            await channel.send(embed=embed)
+            await original_channel.send(embed=embed)
+            
+            # Add worker to the original order channel
+            await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
         
-        # Add worker to the order channel
-        await interaction.user.add_roles(discord.Object(id=self.channel_id))
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
 
+# /post command
 @bot.tree.command(name="post", description="Post a new order.")
-async def post(interaction: discord.Interaction, customer: discord.Member, value: int, required_role: discord.Role, holder: discord.Member, description: str):
+async def post(interaction: Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, description: str):
     order_id = orders_collection.count_documents({}) + 1
+    original_channel_id = interaction.channel.id  # Save the original posting channel
+    
     embed = Embed(title="New Order", color=0xffa500)
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.set_author(name="Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.add_field(name="Customer", value=customer.mention, inline=True)
     embed.add_field(name="Value", value=f"{value}M", inline=True)
-    embed.add_field(name="Required Role", value=required_role.mention, inline=True)
+    embed.add_field(name="Deposit Required", value=f"{deposit_required}M", inline=True)
     embed.add_field(name="Holder", value=holder.mention, inline=True)
     embed.add_field(name="Description", value=description, inline=False)
     embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
-    channel = bot.get_channel(1336510997145325719)
+    channel = bot.get_channel(ORDERS_CHANNEL_ID)
     if channel:
-        message = await channel.send(embed=embed, view=OrderButton(order_id, required_role.id, customer.id, channel.id))
+        message = await channel.send(embed=embed, view=OrderButton(order_id, deposit_required, customer.id, original_channel_id))
         orders_collection.insert_one({
             "_id": order_id,
             "customer": customer.id,
             "worker": None,
             "value": value,
-            "required_role": required_role.id,
+            "deposit_required": deposit_required,
             "holder": holder.id,
             "message_id": message.id,
             "channel_id": channel.id,
+            "original_channel_id": original_channel_id,
             "description": description
         })
         await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
     else:
         await interaction.response.send_message("Error: Order channel not found.", ephemeral=True)
 
-@bot.tree.command(name="complete", description="Complete an order and update balances.")
-async def complete(interaction: discord.Interaction, order_id: int):
+# /complete command
+@bot.tree.command(name="complete", description="Mark an order as completed.")
+async def complete(interaction: Interaction, order_id: int):
     order = orders_collection.find_one({"_id": order_id})
     if not order:
         await interaction.response.send_message("Order not found!", ephemeral=True)
         return
     
-    customer_id = order["customer"]
-    worker_id = interaction.user.id
-    value = order["value"]
-    commission = value * 0.2
-    worker_amount = value * 0.8
+    if order["worker"] != interaction.user.id:
+        await interaction.response.send_message("You are not the assigned worker for this order!", ephemeral=True)
+        return
     
-    update_wallet(worker_id, "wallet", worker_amount)
-    update_wallet(customer_id, "spent", value)
+    # Transfer funds and update the database
+    update_wallet(str(order["customer"]), "spent", order["value"])
+    update_wallet(str(order["worker"]), "wallet", order["value"])
+    orders_collection.update_one({"_id": order_id}, {"$set": {"status": "completed"}})
     
-    orders_collection.delete_one({"_id": order_id})
+    # Notify the original channel
+    original_channel = bot.get_channel(order["original_channel_id"])
+    if original_channel:
+        embed = Embed(title="Order Completed", color=discord.Color.blue())
+        embed.add_field(name="Worker", value=f"<@{order['worker']}>", inline=True)
+        embed.add_field(name="Customer", value=f"<@{order['customer']}>", inline=True)
+        embed.add_field(name="Value", value=f"{order['value']}M", inline=True)
+        embed.set_footer(text=f"Order ID: {order_id}")
+        await original_channel.send(embed=embed)
     
-    embed = Embed(title="Order Completed", color=discord.Color.green())
-    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    embed.set_author(name="Order Completed", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    embed.add_field(name="Worker", value=interaction.user.mention, inline=True)
-    embed.add_field(name="Customer", value=f"<@{customer_id}>", inline=True)
-    embed.add_field(name="Total Value", value=f"{value}M", inline=True)
-    embed.add_field(name="Worker Receives (80%)", value=f"{worker_amount}M", inline=True)
-    embed.add_field(name="Commission (20%)", value=f"{commission}M", inline=True)
-    embed.add_field(name="Customer Spent (100%)", value=f"{value}M", inline=True)
-    embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    
-    await interaction.user.send(embed=embed)
-    order_channel = bot.get_channel(order["channel_id"])
-    if order_channel:
-        await order_channel.send(embed=embed)
-    
-    await interaction.response.send_message(f"Order {order_id} completed!", ephemeral=True)
+    await interaction.response.send_message("Order marked as completed!", ephemeral=True)
 
 
 # 📌 /order deletion {order id}
