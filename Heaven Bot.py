@@ -368,7 +368,7 @@ async def complete(interaction: Interaction, order_id: int):
     original_channel = bot.get_channel(order["original_channel_id"])
     if original_channel:
         embed = Embed(title="Order Completed", color=discord.Color.blue())
-        embed.add_field(name="Worker", value=f"<@{order['worker']}}>", inline=True)
+        embed.add_field(name="Worker", value=f"<@{order['worker']}>", inline=True)
         embed.add_field(name="Customer", value=f"<@{order['customer']}}>", inline=True)
         embed.add_field(name="Value", value=f"{order['value']}M", inline=True)
         embed.add_field(name="Worker Payment (80%)", value=f"{worker_payment}M", inline=True)
