@@ -314,13 +314,14 @@ class OrderButton(View):
         # Send order claimed message in the original posting channel
         original_channel = bot.get_channel(self.original_channel_id)
         if original_channel:
-            embed = Embed(title="🎉 Order Claimed", color=discord.Color.green())
+            embed = Embed(title="🎡 Order Claimed", color=discord.Color.green())
             embed.add_field(name="👷 Worker", value=interaction.user.mention, inline=True)
             embed.add_field(name="📌 Customer", value=f"<@{self.customer_id}>", inline=True)
             embed.add_field(name="💰 Deposit Required", value=f"{self.deposit_required}M", inline=True)
             embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
+            embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
             embed.add_field(name="📜 Description", value=order.get("description", "No description provided."), inline=False)
-            embed.set_footer(text="Heaven System")
+            embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
             
             # Add worker to the original order channel
@@ -336,12 +337,12 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     
     embed = Embed(title="New Order", color=0xffa500)
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    embed.set_author(name="Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    embed.add_field(name="Customer", value=customer.mention, inline=True)
-    embed.add_field(name="Value", value=f"{value}M", inline=True)
-    embed.add_field(name="Deposit Required", value=f"{deposit_required}M", inline=True)
-    embed.add_field(name="Holder", value=holder.mention, inline=True)
-    embed.add_field(name="Description", value=description, inline=False)
+    embed.set_author(name="🎭 Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.add_field(name="📌 Customer", value=customer.mention, inline=True)
+    embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
+    embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
+    embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
+    embed.add_field(name="📜 Description", value=description, inline=False)
     embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
     channel = bot.get_channel(ORDERS_CHANNEL_ID)
