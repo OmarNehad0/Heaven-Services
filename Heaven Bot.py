@@ -273,18 +273,24 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
 
 # Order button class
 class OrderButton(View):
-    def __init__(self, order_id, deposit_required, customer_id, original_channel_id):
+    def __init__(self, order_id, deposit_required, customer_id, original_channel_id, message_id):
         super().__init__()
         self.order_id = order_id
         self.deposit_required = deposit_required
         self.customer_id = customer_id
         self.original_channel_id = original_channel_id
+        self.message_id = message_id
 
     @discord.ui.button(label="✅ Accept TOS & Take Job", style=discord.ButtonStyle.green)
     async def accept_job(self, interaction: Interaction, button: discord.ui.Button):
         order = orders_collection.find_one({"_id": self.order_id})
         if not order:
             await interaction.response.send_message("Order not found!", ephemeral=True)
+            return
+        
+        # Check if the order is already claimed
+        if order.get("worker"):
+            await interaction.response.send_message("This order has already been claimed!", ephemeral=True)
             return
         
         # Check if the user has enough deposit
@@ -296,15 +302,25 @@ class OrderButton(View):
         # Assign worker
         orders_collection.update_one({"_id": self.order_id}, {"$set": {"worker": interaction.user.id}})
         
+        # Delete the original order post
+        order_channel = bot.get_channel(ORDERS_CHANNEL_ID)
+        if order_channel:
+            try:
+                message = await order_channel.fetch_message(self.message_id)
+                await message.delete()
+            except:
+                pass
+        
         # Send order claimed message in the original posting channel
         original_channel = bot.get_channel(self.original_channel_id)
         if original_channel:
-            embed = Embed(title="Order Claimed", color=discord.Color.green())
-            embed.add_field(name="Worker", value=interaction.user.mention, inline=True)
-            embed.add_field(name="Customer", value=f"<@{self.customer_id}>", inline=True)
-            embed.add_field(name="Deposit Required", value=f"{self.deposit_required}M", inline=True)
-            embed.add_field(name="Description", value=order.get("description", "No description provided."), inline=False)
-            embed.set_footer(text=f"Order ID: {self.order_id}")
+            embed = Embed(title="🎉 Order Claimed", color=discord.Color.green())
+            embed.add_field(name="👷 Worker", value=interaction.user.mention, inline=True)
+            embed.add_field(name="📌 Customer", value=f"<@{self.customer_id}>", inline=True)
+            embed.add_field(name="💰 Deposit Required", value=f"{self.deposit_required}M", inline=True)
+            embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
+            embed.add_field(name="📜 Description", value=order.get("description", "No description provided."), inline=False)
+            embed.set_footer(text="Heaven System")
             await original_channel.send(embed=embed)
             
             # Add worker to the original order channel
