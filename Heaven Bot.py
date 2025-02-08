@@ -315,6 +315,8 @@ class OrderButton(View):
         original_channel = bot.get_channel(self.original_channel_id)
         if original_channel:
             embed = Embed(title="🎡 Order Claimed", color=discord.Color.green())
+            embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+            embed.set_author(name="👑 Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             embed.add_field(name="👷 Worker", value=interaction.user.mention, inline=True)
             embed.add_field(name="📌 Customer", value=f"<@{self.customer_id}>", inline=True)
             embed.add_field(name="💰 Deposit Required", value=f"{self.deposit_required}M", inline=True)
