@@ -249,25 +249,38 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     recipient_spent = f"```🛍️ {recipient_wallet['spent']:,}M```"
 
     # Sender's wallet embed
-    sender_embed = discord.Embed(title=f"{interaction.user.display_name}'s Wallet 💳", color=discord.Color.red())
+    sender_embed = discord.Embed(title=f"{interaction.user.display_name}'s Updated Wallet 💳", color=discord.Color.red())
     sender_embed.set_thumbnail(url=interaction.user.avatar.url if interaction.user.avatar else interaction.user.default_avatar.url)
     sender_embed.add_field(name="📥 Deposit", value=sender_deposit, inline=False)
     sender_embed.add_field(name="💰 Wallet", value=sender_wallet_value, inline=False)
     sender_embed.add_field(name="💸 Spent", value=sender_spent, inline=False)
-    sender_embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
+    sender_embed.set_footer(text=f"Tip sent to {user.display_name}", icon_url=user.avatar.url)
 
     # Recipient's wallet embed
-    recipient_embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.green())
+    recipient_embed = discord.Embed(title=f"{user.display_name}'s Updated Wallet 💳", color=discord.Color.green())
     recipient_embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
     recipient_embed.add_field(name="📥 Deposit", value=recipient_deposit, inline=False)
     recipient_embed.add_field(name="💰 Wallet", value=recipient_wallet_value, inline=False)
     recipient_embed.add_field(name="💸 Spent", value=recipient_spent, inline=False)
-    recipient_embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
+    recipient_embed.set_footer(text=f"Tip received from {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
-    # Send message & embeds
+    # Send the tip message publicly
     await interaction.response.send_message(tip_message)
+
+    # Send updated wallets in the channel
     await interaction.channel.send(embed=sender_embed)
     await interaction.channel.send(embed=recipient_embed)
+
+    # Also send updated wallets via DM
+    try:
+        await interaction.user.send(embed=sender_embed)  # Sender DM
+    except discord.Forbidden:
+        await interaction.channel.send(f"⚠️ {interaction.user.mention}, I couldn't DM your updated wallet!")
+
+    try:
+        await user.send(embed=recipient_embed)  # Recipient DM
+    except discord.Forbidden:
+        await interaction.channel.send(f"⚠️ {user.mention}, I couldn't DM your updated wallet!")
 
 
 
