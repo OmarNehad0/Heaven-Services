@@ -319,7 +319,6 @@ class OrderButton(View):
             embed.add_field(name="📌 Customer", value=f"<@{self.customer_id}>", inline=True)
             embed.add_field(name="💰 Deposit Required", value=f"{self.deposit_required}M", inline=True)
             embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
-            embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
             embed.add_field(name="📜 Description", value=order.get("description", "No description provided."), inline=False)
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
