@@ -369,6 +369,7 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
     embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
     embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
+    embed.add_field(name=f"📌 Order ID: {order_id}")
     embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
     channel = bot.get_channel(ORDERS_CHANNEL_ID)
@@ -440,17 +441,29 @@ async def complete(interaction: Interaction, order_id: int):
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
 
 # 📌 /order deletion {order id}
+# /order_deletion command
 @bot.tree.command(name="order_deletion", description="Delete an order.")
-@app_commands.describe(order_id="Order ID to delete")
-async def order_deletion(interaction: discord.Interaction, order_id: str):
+async def order_deletion(interaction: Interaction, order_id: int):
     order = orders_collection.find_one({"_id": order_id})
-
+    
     if not order:
         await interaction.response.send_message("Order not found!", ephemeral=True)
         return
 
+    # Delete the order from MongoDB
     orders_collection.delete_one({"_id": order_id})
-    await interaction.response.send_message(f"Order {order_id} deleted.", ephemeral=True)
+
+    # Try to delete the order message
+    order_channel = bot.get_channel(order["channel_id"])
+    if order_channel:
+        try:
+            message = await order_channel.fetch_message(order["message_id"])
+            await message.delete()
+        except discord.NotFound:
+            print(f"Message for order {order_id} not found. Skipping deletion.")
+
+    await interaction.response.send_message(f"Order {order_id} has been successfully deleted.", ephemeral=True)
+
 
 # Image URLs
 THUMBNAIL_URL = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
