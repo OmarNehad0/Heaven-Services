@@ -369,8 +369,7 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
     embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
     embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
-    embed.add_field(name=f"📌 Order ID: {order_id}")
-    embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
     channel = bot.get_channel(ORDERS_CHANNEL_ID)
     if channel:
