@@ -283,10 +283,9 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     except discord.Forbidden:
         await interaction.channel.send(f"⚠️ {user.mention}, I couldn't DM your updated wallet!")
 
-# Order button class
 class OrderButton(View):
     def __init__(self, order_id, deposit_required, customer_id, original_channel_id, message_id):
-        super().__init__()
+        super().__init__(timeout=None)  # Make the view persistent
         self.order_id = order_id
         self.deposit_required = deposit_required
         self.customer_id = customer_id
@@ -299,21 +298,19 @@ class OrderButton(View):
         if not order:
             await interaction.response.send_message("Order not found!", ephemeral=True)
             return
-        
-        # Check if the order is already claimed
+
         if order.get("worker"):
             await interaction.response.send_message("This order has already been claimed!", ephemeral=True)
             return
-        
-        # Check if the user has enough deposit
+
         user_wallet = get_wallet(str(interaction.user.id))
         if user_wallet.get("deposit", 0) < self.deposit_required:
             await interaction.response.send_message("You do not have enough deposit to claim this order!", ephemeral=True)
             return
-        
+
         # Assign worker
         orders_collection.update_one({"_id": self.order_id}, {"$set": {"worker": interaction.user.id}})
-        
+
         # Delete the original order post
         order_channel = bot.get_channel(ORDERS_CHANNEL_ID)
         if order_channel:
@@ -322,8 +319,8 @@ class OrderButton(View):
                 await message.delete()
             except:
                 pass
-        
-        # Send order claimed message in the original posting channel
+
+        # Send "Order Claimed" message
         original_channel = bot.get_channel(self.original_channel_id)
         if original_channel:
             embed = Embed(title="🎡 Order Claimed", color=discord.Color.green())
@@ -336,11 +333,27 @@ class OrderButton(View):
             embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
-            
-            # Add worker to the original order channel
+
             await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
-        
+
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
+
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user}")
+
+    # Reload buttons for active orders
+    for order in orders_collection.find({"worker": None}):  # Only for unclaimed orders
+        channel = bot.get_channel(order["channel_id"])
+        if channel:
+            try:
+                message = await channel.fetch_message(order["message_id"])
+                view = OrderButton(order["_id"], order["deposit_required"], order["customer"], order["original_channel_id"], order["message_id"])
+                await message.edit(view=view)
+            except discord.NotFound:
+                print(f"Order message {order['message_id']} not found, skipping.")
+    
+    print("Re-registered all active order buttons!")
 
 # /post command
 @bot.tree.command(name="post", description="Post a new order.")
