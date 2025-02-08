@@ -236,7 +236,7 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     sender_wallet = get_wallet(sender_id) or {"wallet": 0, "deposit": 0, "spent": 0}
     recipient_wallet = get_wallet(recipient_id) or {"wallet": 0, "deposit": 0, "spent": 0}
 
-    # Tip message (visible to all)
+    # Tip message (public)
     tip_message = f"💸 {interaction.user.mention} tipped {user.mention} **{value:,}M**!"
 
     # Format numbers with commas (e.g., 1,000M)
@@ -271,18 +271,17 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     await interaction.channel.send(embed=sender_embed)
     await interaction.channel.send(embed=recipient_embed)
 
-    # Also send updated wallets via DM
+    # Send DM to sender with embed & tip message
     try:
-        await interaction.user.send(embed=sender_embed)  # Sender DM
+        await interaction.user.send(f"✅ You sent **{value:,}M** as a tip to {user.mention}!", embed=sender_embed)
     except discord.Forbidden:
         await interaction.channel.send(f"⚠️ {interaction.user.mention}, I couldn't DM your updated wallet!")
 
+    # Send DM to recipient with embed & received message
     try:
-        await user.send(embed=recipient_embed)  # Recipient DM
+        await user.send(f"🎉 You received **{value:,}M** as a tip from {interaction.user.mention}!", embed=recipient_embed)
     except discord.Forbidden:
         await interaction.channel.send(f"⚠️ {user.mention}, I couldn't DM your updated wallet!")
-
-
 
 # Order button class
 class OrderButton(View):
