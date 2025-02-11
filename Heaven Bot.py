@@ -360,11 +360,12 @@ async def on_ready():
 def get_next_order_id():
     counter = counters_collection.find_one_and_update(
         {"_id": "order_counter"},
-        {"$inc": {"seq": 1}},
+        {"$setOnInsert": {"seq": 46}, "$inc": {"seq": 1}},  # Ensure it starts from 46 if not set
         upsert=True,
         return_document=ReturnDocument.AFTER
     )
     return counter["seq"]
+
 
 @bot.tree.command(name="post", description="Post a new order.")
 async def post(interaction: Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, description: str):
