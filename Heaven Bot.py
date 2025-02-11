@@ -377,6 +377,23 @@ def get_next_order_id():
 
 @bot.tree.command(name="post", description="Post a new order.")
 async def post(interaction: Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, description: str):
+    # Ask user for the channel to post the order
+    await interaction.response.send_message("Please mention the channel where you want to post the order:", ephemeral=True)
+    
+    # Wait for a response (waiting for a channel mention)
+    def check(msg):
+        return msg.author == interaction.user and msg.channel == interaction.channel and msg.content.startswith("<#")
+    
+    try:
+        msg = await bot.wait_for('message', timeout=60.0, check=check)
+        channel = bot.get_channel(int(msg.content.strip("<>#")))
+        if not channel:
+            await interaction.followup.send("Invalid channel. Please try again.", ephemeral=True)
+            return
+    except asyncio.TimeoutError:
+        await interaction.followup.send("You took too long to respond. Try again later.", ephemeral=True)
+        return
+
     order_id = get_next_order_id()  # Get a unique order ID
     original_channel_id = interaction.channel.id  # Save the original posting channel
     
@@ -389,11 +406,9 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
     embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
     embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    
-    channel = bot.get_channel(ORDERS_CHANNEL_ID)
-    if channel:
-        message = await channel.send(embed=embed)  # Send the message first
-        message_id = message.id  # Retrieve the message ID
+
+    message = await channel.send(embed=embed)  # Send the message to the user-selected channel
+    message_id = message.id  # Retrieve the message ID
     
     await message.edit(view=OrderButton(order_id, deposit_required, customer.id, original_channel_id, message_id))  # Now pass message_id
 
@@ -409,7 +424,42 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
         "original_channel_id": original_channel_id,
         "description": description
     })
-    await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
+    await interaction.followup.send(f"Order posted in <#{channel.id}>!", ephemeral=True)
+
+@bot.tree.command(name="set", description="Set an order directly with worker.")
+async def set_order(interaction: Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, description: str, worker: discord.Member):
+    order_id = get_next_order_id()  # Get a unique order ID
+    original_channel_id = interaction.channel.id  # Save the original posting channel
+    
+    embed = Embed(title="Order Set", color=0x0000FF)
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.set_author(name="🛠️ Order Set", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.add_field(name="📜 Description", value=description, inline=False)
+    embed.add_field(name="📌 Customer", value=customer.mention, inline=True)
+    embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
+    embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
+    embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
+    embed.add_field(name="👷 Worker", value=worker.mention, inline=True)
+    embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    
+    channel = bot.get_channel(ORDERS_CHANNEL_ID)
+    if channel:
+        message = await channel.send(embed=embed)  # Send the message first
+        message_id = message.id  # Retrieve the message ID
+    
+    orders_collection.insert_one({
+        "_id": order_id,  # Use unique order ID
+        "customer": customer.id,
+        "worker": worker.id,  # Directly assign worker
+        "value": value,
+        "deposit_required": deposit_required,
+        "holder": holder.id,
+        "message_id": message_id,
+        "channel_id": channel.id,
+        "original_channel_id": original_channel_id,
+        "description": description
+    })
+    await interaction.response.send_message(f"Order set with Worker {worker.mention}!", ephemeral=True)
 
 
 # /complete command
