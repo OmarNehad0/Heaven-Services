@@ -358,13 +358,21 @@ async def on_ready():
     print("Re-registered all active order buttons!")
 
 def get_next_order_id():
+    counter = counters_collection.find_one({"_id": "order_counter"})
+    
+    if not counter:
+        # Initialize the counter to 46 if it does not exist
+        counters_collection.insert_one({"_id": "order_counter", "seq": 46})
+        return 46  # First order ID should be 46
+
+    # Increment and return the next order ID
     counter = counters_collection.find_one_and_update(
         {"_id": "order_counter"},
-        {"$setOnInsert": {"seq": 46}, "$inc": {"seq": 1}},  # Ensure it starts from 46 if not set
-        upsert=True,
+        {"$inc": {"seq": 1}},  # Increment the existing counter
         return_document=ReturnDocument.AFTER
     )
     return counter["seq"]
+
 
 
 @bot.tree.command(name="post", description="Post a new order.")
