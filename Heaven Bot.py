@@ -50,6 +50,7 @@ db = client['MongoDB']  # Replace with the name of your database
 # Access collections (equivalent to Firestore collections)
 wallets_collection = db['wallets']
 orders_collection = db['orders']
+counters_collection = db["order_counters"]  # New collection to track order ID
 
 # The fixed orders posting channel
 ORDERS_CHANNEL_ID = 1336510997145325719
@@ -355,10 +356,18 @@ async def on_ready():
     
     print("Re-registered all active order buttons!")
 
-# /post command
+def get_next_order_id():
+    counter = counters_collection.find_one_and_update(
+        {"_id": "order_counter"},
+        {"$inc": {"seq": 1}},
+        upsert=True,
+        return_document=ReturnDocument.AFTER
+    )
+    return counter["seq"]
+
 @bot.tree.command(name="post", description="Post a new order.")
 async def post(interaction: Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, description: str):
-    order_id = orders_collection.count_documents({}) + 1
+    order_id = get_next_order_id()  # Get a unique order ID
     original_channel_id = interaction.channel.id  # Save the original posting channel
     
     embed = Embed(title="New Order", color=0xffa500)
@@ -375,17 +384,17 @@ async def post(interaction: Interaction, customer: discord.Member, value: int, d
     if channel:
         message = await channel.send(embed=embed)  # Send the message first
         message_id = message.id  # Retrieve the message ID
-
+    
     await message.edit(view=OrderButton(order_id, deposit_required, customer.id, original_channel_id, message_id))  # Now pass message_id
 
     orders_collection.insert_one({
-        "_id": order_id,
+        "_id": order_id,  # Use unique order ID
         "customer": customer.id,
         "worker": None,
         "value": value,
         "deposit_required": deposit_required,
         "holder": holder.id,
-        "message_id": message_id,  # Store message ID
+        "message_id": message_id,
         "channel_id": channel.id,
         "original_channel_id": original_channel_id,
         "description": description
