@@ -417,7 +417,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
             "holder": holder.id,
             "message_id": message.id,
             "channel_id": channel.id,
-            "original_channel_id": channel.id,
+            "original_channel_id": channel.id,  # Store original channel
             "description": "This is a description of the order."
         })
 
@@ -443,11 +443,13 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
     embed.add_field(name="👷 Worker", value=worker.mention, inline=True)
     embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
+    # Send the order to the orders channel (this is where orders will be posted initially)
     channel = bot.get_channel(ORDERS_CHANNEL_ID)
     if channel:
         message = await channel.send(embed=embed)  # Send the message first
         message_id = message.id  # Retrieve the message ID
     
+    # Store order in the database, including the original channel where the order was posted
     orders_collection.insert_one({
         "_id": order_id,  # Use unique order ID
         "customer": customer.id,
@@ -457,11 +459,14 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
         "holder": holder.id,
         "message_id": message_id,
         "channel_id": channel.id,
-        "original_channel_id": original_channel_id,
+        "original_channel_id": original_channel_id,  # Store the original channel ID
         "description": description
     })
+
+    # Notify the user that the order was successfully set
     await interaction.response.send_message(f"Order set with Worker {worker.mention}!", ephemeral=True)
 
+    # Now, when the order is completed, the "Order Completed" message will be sent to the same channel
 
 # /complete command
 @bot.tree.command(name="complete", description="Mark an order as completed.")
