@@ -459,29 +459,38 @@ async def complete(interaction: Interaction, order_id: int):
     
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
 
-# 📌 /order deletion {order id}
-# /order_deletion command
+# 📌 /order_deletion command
 @bot.tree.command(name="order_deletion", description="Delete an order.")
 async def order_deletion(interaction: Interaction, order_id: int):
     order = orders_collection.find_one({"_id": order_id})
     
     if not order:
-        await interaction.response.send_message("Order not found!", ephemeral=True)
+        await interaction.response.send_message("❌ Order not found!", ephemeral=True)
         return
 
-    # Delete the order from MongoDB
-    orders_collection.delete_one({"_id": order_id})
-
-    # Try to delete the order message
+    # Delete the order message in the orders channel
     order_channel = bot.get_channel(order["channel_id"])
     if order_channel:
         try:
             message = await order_channel.fetch_message(order["message_id"])
             await message.delete()
         except discord.NotFound:
-            print(f"Message for order {order_id} not found. Skipping deletion.")
+            print(f"⚠️ Message for order {order_id} not found in orders channel. Skipping deletion.")
 
-    await interaction.response.send_message(f"Order {order_id} has been successfully deleted.", ephemeral=True)
+    # Delete the original post message in the interaction channel
+    original_channel = bot.get_channel(order["original_channel_id"])
+    if original_channel:
+        try:
+            original_message = await original_channel.fetch_message(order["message_id"])
+            await original_message.delete()
+        except discord.NotFound:
+            print(f"⚠️ Original message for order {order_id} not found. Skipping deletion.")
+
+    # Remove the order from MongoDB
+    orders_collection.delete_one({"_id": order_id})
+    
+    await interaction.response.send_message(f"✅ Order {order_id} has been successfully deleted.", ephemeral=True)
+
 
 
 # Image URLs
