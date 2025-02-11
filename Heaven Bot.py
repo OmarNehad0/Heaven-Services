@@ -322,16 +322,18 @@ class OrderButton(View):
             except:
                 pass
 
-        # Send "Order Claimed" message
+        # Send "Order Claimed" message with value
         original_channel = bot.get_channel(self.original_channel_id)
         if original_channel:
-            embed = Embed(title="🎡 Order Claimed", color=discord.Color.green())
+            value = order["value"]  # Get the order value
+            embed = discord.Embed(title="🎡 Order Claimed", color=discord.Color.green())
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             embed.set_author(name="👑 Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             embed.add_field(name="📜 Description", value=order.get("description", "No description provided."), inline=False)
             embed.add_field(name="👷 Worker", value=interaction.user.mention, inline=True)
             embed.add_field(name="📌 Customer", value=f"<@{self.customer_id}>", inline=True)
             embed.add_field(name="💰 Deposit Required", value=f"{self.deposit_required}M", inline=True)
+            embed.add_field(name="💵 Order Value", value=f"{value}M", inline=True)  # Display the order value here
             embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
@@ -339,6 +341,7 @@ class OrderButton(View):
             await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
 
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
+
 
 @bot.event
 async def on_ready():
