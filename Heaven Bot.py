@@ -322,7 +322,7 @@ class OrderButton(View):
             except:
                 pass
 
-        # Send "Order Claimed" message with value
+        # Send "Order Claimed" message to the original channel
         original_channel = bot.get_channel(self.original_channel_id)
         if original_channel:
             value = order["value"]  # Get the order value
@@ -382,20 +382,21 @@ def get_next_order_id():
     value="The value of the order (in millions)",
     deposit_required="The deposit required for the order",
     holder="The holder of the order",
-    channel="The channel to post the order (mention or ID)"
+    channel="The channel to post the order (mention or ID)",
+    description="Description of the order"
 )
-async def post(interaction: discord.Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, channel: discord.TextChannel):
+async def post(interaction: discord.Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, channel: discord.TextChannel, description: str):
     # Get the channel where to post the order
     channel_id = channel.id
 
-    # Generate an order ID (you can use any method to generate a unique ID)
+    # Generate an order ID
     order_id = get_next_order_id()
 
     # Create the embed for the order
     embed = discord.Embed(title="New Order", color=0xffa500)
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.set_author(name="🎭 Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    embed.add_field(name="📜 Description", value="This is a description of the order.", inline=False)
+    embed.add_field(name="📜 Description", value=description, inline=False)  # Now using the description parameter
     embed.add_field(name="📌 Customer", value=customer.mention, inline=True)
     embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
     embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
@@ -421,7 +422,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
             "message_id": message.id,
             "channel_id": channel.id,
             "original_channel_id": channel.id,  # Store original channel
-            "description": "This is a description of the order."
+            "description": description  # Store actual description
         })
 
         # Confirm to the user that the order was posted
