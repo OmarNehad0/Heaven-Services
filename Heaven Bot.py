@@ -113,17 +113,30 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
     wallet_value = wallet_data.get('wallet', 0)
     spent_value = wallet_data.get('spent', 0)
 
+    # Default thumbnail if user has no avatar
+    default_thumbnail = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
+
+    # Check if user has an avatar, else use the default image
+    if user.avatar:
+        thumbnail_url = user.avatar.url
+    else:
+        thumbnail_url = default_thumbnail
+
     # Create embed
     embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
-    embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
+    embed.set_thumbnail(url=thumbnail_url)  # Set avatar or default image
 
     embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
     embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
     embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
-    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
-    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif")
+    
+    # Ensure the requester has an avatar, else use default
+    requester_avatar = interaction.user.avatar.url if interaction.user.avatar else default_thumbnail
+    embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=requester_avatar)
 
     await interaction.response.send_message(embed=embed)
+
 
 
 # /wallet_add_remove command
