@@ -339,6 +339,7 @@ class OrderButton(View):
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
 
+            # Add worker to the channel (this allows them to see and send messages)
             await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
 
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
