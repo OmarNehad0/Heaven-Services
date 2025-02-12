@@ -314,18 +314,17 @@ class OrderButton(View):
         orders_collection.update_one({"_id": self.order_id}, {"$set": {"worker": interaction.user.id}})
 
         # Delete the original order post
-        order_channel = bot.get_channel(ORDERS_CHANNEL_ID)
-        if order_channel:
+        original_channel = bot.get_channel(self.original_channel_id)
+        if original_channel:
             try:
-                message = await order_channel.fetch_message(self.message_id)
+                message = await original_channel.fetch_message(self.message_id)
                 await message.delete()
             except:
                 pass
 
         # Send "Order Claimed" message to the original channel
-        original_channel = bot.get_channel(self.original_channel_id)
         if original_channel:
-            value = order["value"]  # Get the order value
+            value = order["value"]
             embed = discord.Embed(title="🎡 Order Claimed", color=discord.Color.green())
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             embed.set_author(name="👑 Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
@@ -333,13 +332,13 @@ class OrderButton(View):
             embed.add_field(name="👷 Worker", value=interaction.user.mention, inline=True)
             embed.add_field(name="📌 Customer", value=f"<@{self.customer_id}>", inline=True)
             embed.add_field(name="💰 Deposit Required", value=f"{self.deposit_required}M", inline=True)
-            embed.add_field(name="💵 Order Value", value=f"{value}M", inline=True)  # Display the order value here
+            embed.add_field(name="💵 Order Value", value=f"{value}M", inline=True)
             embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
-            embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
+            embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif")
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
 
-            # Add worker to the channel (this allows them to see and send messages)
+            # Grant worker access to the original order channel
             await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
 
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
@@ -388,33 +387,32 @@ def get_next_order_id():
     description="Description of the order"
 )
 async def post(interaction: discord.Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, channel: discord.TextChannel, description: str):
-    # Get the channel where to post the order
     channel_id = channel.id
 
     # Generate an order ID
     order_id = get_next_order_id()
 
-    # Create the embed for the order
+    # Create the order embed
     embed = discord.Embed(title="New Order", color=0xffa500)
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.set_author(name="🎭 Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-    embed.add_field(name="📜 Description", value=description, inline=False)  # Now using the description parameter
+    embed.add_field(name="📜 Description", value=description, inline=False)
     embed.add_field(name="📌 Customer", value=customer.mention, inline=True)
     embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
     embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
     embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
-    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif")
     embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
 
-    # Send the embed to the specified channel
+    # Send the order embed to the specified channel
     channel_to_post = interaction.guild.get_channel(channel_id)
     if channel_to_post:
         message = await channel_to_post.send(embed=embed)
 
-        # Create a button for the order (this can be a custom button for claiming the order)
+        # Attach the order button
         await message.edit(view=OrderButton(order_id, deposit_required, customer.id, channel.id, message.id))
 
-        # Log the order in the database (MongoDB)
+        # Save order details in MongoDB
         orders_collection.insert_one({
             "_id": order_id,
             "customer": customer.id,
@@ -424,14 +422,13 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
             "holder": holder.id,
             "message_id": message.id,
             "channel_id": channel.id,
-            "original_channel_id": channel.id,  # Store original channel
-            "description": description  # Store actual description
+            "original_channel_id": channel.id,  # Store the original posting channel
+            "description": description
         })
 
         # Confirm to the user that the order was posted
         await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
     else:
-        # If the channel was not found, let the user know
         await interaction.response.send_message("Invalid channel specified.", ephemeral=True)
 
 @bot.tree.command(name="set", description="Set an order directly with worker.")
