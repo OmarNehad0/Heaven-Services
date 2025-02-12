@@ -56,6 +56,23 @@ counters_collection = db["order_counters"]  # New collection to track order ID
 # The fixed orders posting channel
 ORDERS_CHANNEL_ID = 1336510997145325719
 
+# Allowed roles for commands
+ALLOWED_ROLES = {1327425615824949340, 1327426586626228234, 1327426761549680670}
+LOG_CHANNEL_ID = 1332354894597853346
+
+def has_permission(user: discord.Member):
+    return any(role.id in ALLOWED_ROLES for role in user.roles)
+
+async def log_command(interaction: discord.Interaction, command_name: str, details: str):
+    log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
+    if log_channel:
+        embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
+        embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
+        embed.add_field(name="💻 Command", value=command_name, inline=False)
+        embed.add_field(name="📜 Details", value=details, inline=False)
+        embed.set_footer(text=f"Guild: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+        await log_channel.send(embed=embed)
+
 # Syncing command tree for slash commands
 @bot.event
 async def on_ready():
@@ -156,6 +173,9 @@ async def wallet(interaction: discord.Interaction, user: discord.Member = None):
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def wallet_add_remove(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
+    if not has_permission(interaction.user):
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
     user_id = str(user.id)
     
     # Fetch wallet data or default to zero if not found
@@ -192,6 +212,7 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
     
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value:,}M.", embed=embed)
+    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
 
 @bot.tree.command(name="deposit", description="Set or remove a user's deposit value")
@@ -237,6 +258,7 @@ async def deposit(interaction: discord.Interaction, user: discord.Member, action
     embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     # Send response
     await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} by {value:,}M.", embed=embed)
+    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
 @bot.tree.command(name="tip", description="Tip M to another user.")
 @app_commands.describe(user="User to tip", value="Value in M")
@@ -455,6 +477,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
         confirmation_embed.title = "Order Posted"
         await interaction.channel.send(embed=confirmation_embed)
         await interaction.response.send_message("Order posted successfully!", ephemeral=True)
+        await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
     else:
         await interaction.response.send_message("Invalid channel specified.", ephemeral=True)
 
@@ -497,6 +520,7 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
 
     # Notify the user that the order was successfully set
     await interaction.response.send_message(f"Order set with Worker {worker.mention}!", ephemeral=True)
+    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
     # Now, add the worker to the original channel and grant permissions
     if original_channel:
@@ -556,6 +580,7 @@ async def complete(interaction: Interaction, order_id: int):
         await worker.send(embed=dm_embed)
     
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
+    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
 # 📌 /order_deletion command
 @bot.tree.command(name="order_deletion", description="Delete an order.")
@@ -588,6 +613,7 @@ async def order_deletion(interaction: Interaction, order_id: int):
     orders_collection.delete_one({"_id": order_id})
     
     await interaction.response.send_message(f"✅ Order {order_id} has been successfully deleted.", ephemeral=True)
+    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
 
 
