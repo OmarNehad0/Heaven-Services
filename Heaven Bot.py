@@ -474,7 +474,18 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
     # Notify the user that the order was successfully set
     await interaction.response.send_message(f"Order set with Worker {worker.mention}!", ephemeral=True)
 
+    # Now, add the worker to the original channel and grant permissions
+    original_channel = bot.get_channel(original_channel_id)
+    if original_channel:
+        try:
+            # Add the worker to the channel, allowing them to read and send messages
+            await original_channel.set_permissions(worker, read_messages=True, send_messages=True)
+            print(f"Permissions granted to {worker.name} in {original_channel.name}.")
+        except Exception as e:
+            print(f"Failed to set permissions for {worker.name} in {original_channel.name}: {e}")
+    
     # Now, when the order is completed, the "Order Completed" message will be sent to the same channel
+
 
 # /complete command
 @bot.tree.command(name="complete", description="Mark an order as completed.")
