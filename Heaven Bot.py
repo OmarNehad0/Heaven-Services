@@ -343,6 +343,10 @@ class OrderButton(View):
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
 
+            # ✅ Send message to /post channel pinging the worker & customer
+            claim_message = f"**<@{self.customer_id}> <@{interaction.user.id}> is your worker. You can put info for him using `!f`**"
+            await original_channel.send(claim_message)
+
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
 
 
