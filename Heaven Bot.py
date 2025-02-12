@@ -328,7 +328,7 @@ class OrderButton(View):
         if original_channel:
             await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
 
-            # Send "Order Claimed" message to the /post channel
+            # ✅ Send "Order Claimed" message only in the `/post` channel
             value = order["value"]
             embed = discord.Embed(title="🎡 Order Claimed", color=discord.Color.green())
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
@@ -341,13 +341,15 @@ class OrderButton(View):
             embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
             embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif")
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
-            await original_channel.send(embed=embed)
+            
+            await original_channel.send(embed=embed)  # ✅ Send embed only in `/post` channel
 
-            # ✅ Send message to /post channel pinging the worker & customer
+            # ✅ Send message to `/post` channel pinging the worker & customer
             claim_message = f"**<@{self.customer_id}> <@{interaction.user.id}> is your worker. You can put info for him using `!f`**"
             await original_channel.send(claim_message)
 
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
+
 
 
 @bot.event
