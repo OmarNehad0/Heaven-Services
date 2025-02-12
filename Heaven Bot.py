@@ -214,6 +214,15 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value:,}M.", embed=embed)
     await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
+async def log_command(interaction: discord.Interaction, command_name: str, details: str):
+    log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
+    if log_channel:
+        embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
+        embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
+        embed.add_field(name="💻 Command", value=command_name, inline=False)
+        embed.add_field(name="📜 Details", value=details, inline=False)
+        embed.set_footer(text=f"Guild: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+        await log_channel.send(embed=embed)
 
 @bot.tree.command(name="deposit", description="Set or remove a user's deposit value")
 @app_commands.choices(action=[
@@ -433,6 +442,15 @@ def get_next_order_id():
         return_document=ReturnDocument.AFTER
     )
     return counter["seq"]
+async def log_command(interaction: discord.Interaction, command_name: str, details: str):
+    log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
+    if log_channel:
+        embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
+        embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
+        embed.add_field(name="💻 Command", value=command_name, inline=False)
+        embed.add_field(name="📜 Details", value=details, inline=False)
+        embed.set_footer(text=f"Guild: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+        await log_channel.send(embed=embed)
 
 @bot.tree.command(name="post", description="Post a new order.")
 @app_commands.describe(
@@ -488,6 +506,16 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     else:
         await interaction.response.send_message("Invalid channel specified.", ephemeral=True)
 
+async def log_command(interaction: discord.Interaction, command_name: str, details: str):
+    log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
+    if log_channel:
+        embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
+        embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
+        embed.add_field(name="💻 Command", value=command_name, inline=False)
+        embed.add_field(name="📜 Details", value=details, inline=False)
+        embed.set_footer(text=f"Guild: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+        await log_channel.send(embed=embed)
+
 @bot.tree.command(name="set", description="Set an order directly with worker.")
 async def set_order(interaction: Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, description: str, worker: discord.Member):
     if not has_permission(interaction.user):
@@ -541,6 +569,15 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
         except Exception as e:
             print(f"Failed to set permissions for {worker.name} in {original_channel.name}: {e}")
 
+async def log_command(interaction: discord.Interaction, command_name: str, details: str):
+    log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
+    if log_channel:
+        embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
+        embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
+        embed.add_field(name="💻 Command", value=command_name, inline=False)
+        embed.add_field(name="📜 Details", value=details, inline=False)
+        embed.set_footer(text=f"Guild: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+        await log_channel.send(embed=embed)
 
 # /complete command
 @bot.tree.command(name="complete", description="Mark an order as completed.")
@@ -595,6 +632,15 @@ async def complete(interaction: Interaction, order_id: int):
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
     await log_action(interaction, "Order Completed", f"Order ID: {order_id}\nMarked by: {interaction.user.mention} (`{interaction.user.id}`)\nWorker: <@{order['worker']}> (`{order['worker']}`)\nCustomer: <@{order['customer']}> (`{order['customer']}`)\nValue: {order['value']}M\nWorker Payment: {worker_payment}M")
 
+async def log_command(interaction: discord.Interaction, command_name: str, details: str):
+    log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
+    if log_channel:
+        embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
+        embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
+        embed.add_field(name="💻 Command", value=command_name, inline=False)
+        embed.add_field(name="📜 Details", value=details, inline=False)
+        embed.set_footer(text=f"Guild: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+        await log_channel.send(embed=embed)
 
 # 📌 /order_deletion command
 @bot.tree.command(name="order_deletion", description="Delete an order.")
