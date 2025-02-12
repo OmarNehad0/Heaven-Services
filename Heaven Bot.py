@@ -270,7 +270,7 @@ async def deposit(interaction: discord.Interaction, user: discord.Member, action
     embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     # Send response
     await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} by {value:,}M.", embed=embed)
-    await log_action(interaction, "Deposit Set/Remove", f"User: {user.mention} (`{user.id}`)\nAction: {action.capitalize()}\nAmount: {value:,}M")
+    await log_command(interaction, "Deposit Set/Remove", f"User: {user.mention} (`{user.id}`)\nAction: {action.capitalize()}\nAmount: {value:,}M")
 
 
 @bot.tree.command(name="tip", description="Tip M to another user.")
@@ -502,7 +502,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
         confirmation_embed.title = "Order Posted"
         await interaction.channel.send(embed=confirmation_embed)
         await interaction.response.send_message("Order posted successfully!", ephemeral=True)
-        await log_action(interaction, "Order Posted", f"Customer: {customer.mention} (`{customer.id}`)\nValue: {value:,}M\nDeposit Required: {deposit_required:,}M\nHolder: {holder.mention} (`{holder.id}`)\nChannel: {channel.mention}\nDescription: {description}")
+        await log_command(interaction, "Order Posted", f"Customer: {customer.mention} (`{customer.id}`)\nValue: {value:,}M\nDeposit Required: {deposit_required:,}M\nHolder: {holder.mention} (`{holder.id}`)\nChannel: {channel.mention}\nDescription: {description}")
     else:
         await interaction.response.send_message("Invalid channel specified.", ephemeral=True)
 
@@ -558,7 +558,7 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
 
     # Notify the user that the order was successfully set
     await interaction.response.send_message(f"Order set with Worker {worker.mention}!", ephemeral=True)
-    await log_action(interaction, "Order Set", f"Customer: {customer.mention} (`{customer.id}`)\nWorker: {worker.mention} (`{worker.id}`)\nValue: {value:,}M\nDeposit Required: {deposit_required:,}M\nHolder: {holder.mention} (`{holder.id}`)\nDescription: {description}")
+    await log_command(interaction, "Order Set", f"Customer: {customer.mention} (`{customer.id}`)\nWorker: {worker.mention} (`{worker.id}`)\nValue: {value:,}M\nDeposit Required: {deposit_required:,}M\nHolder: {holder.mention} (`{holder.id}`)\nDescription: {description}")
 
     # Now, add the worker to the original channel and grant permissions
     if original_channel:
@@ -630,7 +630,7 @@ async def complete(interaction: Interaction, order_id: int):
         await worker.send(embed=dm_embed)
     
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
-    await log_action(interaction, "Order Completed", f"Order ID: {order_id}\nMarked by: {interaction.user.mention} (`{interaction.user.id}`)\nWorker: <@{order['worker']}> (`{order['worker']}`)\nCustomer: <@{order['customer']}> (`{order['customer']}`)\nValue: {order['value']}M\nWorker Payment: {worker_payment}M")
+    await log_command(interaction, "Order Completed", f"Order ID: {order_id}\nMarked by: {interaction.user.mention} (`{interaction.user.id}`)\nWorker: <@{order['worker']}> (`{order['worker']}`)\nCustomer: <@{order['customer']}> (`{order['customer']}`)\nValue: {order['value']}M\nWorker Payment: {worker_payment}M")
 
 async def log_command(interaction: discord.Interaction, command_name: str, details: str):
     log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
@@ -676,7 +676,7 @@ async def order_deletion(interaction: Interaction, order_id: int):
     orders_collection.delete_one({"_id": order_id})
     
     await interaction.response.send_message(f"✅ Order {order_id} has been successfully deleted.", ephemeral=True)
-    await log_action(interaction, "Order Deleted", f"Order ID: {order_id}\nDeleted by: {interaction.user.mention} (`{interaction.user.id}`)")
+    await log_command(interaction, "Order Deleted", f"Order ID: {order_id}\nDeleted by: {interaction.user.mention} (`{interaction.user.id}`)")
 
 
 
