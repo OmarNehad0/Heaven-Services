@@ -221,6 +221,9 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     discord.app_commands.Choice(name="Remove", value="remove")
 ])
 async def deposit(interaction: discord.Interaction, user: discord.Member, action: str, value: int):
+    if not has_permission(interaction.user):
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
     user_id = str(user.id)
     
     # Fetch current wallet data
@@ -258,7 +261,7 @@ async def deposit(interaction: discord.Interaction, user: discord.Member, action
     embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     # Send response
     await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} by {value:,}M.", embed=embed)
-    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
+    await log_command(interaction, "deposit", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
 @bot.tree.command(name="tip", description="Tip M to another user.")
 @app_commands.describe(user="User to tip", value="Value in M")
@@ -440,6 +443,9 @@ def get_next_order_id():
     description="Description of the order"
 )
 async def post(interaction: discord.Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, channel: discord.TextChannel, description: str):
+    if not has_permission(interaction.user):
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
     channel_id = channel.id
     order_id = get_next_order_id()
     post_channel_id = interaction.channel.id  # Store the channel where /post was used
@@ -477,12 +483,15 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
         confirmation_embed.title = "Order Posted"
         await interaction.channel.send(embed=confirmation_embed)
         await interaction.response.send_message("Order posted successfully!", ephemeral=True)
-        await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
+        await log_command(interaction, "post", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
     else:
         await interaction.response.send_message("Invalid channel specified.", ephemeral=True)
 
 @bot.tree.command(name="set", description="Set an order directly with worker.")
 async def set_order(interaction: Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, description: str, worker: discord.Member):
+    if not has_permission(interaction.user):
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
     order_id = get_next_order_id()  # Get a unique order ID
     original_channel_id = interaction.channel.id  # Save the original posting channel
     
@@ -535,6 +544,9 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
 # /complete command
 @bot.tree.command(name="complete", description="Mark an order as completed.")
 async def complete(interaction: Interaction, order_id: int):
+    if not has_permission(interaction.user):
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
     order = orders_collection.find_one({"_id": order_id})
     if not order:
         await interaction.response.send_message("Order not found!", ephemeral=True)
@@ -580,11 +592,14 @@ async def complete(interaction: Interaction, order_id: int):
         await worker.send(embed=dm_embed)
     
     await interaction.response.send_message("Order marked as completed!", ephemeral=True)
-    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
+    await log_command(interaction, "complete", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
 # 📌 /order_deletion command
 @bot.tree.command(name="order_deletion", description="Delete an order.")
 async def order_deletion(interaction: Interaction, order_id: int):
+    if not has_permission(interaction.user):
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
     order = orders_collection.find_one({"_id": order_id})
     
     if not order:
@@ -613,7 +628,7 @@ async def order_deletion(interaction: Interaction, order_id: int):
     orders_collection.delete_one({"_id": order_id})
     
     await interaction.response.send_message(f"✅ Order {order_id} has been successfully deleted.", ephemeral=True)
-    await log_command(interaction, "wallet_add_remove", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
+    await log_command(interaction, "order_deletion", f"User: {user.mention} | Action: {action} | Value: {value:,}M")
 
 
 
