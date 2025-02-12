@@ -345,7 +345,7 @@ class OrderButton(View):
             await original_channel.send(embed=embed)  # ✅ Send embed only in `/post` channel
 
             # ✅ Send message to `/post` channel pinging the worker & customer
-            claim_message = f"**<@{self.customer_id}> <@{interaction.user.id}> is your worker. You can put info for him using `!f`**"
+            claim_message = f"**<@{self.customer_id}> <@{interaction.user.id}> is your worker. You can put info for him using `!inf`**"
             await original_channel.send(claim_message)
 
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
