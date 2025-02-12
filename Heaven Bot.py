@@ -451,10 +451,10 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
     embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
-    # Send the order to the orders channel (this is where orders will be posted initially)
-    channel = bot.get_channel(ORDERS_CHANNEL_ID)
-    if channel:
-        message = await channel.send(embed=embed)  # Send the message first
+    # Send the order to the channel where the command was used
+    original_channel = bot.get_channel(original_channel_id)
+    if original_channel:
+        message = await original_channel.send(embed=embed)  # Send the message to the original channel
         message_id = message.id  # Retrieve the message ID
     
     # Store order in the database, including the original channel where the order was posted
@@ -466,7 +466,7 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
         "deposit_required": deposit_required,
         "holder": holder.id,
         "message_id": message_id,
-        "channel_id": channel.id,
+        "channel_id": original_channel.id,  # Store the original channel ID
         "original_channel_id": original_channel_id,  # Store the original channel ID
         "description": description
     })
@@ -475,7 +475,6 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
     await interaction.response.send_message(f"Order set with Worker {worker.mention}!", ephemeral=True)
 
     # Now, add the worker to the original channel and grant permissions
-    original_channel = bot.get_channel(original_channel_id)
     if original_channel:
         try:
             # Add the worker to the channel, allowing them to read and send messages
@@ -483,8 +482,6 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
             print(f"Permissions granted to {worker.name} in {original_channel.name}.")
         except Exception as e:
             print(f"Failed to set permissions for {worker.name} in {original_channel.name}: {e}")
-    
-    # Now, when the order is completed, the "Order Completed" message will be sent to the same channel
 
 
 # /complete command
