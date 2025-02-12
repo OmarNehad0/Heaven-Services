@@ -287,7 +287,7 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
 
 class OrderButton(View):
     def __init__(self, order_id, deposit_required, customer_id, original_channel_id, message_id):
-        super().__init__(timeout=None)  # Make the view persistent
+        super().__init__(timeout=None)
         self.order_id = order_id
         self.deposit_required = deposit_required
         self.customer_id = customer_id
@@ -322,8 +322,10 @@ class OrderButton(View):
             except:
                 pass
 
-        # Send "Order Claimed" message to the original channel
-        if original_channel:
+            # Grant worker access to the channel
+            await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
+
+            # Send "Order Claimed" message to the original channel
             value = order["value"]
             embed = discord.Embed(title="🎡 Order Claimed", color=discord.Color.green())
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
@@ -338,11 +340,7 @@ class OrderButton(View):
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
 
-            # Grant worker access to the original order channel
-            await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
-
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
-
 
 @bot.event
 async def on_ready():
@@ -388,11 +386,8 @@ def get_next_order_id():
 )
 async def post(interaction: discord.Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, channel: discord.TextChannel, description: str):
     channel_id = channel.id
-
-    # Generate an order ID
     order_id = get_next_order_id()
 
-    # Create the order embed
     embed = discord.Embed(title="New Order", color=0xffa500)
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.set_author(name="🎭 Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
@@ -404,15 +399,11 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif")
     embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
 
-    # Send the order embed to the specified channel
     channel_to_post = interaction.guild.get_channel(channel_id)
     if channel_to_post:
         message = await channel_to_post.send(embed=embed)
-
-        # Attach the order button
         await message.edit(view=OrderButton(order_id, deposit_required, customer.id, channel.id, message.id))
 
-        # Save order details in MongoDB
         orders_collection.insert_one({
             "_id": order_id,
             "customer": customer.id,
@@ -422,12 +413,14 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
             "holder": holder.id,
             "message_id": message.id,
             "channel_id": channel.id,
-            "original_channel_id": channel.id,  # Store the original posting channel
+            "original_channel_id": channel.id,
             "description": description
         })
 
-        # Confirm to the user that the order was posted
-        await interaction.response.send_message(f"Order posted in <#{channel.id}>!", ephemeral=True)
+        confirmation_embed = embed.copy()
+        confirmation_embed.title = "Order Posted"
+        await interaction.channel.send(embed=confirmation_embed)
+        await interaction.response.send_message("Order posted successfully!", ephemeral=True)
     else:
         await interaction.response.send_message("Invalid channel specified.", ephemeral=True)
 
