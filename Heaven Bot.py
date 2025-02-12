@@ -120,7 +120,7 @@ async def wallet(interaction: discord.Interaction, user: discord.Member):
     embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
     embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
     embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
-
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
 
     await interaction.response.send_message(embed=embed)
@@ -165,7 +165,7 @@ async def wallet_add_remove(interaction: discord.Interaction, user: discord.Memb
     embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value:,}M```", inline=False)
     embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value:,}M```", inline=False)
     embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value:,}M```", inline=False)
-
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
     
     await interaction.response.send_message(f"✅ {action.capitalize()}ed {value:,}M.", embed=embed)
@@ -211,7 +211,7 @@ async def deposit(interaction: discord.Interaction, user: discord.Member, action
     embed.add_field(name="💰 Wallet", value=wallet_value, inline=False)
     embed.add_field(name="💸 Spent", value=spent_value, inline=False)
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
-
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     # Send response
     await interaction.response.send_message(f"✅ {action.capitalize()}ed deposit value for {user.name} by {value:,}M.", embed=embed)
 
@@ -257,7 +257,7 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     sender_embed.add_field(name="💰 Wallet", value=sender_wallet_value, inline=False)
     sender_embed.add_field(name="💸 Spent", value=sender_spent, inline=False)
     sender_embed.set_footer(text=f"Tip sent to {user.display_name}", icon_url=user.avatar.url)
-
+    sender_embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     # Recipient's wallet embed
     recipient_embed = discord.Embed(title=f"{user.display_name}'s Updated Wallet 💳", color=discord.Color.green())
     recipient_embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)
@@ -265,7 +265,7 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
     recipient_embed.add_field(name="💰 Wallet", value=recipient_wallet_value, inline=False)
     recipient_embed.add_field(name="💸 Spent", value=recipient_spent, inline=False)
     recipient_embed.set_footer(text=f"Tip received from {interaction.user.display_name}", icon_url=interaction.user.avatar.url)
-
+    recipient_embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     # Send the tip message publicly
     await interaction.response.send_message(tip_message)
 
@@ -335,6 +335,7 @@ class OrderButton(View):
             embed.add_field(name="💰 Deposit Required", value=f"{self.deposit_required}M", inline=True)
             embed.add_field(name="💵 Order Value", value=f"{value}M", inline=True)  # Display the order value here
             embed.add_field(name="🆔 Order ID", value=self.order_id, inline=True)
+            embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
             embed.set_footer(text="Heaven System", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
             await original_channel.send(embed=embed)
 
@@ -401,6 +402,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     embed.add_field(name="💵 Value", value=f"{value}M", inline=True)
     embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
     embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
 
     # Send the embed to the specified channel
@@ -445,6 +447,7 @@ async def set_order(interaction: Interaction, customer: discord.Member, value: i
     embed.add_field(name="💰 Deposit Required", value=f"{deposit_required}M", inline=True)
     embed.add_field(name="🔐 Holder", value=holder.mention, inline=True)
     embed.add_field(name="👷 Worker", value=worker.mention, inline=True)
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
     embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     
     # Send the order to the orders channel (this is where orders will be posted initially)
@@ -501,6 +504,7 @@ async def complete(interaction: Interaction, order_id: int):
         embed.add_field(name="📌 Customer", value=f"<@{order['customer']}>", inline=True)
         embed.add_field(name="💰 Value", value=f"{order['value']}M", inline=True)
         embed.add_field(name="💵 Worker Payment", value=f"{worker_payment}M", inline=True)
+        embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
         embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
         await original_channel.send(embed=embed)
     
@@ -514,6 +518,7 @@ async def complete(interaction: Interaction, order_id: int):
         dm_embed.add_field(name="📌 Customer", value=f"<@{order['customer']}>", inline=True)
         dm_embed.add_field(name="💰 Value", value=f"{order['value']}M", inline=True)
         dm_embed.add_field(name="💵 Your Payment", value=f"{worker_payment}M", inline=True)
+        dm_embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
         dm_embed.set_footer(text=f"Order ID: {order_id}", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
         await worker.send(embed=dm_embed)
     
