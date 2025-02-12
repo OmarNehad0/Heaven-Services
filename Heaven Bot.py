@@ -286,13 +286,14 @@ async def tip(interaction: discord.Interaction, user: discord.Member, value: int
         await interaction.channel.send(f"⚠️ {user.mention}, I couldn't DM your updated wallet!")
 
 class OrderButton(View):
-    def __init__(self, order_id, deposit_required, customer_id, original_channel_id, message_id):
+    def __init__(self, order_id, deposit_required, customer_id, original_channel_id, message_id, post_channel_id):
         super().__init__(timeout=None)
         self.order_id = order_id
         self.deposit_required = deposit_required
         self.customer_id = customer_id
-        self.original_channel_id = original_channel_id
+        self.original_channel_id = original_channel_id  # Channel where /post was used
         self.message_id = message_id
+        self.post_channel_id = post_channel_id  # Channel where order is posted
 
     @discord.ui.button(label="✅ Accept TOS & Job", style=discord.ButtonStyle.primary)
     async def accept_job(self, interaction: Interaction, button: discord.ui.Button):
@@ -313,19 +314,21 @@ class OrderButton(View):
         # Assign worker
         orders_collection.update_one({"_id": self.order_id}, {"$set": {"worker": interaction.user.id}})
 
-        # Delete the original order post
-        original_channel = bot.get_channel(self.original_channel_id)
-        if original_channel:
+        # Delete the original order post from the posting channel
+        post_channel = bot.get_channel(self.post_channel_id)
+        if post_channel:
             try:
-                message = await original_channel.fetch_message(self.message_id)
+                message = await post_channel.fetch_message(self.message_id)
                 await message.delete()
             except:
                 pass
 
-            # Grant worker access to the channel
+        # Grant worker access to the original /post channel (not the posting channel)
+        original_channel = bot.get_channel(self.original_channel_id)
+        if original_channel:
             await original_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
 
-            # Send "Order Claimed" message to the original channel
+            # Send "Order Claimed" message to the /post channel
             value = order["value"]
             embed = discord.Embed(title="🎡 Order Claimed", color=discord.Color.green())
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
@@ -341,6 +344,7 @@ class OrderButton(View):
             await original_channel.send(embed=embed)
 
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
+
 
 @bot.event
 async def on_ready():
@@ -387,6 +391,7 @@ def get_next_order_id():
 async def post(interaction: discord.Interaction, customer: discord.Member, value: int, deposit_required: int, holder: discord.Member, channel: discord.TextChannel, description: str):
     channel_id = channel.id
     order_id = get_next_order_id()
+    post_channel_id = interaction.channel.id  # Store the channel where /post was used
 
     embed = discord.Embed(title="New Order", color=0xffa500)
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
@@ -402,7 +407,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     channel_to_post = interaction.guild.get_channel(channel_id)
     if channel_to_post:
         message = await channel_to_post.send(embed=embed)
-        await message.edit(view=OrderButton(order_id, deposit_required, customer.id, channel.id, message.id))
+        await message.edit(view=OrderButton(order_id, deposit_required, customer.id, post_channel_id, message.id, channel_id))
 
         orders_collection.insert_one({
             "_id": order_id,
@@ -413,7 +418,7 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
             "holder": holder.id,
             "message_id": message.id,
             "channel_id": channel.id,
-            "original_channel_id": channel.id,
+            "original_channel_id": post_channel_id,  # Store where /post was used
             "description": description
         })
 
