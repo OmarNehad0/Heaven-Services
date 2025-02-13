@@ -58,20 +58,30 @@ ORDERS_CHANNEL_ID = 1336510997145325719
 
 # Allowed roles for commands
 ALLOWED_ROLES = {1327425615824949340, 1327426586626228234, 1327426761549680670, 1337751285348433972, 1337751330151858176, 1338931704110252095}
-LOG_CHANNEL_ID = 1332354894597853346
 
 def has_permission(user: discord.Member):
     return any(role.id in ALLOWED_ROLES for role in user.roles)
 
 async def log_command(interaction: discord.Interaction, command_name: str, details: str):
-    log_channel = interaction.guild.get_channel(LOG_CHANNEL_ID)
-    if log_channel:
-        embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
-        embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
-        embed.add_field(name="💻 Command", value=command_name, inline=False)
-        embed.add_field(name="📜 Details", value=details, inline=False)
-        embed.set_footer(text=f"Guild: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
-        await log_channel.send(embed=embed)
+    # The ID of the server where the log channel is located
+    LOG_GUILD_ID = 520905245174267908  # Replace with the actual server (guild) ID
+    LOG_CHANNEL_ID = 1332354894597853346  # Replace with the actual log channel ID
+    
+    log_guild = interaction.client.get_guild(LOG_GUILD_ID)  # Get the guild where the log channel exists
+    if log_guild:
+        log_channel = log_guild.get_channel(LOG_CHANNEL_ID)  # Get the logging channel
+        if log_channel:
+            embed = discord.Embed(title="📜 Command Log", color=discord.Color.red())
+            embed.add_field(name="👤 User", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
+            embed.add_field(name="💻 Command", value=command_name, inline=False)
+            embed.add_field(name="📜 Details", value=details, inline=False)
+            embed.set_footer(text=f"Used in: {interaction.guild.name}", icon_url=interaction.guild.icon.url if interaction.guild.icon else None)
+            await log_channel.send(embed=embed)
+        else:
+            print(f"⚠️ Log channel not found in {log_guild.name} ({LOG_GUILD_ID})")
+    else:
+        print(f"⚠️ Log guild not found: {LOG_GUILD_ID}")
+
 
 # Syncing command tree for slash commands
 @bot.event
