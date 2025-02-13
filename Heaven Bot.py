@@ -134,47 +134,55 @@ def update_wallet(user_id, field, value):
 
 @bot.tree.command(name="wallet", description="Check a user's wallet balance")
 async def wallet(interaction: discord.Interaction, user: discord.Member = None):
-    # Role IDs
-    self_only_role = 1327427683092533258
+    # Define role IDs
+    self_only_roles = {1327427683092533258, 1339378627942416554} 
     allowed_roles = {1327425615824949340, 1327426586626228234, 1327426761549680670, 1337751285348433972, 1337751330151858176, 1338931704110252095}
 
-    # Check if the user has the self-only role
-    has_self_only_role = discord.utils.get(interaction.user.roles, id=self_only_role) is not None
-    has_allowed_role = any(discord.utils.get(interaction.user.roles, id=role) for role in allowed_roles)
+    # Check if user has permission
+    user_roles = {role.id for role in interaction.user.roles}
+    has_self_only_role = bool(self_only_roles & user_roles)  # User has at least one self-only role
+    has_allowed_role = bool(allowed_roles & user_roles)  # User has at least one allowed role
 
-    # If user has the self-only role and doesn't have an allowed role, restrict them
+    # If user has no valid role, deny access
+    if not has_self_only_role and not has_allowed_role:
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
+
+    # If user has only a self-only role (and not an allowed role), force them to check their own wallet
     if has_self_only_role and not has_allowed_role:
-        user = interaction.user  # Force user to check their own wallet
+        user = interaction.user  
 
-    # If no user is specified, default to the interaction user
+    # Default to interaction user if no target user is specified
     if user is None:
         user = interaction.user
 
-    user_id = str(user.id)  # Convert Discord user ID to string for MongoDB lookup
-    wallet_data = get_wallet(user_id)  # Fetch wallet data
-
-    # Ensure missing fields don't cause errors
+    # Fetch wallet data
+    user_id = str(user.id)
+    wallet_data = get_wallet(user_id)
+    
+    # Default missing fields to 0
     deposit_value = wallet_data.get('deposit', 0)
     wallet_value = wallet_data.get('wallet', 0)
     spent_value = wallet_data.get('spent', 0)
 
-    # Default thumbnail if user has no avatar
+    # Get user's avatar (fallback to default image)
     default_thumbnail = "https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
     thumbnail_url = user.avatar.url if user.avatar else default_thumbnail
 
-    # Create embed
+    # Create embed message
     embed = discord.Embed(title=f"{user.display_name}'s Wallet 💳", color=discord.Color.blue())
-    embed.set_thumbnail(url=thumbnail_url)  # Set avatar or default image
+    embed.set_thumbnail(url=thumbnail_url)
     embed.add_field(name="📥 Deposit", value=f"```💵 {deposit_value}M```", inline=False)
     embed.add_field(name="💰 Wallet", value=f"```💰 {wallet_value}M```", inline=False)
     embed.add_field(name="💸 Spent", value=f"```🛍️ {spent_value}M```", inline=False)
     embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif")
 
-    # Ensure the requester has an avatar, else use default
+    # Ensure requester avatar exists
     requester_avatar = interaction.user.avatar.url if interaction.user.avatar else default_thumbnail
     embed.set_footer(text=f"Requested by {interaction.user.display_name}", icon_url=requester_avatar)
 
     await interaction.response.send_message(embed=embed)
+
 
 
 
