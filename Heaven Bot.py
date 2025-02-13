@@ -470,6 +470,22 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
     order_id = get_next_order_id()
     post_channel_id = interaction.channel.id  # Store the channel where /post was used
 
+    # Define role IDs
+    role1_id = 1327427577031426150
+    role2_id = 1337751446048739391
+
+    # Check if roles exist in the guild
+    role1 = discord.utils.get(interaction.guild.roles, id=role1_id)
+    role2 = discord.utils.get(interaction.guild.roles, id=role2_id)
+
+    # Determine which role to ping
+    if role1:
+        role_ping = role1.mention
+    elif role2:
+        role_ping = role2.mention
+    else:
+        role_ping = None  # No roles found, so no ping
+
     embed = discord.Embed(title="New Order", color=0xffa500)
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.set_author(name="🎭 Order Posted", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
@@ -483,7 +499,13 @@ async def post(interaction: discord.Interaction, customer: discord.Member, value
 
     channel_to_post = interaction.guild.get_channel(channel_id)
     if channel_to_post:
-        message = await channel_to_post.send(embed=embed)
+        # Send message with role ping if a role exists
+        if role_ping:
+            message = await channel_to_post.send(f"{role_ping}", embed=embed)
+        else:
+            message = await channel_to_post.send(embed=embed)
+
+        # Add order button functionality
         await message.edit(view=OrderButton(order_id, deposit_required, customer.id, post_channel_id, message.id, channel_id))
 
         orders_collection.insert_one({
