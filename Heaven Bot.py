@@ -58,7 +58,7 @@ ORDERS_CHANNEL_ID = 1336510997145325719
 
 # Allowed roles for commands
 ALLOWED_ROLES = {1327425615824949340, 1327426586626228234, 1327426761549680670, 1337751285348433972, 1337751330151858176, 1338931704110252095}
-LOG_CHANNEL_ID = {1337751756981141605, 1332354894597853346, 1339719072774099087}
+LOG_CHANNEL_ID = 1337751756981141605, 1332354894597853346
 
 def has_permission(user: discord.Member):
     return any(role.id in ALLOWED_ROLES for role in user.roles)
@@ -123,7 +123,7 @@ def update_wallet(user_id, field, value):
 @bot.tree.command(name="wallet", description="Check a user's wallet balance")
 async def wallet(interaction: discord.Interaction, user: discord.Member = None):
     # Role IDs
-    self_only_role = {1327427683092533258, 1339378627942416554}
+    self_only_role = 1327427683092533258, 1339378627942416554
     allowed_roles = {1327425615824949340, 1327426586626228234, 1327426761549680670, 1337751285348433972, 1337751330151858176, 1338931704110252095}
 
     # Check if the user has the self-only role
