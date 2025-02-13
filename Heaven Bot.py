@@ -64,7 +64,7 @@ def has_permission(user: discord.Member):
 
 async def log_command(interaction: discord.Interaction, command_name: str, details: str):
     # The ID of the server where the log channel is located
-    LOG_GUILD_ID = 520905245174267908  # Replace with the actual server (guild) ID
+    LOG_GUILD_ID = 520905245174267908, 1337750723365965874  # Replace with the actual server (guild) ID
     LOG_CHANNEL_ID = 1332354894597853346  # Replace with the actual log channel ID
     
     log_guild = interaction.client.get_guild(LOG_GUILD_ID)  # Get the guild where the log channel exists
