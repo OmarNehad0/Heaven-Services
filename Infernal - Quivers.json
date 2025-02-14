@@ -1,16 +1,16 @@
 [ {
         "name": "Dizana's Quiver",
         "aliases": ["quiver"],
-        "caption" : "You keep all loot.\n Prices may vary depending on stats and gear \n Using Parsec Would Cost +50%",
+        "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
         "items": [
             {
-                "name": "Quiver Max Gear - Login",
-                "price": 150000000,
+                "name": "Quiver Max Gear",
+                "price": 350000000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Dizana%27s_quiver_detail.png/150px-Dizana%27s_quiver_detail.png?f6c23"
             },
             {
-                "name": "Quiver Budget Gear - Login",
-                "price": 200000000,
+                "name": "Quiver Budget Gear",
+                "price": 400000000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Dizana%27s_quiver_detail.png/150px-Dizana%27s_quiver_detail.png?f6c23"
             }
         ],
@@ -19,41 +19,31 @@
     {
         "name": "Infernal Cape",
         "aliases": ["inf", "infernal cape", "infernal"],
-        "caption" : "You keep all loot.\n Prices may vary depending on stats and gear \n Using Parsec Would Cost +50%",
+        "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
         "items": [
             {
                 "name": "Twisted Bow (Tbow)",
-                "price": 200000000,
+                "price": 415000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             },
             {
                 "name": "Bow of Faerdhinen (Bowfa)",
-                "price": 230000000,
+                "price": 462000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             },
             {
                 "name": "Armadyl Crossbow (ACB)",
-                "price": 300000000,
+                "price": 508000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             },
             {
                 "name": "Rune Crossbow (RCB)",
-                "price": 400000000,
+                "price": 650000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             },
             {
                 "name": "Slayer Task (Max Gear)",
-                "price": 160000000,
-                "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
-            },
-            {
-                "name": "Additional cost for No Rigour",
-                "price": 30000000,
-                "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
-            },
-            {
-                "name": "Additional cost for lower than 94 Mage",
-                "price": 60000000,
+                "price": 350000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             }
         ],
@@ -62,21 +52,16 @@
     {
         "name": "Zerker Infernal Cape",
         "aliases": ["zerkerinfernal", "infernalzerker"],
-        "caption" : "You keep all loot.\n Prices may vary depending on stats and gear \n Using Parsec Would Cost +50%",
+        "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
         "items": [
             {
                 "name": "Twisted Bow (Tbow)",
-                "price": 350000000,
+                "price": 550000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             },
             {
                 "name": "Armadyl Crossbow (ACB)",
-                "price": 500000000,
-                "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
-            },
-            {
-                "name": "Additional cost for lower than 94 Mage",
-                "price": 60000000,
+                "price": 640000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             }
         ],
@@ -85,26 +70,21 @@
     {
         "name": "Pure Infernal Cape",
         "aliases": ["pureinfernal", "infernalpure"],
-        "caption" : "You keep all loot.\n Prices may vary depending on stats and gear \n Using Parsec Would Cost +50%",
+        "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
         "items": [
             {
                 "name": "Twisted Bow (Tbow)",
-                "price": 450000000,
+                "price": 690000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             },
             {
                 "name": "Armadyl Crossbow (ACB)",
-                "price": 550000000,
+                "price": 920000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             },
             {
                 "name": "Rune Crossbow or better",
-                "price": 800000000,
-                "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
-            },
-            {
-                "name": "Additional cost for lower than 94 Mage",
-                "price": 60000000,
+                "price": 1100000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Infernal_cape_concept_4.gif/57px-Infernal_cape_concept_4.gif?9aa4d"
             }
         ],
@@ -113,16 +93,16 @@
     {
         "name": "6 Jad Challenge",
         "aliases": ["sixjad", "6jad", "vijad", "jad6", "jadsix"],
-        "caption" : "You keep all loot.\n Prices may vary depending on stats and gear \n Using Parsec Would Cost +50%",
+        "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
         "items": [
             {
                 "name": "Twisted Bow (Tbow)",
-                "price": 100000000,
+                "price": 140000000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/JalTok-Jad.png/280px-JalTok-Jad.png?7e369"
             },
             {
                 "name": "Toxic Blowpipe (BP)",
-                "price": 150000000,
+                "price": 190000000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/JalTok-Jad.png/280px-JalTok-Jad.png?7e369"
             }
         ],
