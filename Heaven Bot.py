@@ -670,6 +670,46 @@ async def order_deletion(interaction: Interaction, order_id: int):
     await interaction.response.send_message(f"✅ Order {order_id} has been successfully deleted.", ephemeral=True)
     await log_command(interaction, "Order Deleted", f"Order ID: {order_id}\nDeleted by: {interaction.user.mention} (`{interaction.user.id}`)")
 
+@bot.tree.command(name="done", description="Mark an order as completed.")
+@app_commands.describe(
+    customer="The customer who placed the order",
+    worker="The worker who completed the order"
+)
+async def done(interaction: discord.Interaction, customer: discord.Member, worker: discord.Member):
+    # Roles allowed to use this command
+    done_command_roles = {1327427577031426150, 1337751446048739391}
+
+    # Check if the user has at least one of the required roles
+    if not any(role.id in done_command_roles for role in interaction.user.roles):
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+        return
+
+    # Roles to mention when the command is used
+    mention_roles = {1327425615824949340, 1327426586626228234, 1327426761549680670}
+
+    # Fetch roles that exist in the server
+    roles_to_mention = [f"<@&{role_id}>" for role_id in mention_roles if discord.utils.get(interaction.guild.roles, id=role_id)]
+
+    # Create embed
+    embed = discord.Embed(title="Order Marked", color=discord.Color.green())
+    embed.set_author(name="Heaven Bot", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.description = (
+        f"{customer.mention} Your Order Marked Completed By {worker.mention}.\n\n"
+        "**🔹 Please:**\n"
+        "➜ **Change Your Acc Info Then End All Sessions.**\n"
+        "➜ **We Will Appreciate Your Vouch By Using The Command `!f`**"
+    )
+    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif")
+
+    # Send message with role mentions
+    if roles_to_mention:
+        await interaction.channel.send(" ".join(roles_to_mention))
+
+    await interaction.channel.send(embed=embed)
+    await interaction.response.send_message("✅ Order marked as completed!", ephemeral=True)
+
+    # Log the command usage
+    await log_command(interaction, "Order Marked as Done", f"Customer: {customer.mention} (`{customer.id}`)\nWorker: {worker.mention} (`{worker.id}`)")
 
 
 # Image URLs
