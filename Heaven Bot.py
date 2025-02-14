@@ -413,7 +413,7 @@ class OrderButton(View):
             await original_channel.send(embed=embed)  # ✅ Send embed only in `/post` channel
 
             # ✅ Send message to `/post` channel pinging the worker & customer
-            claim_message = f"**<@{self.customer_id}> <@{interaction.user.id}> is your worker. You can put info for him using `!inf`**"
+            claim_message = f"**hello! <@{self.customer_id}>, <@{interaction.user.id}> is your worker for this job. You can put info for him using `!inf`**"
             await original_channel.send(claim_message)
 
         await interaction.response.send_message("Order claimed successfully!", ephemeral=True)
@@ -691,10 +691,10 @@ async def done(interaction: discord.Interaction, customer: discord.Member, worke
     roles_to_mention = [f"<@&{role_id}>" for role_id in mention_roles if discord.utils.get(interaction.guild.roles, id=role_id)]
 
     # Create embed
-    embed = discord.Embed(title="Order Marked", color=discord.Color.green())
+    embed = discord.Embed(title="<:user:1338538680461033523> Order Completed! <:user:1338538680461033523>", color=discord.Color.green())
     embed.set_author(name="Heaven Bot", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     embed.description = (
-        f"{customer.mention} Your Order Marked Completed By {worker.mention}.\n\n"
+        f"Hello! {customer.mention} Name Your Order Completed By {worker.mention} And Sent To Admin To Approve It.\n\n"
         "**🔹 Please:**\n"
         "➜ **Change Your Acc Info Then End All Sessions.**\n"
         "➜ **We Will Appreciate Your Vouch By Using The Command `!f`**"
