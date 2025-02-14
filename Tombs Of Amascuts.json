@@ -1,55 +1,55 @@
 [
     {
       "name": "Solos - Expert / Normal Modes",
-      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
       "aliases": [
         "toa",
         "tombs of amascuts"
       ],
       "items": [
         {
-          "name": "150 Raid Level - With Budget Gear",
-          "price": 12000000,
+          "name": "150 Raid Level",
+          "price": 10000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
-          "name": "200 Raid Level - With Budget Gears",
+          "name": "200 Raid Level",
           "price": 14000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
-          "name": "250 Raid Level - With Budget Gears",
-          "price": 16000000,
+          "name": "250 Raid Level",
+          "price": 18000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
           "name": "300 Raid Level",
-          "price": 17000000,
+          "price": 21000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
           "name": "350 Raid Level (Ava's Kit)",
-          "price": 40000000,
+          "price": 28000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
         "name" : "400 Raid Level",
-        "price" : 55000000,
+        "price" : 37000000,
         "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
           "name": "425 Raid Level (Ward Kit)",
-          "price": 90000000,
+          "price": 56000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
           "name": "450 Raid Level",
-          "price": 150000000,
+          "price": 70000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         },
         {
           "name": "500 Raid Level (Fang Kit)",
-          "price": 250000000,
+          "price": 93000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Elidinis%27_Warden.png/180px-Elidinis%27_Warden.png?c9f68"
         }
       ],
@@ -57,7 +57,7 @@
     },
     {
       "name": "Pet Transmogs",
-      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
       "aliases": [
         "toapet",
         "pettrans"
@@ -72,7 +72,7 @@
     },
          {
       "name": "Zebak Transmog",
-      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
       "aliases": [
         "zebak",
         "toazebak"
@@ -87,7 +87,7 @@
          },
         {
       "name": "Kephri Transmog",
-      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
       "aliases": [
         "kephri",
         "toakephri"
@@ -103,7 +103,7 @@
     },
     {
       "name": "Baba Transmog",
-      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
       "aliases": [
         "baba",
         "toababa"
@@ -119,7 +119,7 @@
     },
     {
       "name": "Akha Transmog",
-      "caption" : " **Req Gear For Experts : **\nAssumes close to max gear if not.\n Upcharges may apply for missing gear ",
+      "caption" : "Prices May Vary\nFor A Custom Service Create A Ticket\n Using Parsec Would Cost More.",
       "aliases": [
         "akha",
         "toaakha"
