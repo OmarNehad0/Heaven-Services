@@ -2,15 +2,15 @@
     {
         "name": "Calisto / Artio",
         "aliases": ["artio", "calisto"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear.",
+        "caption": "Prices May Vary\nFor A Custom Service Create A Ticket.",
         "items": [
             {
                 "name": "Callisto",
-                "price": 1800000,
+                "price": 2800000,
                 "image" : "https://oldschool.runescape.wiki/images/Callisto.png?bfba7"
          },{
                 "name": "Artio",
-                "price": 1000000,
+                "price": 1800000,
                 "image" : "https://oldschool.runescape.wiki/images/Callisto.png?bfba7"}],
                 "emoji" : "<:290pxArtio:1321176454725107772>"
 
@@ -20,21 +20,21 @@
      {
         "name": "Chaos Fanatic",
         "aliases": ["chaos"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear.",
+        "caption": "Prices May Vary\nFor A Custom Service Create A Ticket.",
         "items": [
             {
                 "name": "Chaos Fanatic",
-                "price": 800000,
+                "price": 1500000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Chaos_Fanatic.png/180px-Chaos_Fanatic.png?8871d"
             },
             {
                 "name": "Chaos Elemental",
-                "price": 700000,
+                "price": 1300000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Chaos_Fanatic.png/180px-Chaos_Fanatic.png?8871d"
             },
             {
                 "name": "Crazy Archaeologist",
-                "price": 600000,
+                "price": 1100000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Chaos_Fanatic.png/180px-Chaos_Fanatic.png?8871d"
             }    ], 
                 "emoji" : "<:250pxChaos_Elemental:1321176443757006910>"
@@ -42,16 +42,16 @@
     {
         "name": "Venenatis / Spindel",
         "aliases": ["venenatis","spindel","ven"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear.",
+        "caption": "Prices May Vary\nFor A Custom Service Create A Ticket",
         "items": [
             {
                 "name": "Venenatis",
-                "price": 1500000,
+                "price": 2800000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Venenatis.png/280px-Venenatis.png?13693"
             },
             {
                 "name": "Spindel",
-                "price": 1000000,
+                "price": 1400000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Venenatis.png/280px-Venenatis.png?13693"
             }    ],
                 "emoji" : "<:280pxVenenatis:1321176451277393940>"
@@ -63,12 +63,12 @@
         "items": [
             {
                 "name": "Vet'ion",
-                "price": 1500000,
+                "price": 2800000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Calvar%27ion.png/180px-Calvar%27ion.png?6268f"
             },
             {
                 "name": "Calvar'ion",
-                "price": 1000000,
+                "price": 1400000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Calvar%27ion.png/180px-Calvar%27ion.png?6268f"
             }    ],
                 "emoji" : "<:180pxVetion:1321176441236357161>"
@@ -76,11 +76,11 @@
      {
         "name": "Scorpia",
         "aliases": ["scorpia"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear.",
+        "caption": "Prices May Vary\nFor A Custom Service Create A Ticket",
         "items": [
             {
                 "name": "Scorpia",
-                "price": 800000,
+                "price": 1200000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/Scorpion.png/130px-Scorpion.png?79d06"
             }    ],
                  "emoji" : "<:130pxScorpion:1321176437406830725>"
@@ -88,16 +88,16 @@
      {
         "name": "King Black Dragon",
         "aliases": ["kbd"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear.",
+        "caption": "Prices May Vary\nFor A Custom Service Create A Ticket",
         "items": [
             {
                 "name": "King Black Dragon (KBD) - Normal Gear",
-                "price": 600000,
+                "price": 750000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/King_Black_Dragon_%28Christmas%29.png/290px-King_Black_Dragon_%28Christmas%29.png?a4b99"
             },
             {
                 "name": "King Black Dragon (KBD) - w/Dragon Hunter Items",
-                "price": 350000,
+                "price": 450000,
                 "image" : "https://oldschool.runescape.wiki/images/thumb/King_Black_Dragon_%28Christmas%29.png/290px-King_Black_Dragon_%28Christmas%29.png?a4b99"
             }     ],
                  "emoji" : "<:290pxKing_Black_Dragon_Christmas:1321229053214068808>"
