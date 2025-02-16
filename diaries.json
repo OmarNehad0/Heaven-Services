@@ -9,19 +9,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":5000000
+            "price":11200000
          },
          {
             "name":"Medium Diary",
-            "price":7000000
+            "price":11200000
          },
          {
             "name":"Hard Diary",
-            "price":11000000
+            "price":13000000
          },
          {
             "name":"Elite Diary",
-            "price":17000000
+            "price":13700000
          }
       ]
    },
@@ -36,19 +36,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":5000000
+            "price":11200000
          },
          {
             "name":"Medium Diary",
-            "price":7000000
+            "price":12800000
          },
          {
             "name":"Hard Diary",
-            "price":13000000
+            "price":11200000
          },
          {
             "name":"Elite Diary",
-            "price":19000000
+            "price":11200000
          }
       ]
    },
@@ -63,19 +63,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":5000000
+            "price":10300000
          },
          {
             "name":"Medium Diary",
-            "price":7000000
+            "price":10300000
          },
          {
             "name":"Hard Diary",
-            "price":16000000
+            "price":16400000
          },
          {
             "name":"Elite Diary",
-            "price":20000000
+            "price":22000000
          },
          {
             "name":"Price per Black Knight kill (1300 required )",
@@ -93,19 +93,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":5000000
+            "price":10300000
          },
          {
             "name":"Medium Diary",
-            "price":7000000
+            "price":16400000
          },
          {
             "name":"Hard Diary",
-            "price":13000000
+            "price":11200000
          },
          {
             "name":"Elite Diary",
-            "price":17000000
+            "price":22000000
          }
       ]
    },
@@ -119,27 +119,27 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":7000000
+            "price":11200000
          },
          {
             "name":"Medium Diary",
-            "price":9000000
+            "price":16400000
          },
          {
             "name":"Hard Diary Without Granite body",
-            "price":26000000
+            "price":41000000
          },
          {
             "name":"Hard Diary With Granite body",
-            "price":11000000
+            "price":18800000
          },
          {
             "name":"Elite Diary and level 5 for every role",
-            "price":210000000
+            "price":270000000
          },
          {
             "name":"Elite Diary if lvl 5 roles completed",
-            "price":30000000
+            "price":21000000
          }
       ]
    },
@@ -154,23 +154,23 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":7000000
+            "price":11200000
          },
          {
             "name":"Medium Diary and gout tuber",
-            "price":20000000
+            "price":40000000
          },
          {
             "name":"Medium Diary if you got gout tuber",
-            "price":10000000
+            "price":22900000
          },
          {
             "name":"Hard Diary",
-            "price":12000000
+            "price":11200000
          },
          {
             "name":"Elite Diary - Firecape required",
-            "price":17000000
+            "price":20300000
          }
       ]
    },
@@ -185,19 +185,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":5000000
+            "price":11200000
          },
          {
             "name":"Medium Diary",
-            "price":7000000
+            "price":9500000
          },
          {
             "name":"Hard Diary",
-            "price":13000000
+            "price":19600000
          },
          {
             "name":"Elite Diary",
-            "price":33000000
+            "price":41000000
          }
       ]
    },
@@ -213,23 +213,23 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":7000000
+            "price":9500000
          },
          {
             "name":"Medium Diary",
-            "price":10000000
+            "price":20500000
          },
          {
             "name":"Hard Diary and bones to peaches",
-            "price":65000000
+            "price":76000000
          },
          {
            "name":"Hard Diary if bones to peaches unlocked",
-           "price":15000000
+           "price":21000000
         },
          {
             "name":"Elite Diary",
-            "price":17000000
+            "price":20500000
          }
       ]
    },
@@ -244,19 +244,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":7000000
+            "price":11200000
          },
          {
             "name":"Medium Diary",
-            "price":9000000
+            "price":20500000
          },
          {
             "name":"Hard Diary",
-            "price":13000000
+            "price":19100000
          },
          {
             "name":"Elite Diary",
-            "price":17000000
+            "price":23600000
          }
       ]
    },
@@ -270,19 +270,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":6000000
+            "price":11200000
          },
          {
             "name":"Medium Diary",
-            "price":10000000
+            "price":16700000
          },
          {
             "name":"Hard Diary",
-            "price":12000000
+            "price":20500000
          },
          {
             "name":"Elite Diary",
-            "price":15000000
+            "price":23000000
          }
       ]
    },
@@ -296,31 +296,31 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":8000000
+            "price":16000000
          },
          {
             "name":"Medium Diary",
-            "price":14000000
+            "price":28100000
          },
          {
             "name":"Hard Diary includes chompy kills",
-            "price":40000000
-         },
-         {
-            "name":"Hard Diary",
-            "price":25000000
-         },
-         {
-            "name":"Elite Diary includes chompy kills/void required",
             "price":70000000
          },
          {
+            "name":"Hard Diary",
+            "price":23500000
+         },
+         {
+            "name":"Elite Diary includes chompy kills/void required",
+            "price":82000000
+         },
+         {
             "name":"Elite Diary Void required",
-            "price":20000000
+            "price":28100000
          },
          {
             "name":"price per Chompy Kill",
-            "price":50000
+            "price":180000
          }
       ]
    },
@@ -335,19 +335,19 @@
       "items":[
          {
             "name":"Easy Diary",
-            "price":7000000
+            "price":16200000
          },
          {
             "name":"Medium Diary",
-            "price":10000000
+            "price":23400000
          },
          {
             "name":"Hard Diary",
-            "price":15000000
+            "price":23400000
          },
          {
             "name":"Elite Diary",
-            "price":18000000
+            "price":28000000
          }
       ]
    }
