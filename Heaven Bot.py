@@ -1580,7 +1580,6 @@ async def log_interaction(user, selected_boss, json_file):
     await log_channel.send(embed=embed)
 
 
-# Boss Select Dropdown (User-Specific)
 class BossSelect(discord.ui.Select):
     def __init__(self, json_file):
         self.json_file = json_file
@@ -1590,16 +1589,22 @@ class BossSelect(discord.ui.Select):
         file_name = os.path.basename(json_file).replace(".json", "")  # Remove .json extension
 
         # Create dropdown options with a unique value for each boss
-        options = [
-            discord.SelectOption(
+        options = []
+        seen_values = set()  # Keep track of unique values
+
+        for boss in load_bosses_from_file(json_file):
+            unique_value = f"{boss['name']}|{file_name}|{hash(json_file)}"  # Ensure uniqueness
+            if unique_value in seen_values:
+                continue  # Skip duplicates
+            seen_values.add(unique_value)
+
+            options.append(discord.SelectOption(
                 label=f"{emoji} {boss['name']}",
                 description=f"Boss {boss['name']}",
-                value=f"{boss['name']}|{file_name}",  # Unique value: boss name + file name
+                value=unique_value,
                 emoji=boss.get("emoji", "🔨")
-            )
-            for boss in load_bosses_from_file(json_file)
-        ]
-        
+            ))
+
         # Use the JSON file's name as the placeholder
         super().__init__(placeholder=f"{emoji}{file_name}", options=options)
 
