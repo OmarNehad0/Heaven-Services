@@ -2,7 +2,7 @@
     {
         "name": "Firecape",
         "aliases": ["fc"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "caption": "For Any Custom Question Create A Ticket.",
         "items": [
             {
                 "name": "90+ Range + Rigour",
@@ -20,7 +20,7 @@
     {
         "name": "firecape low",
         "aliases": ["fcLow"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "caption": "For Any Custom Question Create A Ticket.",
         "items": [
             {
                 "name": "85-99 Range / -70 Defence",
@@ -48,7 +48,7 @@
     {
         "name": "Firecape pure",
         "aliases": ["purefc", "fcpure"],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "caption": "For Any Custom Question Create A Ticket.",
         "items": [
             {
                 "name": "85-99 Range",
@@ -76,7 +76,7 @@
     {
         "name": "No Pray Firecape",
         "aliases" : ["NoPray"],
-        "caption": "Must Already Have Dwarven Rock Cake\nWe Provide All Items And Sweets Except Dwarven Cake or Twisted Bow",
+        "caption": "For Any Custom Question Create A Ticket.",
         "items": [
             {
                 "name": "50+ Range, Below 50 Hp",
