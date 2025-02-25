@@ -3,11 +3,11 @@
     "aliases": [
       "Duke"
     ],
-    "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+    "caption": "For Any Custom Question Create A Ticket.",
     "items": [
       {
         "name": "Duke Sucellus",
-        "price": 1350000,
+        "price": 2100000,
         "image": "https://oldschool.runescape.wiki/images/thumb/Duke_Sucellus.png/800px-Duke_Sucellus.png?d588a"
       }
     ],
@@ -18,11 +18,11 @@
                 "aliases": [
                   "Vard"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "Vardorvis",
-                    "price": 1500000,
+                    "price": 2500000,
                     "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
                   }
                 ],
@@ -32,11 +32,11 @@
                 "aliases": [
                   "whisperer"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "The Whisperer",
-                    "price": 2000000,
+                    "price": 2300000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
                   }
                 ],
@@ -46,11 +46,11 @@
                 "aliases": [
                   "Levi"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "The Leviathan",
-                    "price": 2000000,
+                    "price": 1900000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
                   }
                 ],
@@ -60,11 +60,11 @@
                 "aliases": [
                   "AwDuke"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "Awakened Duke",
-                    "price": 120000000,
+                    "price": 140000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/Duke_Sucellus.png/800px-Duke_Sucellus.png?d588a"
                   }
                 ],
@@ -74,11 +74,11 @@
                 "aliases": [
                   "AwLevi"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "Awakened Leviathan",
-                    "price": 150000000,
+                    "price": 256000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
                   }
                 ],
@@ -89,11 +89,11 @@
                 "aliases": [
                   "AwVard"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "Awakened Vardorvis",
-                    "price": 120000000,
+                    "price": 140000000,
                     "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
                   }
                 ],
@@ -104,11 +104,11 @@
                 "aliases": [
                   "AwWhisp"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "Awakened Whisperer",
-                    "price": 180000000,
+                    "price": 140000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
                   }
                 ],
@@ -119,11 +119,11 @@
                 "aliases": [
                   "BTorva"
                 ],
-                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
                     "name": "BTorva",
-                    "price": 400000000,
+                    "price": 600000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/Ancient_blood_ornament_kit_detail.png/800px-Ancient_blood_ornament_kit_detail.png?4b3c1"
                   }
                 ],
