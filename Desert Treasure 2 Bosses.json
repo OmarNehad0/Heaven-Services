@@ -6,7 +6,7 @@
     "caption": "For Any Custom Question Create A Ticket.",
     "items": [
       {
-        "name": "Duke Sucellus",
+        "name": "Duke Sucellus!",
         "price": 2100000,
         "image": "https://oldschool.runescape.wiki/images/thumb/Duke_Sucellus.png/800px-Duke_Sucellus.png?d588a"
       }
@@ -21,7 +21,7 @@
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "Vardorvis",
+                    "name": "Vardorvis!",
                     "price": 2500000,
                     "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
                   }
@@ -35,7 +35,7 @@
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "The Whisperer",
+                    "name": "The Whisperer!",
                     "price": 2300000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
                   }
@@ -49,7 +49,7 @@
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "The Leviathan",
+                    "name": "The Leviathan!",
                     "price": 1900000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
                   }
@@ -63,7 +63,7 @@
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "Awakened Duke",
+                    "name": "Awakened Duke!",
                     "price": 140000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/Duke_Sucellus.png/800px-Duke_Sucellus.png?d588a"
                   }
@@ -77,7 +77,7 @@
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "Awakened Leviathan",
+                    "name": "Awakened Leviathan!",
                     "price": 256000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
                   }
@@ -92,7 +92,7 @@
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "Awakened Vardorvis",
+                    "name": "Awakened Vardorvis!",
                     "price": 140000000,
                     "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
                   }
@@ -107,7 +107,7 @@
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "Awakened Whisperer",
+                    "name": "Awakened Whisperer!",
                     "price": 140000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
                   }
@@ -115,14 +115,14 @@
                 "emoji" : "<:120pxThe_Whisperer:1321171164290224198>"
               },  
               {
-                "name": "BTorva",
+                "name": "Blood Torva",
                 "aliases": [
                   "BTorva"
                 ],
                 "caption": "For Any Custom Question Create A Ticket.",
                 "items": [
                   {
-                    "name": "BTorva",
+                    "name": "BTorva!",
                     "price": 600000000,
                     "image": "https://oldschool.runescape.wiki/images/thumb/Ancient_blood_ornament_kit_detail.png/800px-Ancient_blood_ornament_kit_detail.png?4b3c1"
                   }
