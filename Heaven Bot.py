@@ -1589,13 +1589,13 @@ class BossSelect(discord.ui.Select):
         emoji = EMOJI_MAP.get(json_file, "🔨")  # Default to 🔨 if emoji is not found
         file_name = os.path.basename(json_file).replace(".json", "")  # Remove .json extension
 
-        # Create dropdown options with the emoji from the JSON file and the new emoji from EMOJI_MAP
+        # Create dropdown options with a unique value for each boss
         options = [
             discord.SelectOption(
-                label=f"{emoji} {boss['name']}",  # The label now has the emoji from EMOJI_MAP and boss name
+                label=f"{emoji} {boss['name']}",
                 description=f"Boss {boss['name']}",
-                value=boss["name"],
-                emoji=boss.get("emoji", "🔨")  # Emoji for the boss from the JSON file
+                value=f"{boss['name']}|{file_name}",  # Unique value: boss name + file name
+                emoji=boss.get("emoji", "🔨")
             )
             for boss in load_bosses_from_file(json_file)
         ]
@@ -1604,11 +1604,13 @@ class BossSelect(discord.ui.Select):
         super().__init__(placeholder=f"{emoji}{file_name}", options=options)
 
     async def callback(self, interaction: discord.Interaction):
-        selected_boss = self.values[0]
-        # Log the interaction (send the log embed)
+        selected_value = self.values[0]  # Example: "Vorkath|Chambers Of Xeric"
+        selected_boss, file_name = selected_value.rsplit("|", 1)  # Split boss name and file name
+
+        # Log the interaction
         await log_interaction(interaction.user, selected_boss, self.json_file)
-     
-        # Send the modal form for the kill count
+        
+        # Send the modal form
         await interaction.response.send_modal(KillCountModal(self.json_file, selected_boss))
 
 # View for each JSON file (with no timeout)
