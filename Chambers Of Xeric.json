@@ -4,11 +4,11 @@
         "aliases": [
             "coxtrio"
         ],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "caption": "For Any Custom Question Create A Ticket.",
         "items": [
             {
                 "name": "Trio",
-                "price": 12000000,
+                "price": 13000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
             }
         ],
@@ -19,7 +19,7 @@
         "aliases": [
             "coxcm"
         ],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "caption": "For Any Custom Question Create A Ticket.",
         "items": [
             {
                 "name": "Challenge Mode - Mass",
@@ -39,7 +39,7 @@
         "aliases": [
             "coxsolo"
         ],
-        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+        "caption": "For Any Custom Question Create A Ticket.",
         "items": [
             {
                 "name": "Twisted Bow (TBow)",
@@ -47,13 +47,13 @@
                 "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
             },
             {
-                "name": "Bow of Faerdhinen (Bowfa)",
-                "price": 12000000,
+                "name": "dhl/Bow of Faerdhinen (Bowfa)",
+                "price": 18000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
             },
             {
-                "name": "Tentacle Whip/Toxic Blowpipe (BP)",
-                "price": 15000000,
+                "name": "Tentacle Whip/Bowfa ",
+                "price": 23000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Great_Olm_%28Christmas%29.png/800px-Great_Olm_%28Christmas%29.png?48b39"
             }
         ],
