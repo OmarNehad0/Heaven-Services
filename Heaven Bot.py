@@ -1621,7 +1621,7 @@ class BossSelectView(View):
 @bot.command()
 async def start(ctx):
     # Direct URL to the banner image
-    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif?ex=679c8757&is=679b35d7&hm=ca456672c6c7daadd273a7144b9533aece23d25450ed21f8fa579e7c0d2f6f57&=&width=400&height=225"
+    banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif?ex=67bece57&is=67bd7cd7&hm=3ad3d5ee046b9714f9ecf4d6c209a1f866b6137886f56667671402fa412a4bbf&="
     import io
 
     # Download and send the banner image
