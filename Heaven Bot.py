@@ -1580,6 +1580,7 @@ async def log_interaction(user, selected_boss, json_file):
     await log_channel.send(embed=embed)
 
 
+# Boss Select Dropdown (User-Specific)
 class BossSelect(discord.ui.Select):
     def __init__(self, json_file):
         self.json_file = json_file
@@ -1588,34 +1589,26 @@ class BossSelect(discord.ui.Select):
         emoji = EMOJI_MAP.get(json_file, "🔨")  # Default to 🔨 if emoji is not found
         file_name = os.path.basename(json_file).replace(".json", "")  # Remove .json extension
 
-        # Create dropdown options with a unique value for each boss
-        options = []
-        seen_values = set()  # Keep track of unique values
-
-        for boss in load_bosses_from_file(json_file):
-            unique_value = f"{boss['name']}|{file_name}|{hash(json_file)}"  # Ensure uniqueness
-            if unique_value in seen_values:
-                continue  # Skip duplicates
-            seen_values.add(unique_value)
-
-            options.append(discord.SelectOption(
-                label=f"{emoji} {boss['name']}",
+        # Create dropdown options with the emoji from the JSON file and the new emoji from EMOJI_MAP
+        options = [
+            discord.SelectOption(
+                label=f"{emoji} {boss['name']}",  # The label now has the emoji from EMOJI_MAP and boss name
                 description=f"Boss {boss['name']}",
-                value=unique_value,
-                emoji=boss.get("emoji", "🔨")
-            ))
-
+                value=boss["name"],
+                emoji=boss.get("emoji", "🔨")  # Emoji for the boss from the JSON file
+            )
+            for boss in load_bosses_from_file(json_file)
+        ]
+        
         # Use the JSON file's name as the placeholder
         super().__init__(placeholder=f"{emoji}{file_name}", options=options)
 
     async def callback(self, interaction: discord.Interaction):
-        selected_value = self.values[0]  # Example: "Vorkath|Chambers Of Xeric"
-        selected_boss, file_name = selected_value.rsplit("|", 1)  # Split boss name and file name
-
-        # Log the interaction
+        selected_boss = self.values[0]
+        # Log the interaction (send the log embed)
         await log_interaction(interaction.user, selected_boss, self.json_file)
-        
-        # Send the modal form
+     
+        # Send the modal form for the kill count
         await interaction.response.send_modal(KillCountModal(self.json_file, selected_boss))
 
 # View for each JSON file (with no timeout)
