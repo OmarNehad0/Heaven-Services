@@ -408,7 +408,7 @@
     "items" : [
       {
         "name": "Pearl",
-        "price": "1700000"
+        "price": 1700000
       }
     ]
   },
@@ -420,7 +420,7 @@
     "items" : [
       {
         "name": "herbiboar run",
-        "price": "270000"
+        "price": 270000
       }
     ]
   },
@@ -432,7 +432,7 @@
     "items" : [
       {
         "name": "Hunter Rumors Run",
-        "price": "3000000"
+        "price": 3000000
       }
     ]
   },
