@@ -844,10 +844,11 @@ async def dropdown(ctx):
 
         # Dropdown Selection
         select = discord.ui.Select(
-          placeholder=f"📘 | {category_name}",
+          placeholder=f"{emoji} | {category_name}",  # Use the correct emoji from the json_files mapping
           options=options,
-          custom_id=f"{file_name}_select"  # Set custom_id for the select menu itself
+          custom_id=f"{file_name}_select"
         )
+
         select.callback = select_callback  # Attach the callback
 
         view = discord.ui.View(timeout=None)  # Make View persistent
