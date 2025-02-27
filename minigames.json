@@ -437,18 +437,6 @@
     ]
   },
   {
-    "name": "Hunter Rumors",
-    "emoji" : "<:Hunter:1332625188289908808>",
-    "aliases": [
-      "hunter rumor","rumor"],
-    "items" : [
-      {
-        "name": "Hunter Rumors Run",
-        "price": "3000000"
-      }
-    ]
-  },
-  {
     "name": "Red/Black Chins",
     "emoji" : "<:Red_chinchompa:1344648891294945290>",
     "aliases": [
