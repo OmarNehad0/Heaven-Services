@@ -8,66 +8,61 @@
       "agil"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "1-25: Tourist trap quest or 5m\nPrice per marks of grace = 350k/ea (Canifis course or better required)\n+10% If you need marks collecting while training.",
     "methods": [
       {
         "title": "Gnome Stronghold Course",
-        "gpxp": 820,
+        "gpxp": 1064,
         "req": 1
       },
       {
         "title": "Alkharid Rooftop Course",
-        "gpxp": 470,
+        "gpxp": 1015,
         "req": 20
       },
       {
         "title": "Varrock Rooftop Course",
-        "gpxp": 420,
+        "gpxp": 1065,
         "req": 30
       },
       {
         "title": "Canifis Rooftop Course",
-        "gpxp": 380,
+        "gpxp": 1086,
         "req": 40
       },
       {
         "title": "Falador Rooftop Course",
-        "gpxp": 350,
+        "gpxp": 2155,
         "req": 50
       },
       {
         "title": "Seers Rooftop Course Without Teleport",
-        "gpxp": 330,
+        "gpxp": 4939,
         "req": 60
       },
       {
         "title": "Seers Rooftop Course With Teleport",
-        "gpxp": 310,
+        "gpxp": 4295,
         "req": 60
       },
       {
         "title": "Pollnivneach Rooftop Course",
-        "gpxp": 290,
+        "gpxp": 4298,
         "req": 70
       },
       {
         "title": "Prifddinas Agility Course",
-        "gpxp": 270,
-        "req": 75
-      },
-      {
-        "title": "Prifddinas Agility Course",
-        "gpxp": 250,
+        "gpxp": 28581,
         "req": 80
       },
       {
-        "title": "Rellekka Rooftop Course",
-        "gpxp": 250,
+        "title": "Rellekka Rooftop Course With Teleport",
+        "gpxp": 4286,
         "req": 80
       },
       {
         "title": "Ardougne Rooftop Course",
-        "gpxp": 210,
+        "gpxp": 39678,
         "req": 90
       }
     ]
@@ -85,47 +80,37 @@
     "methods": [
       {
         "title": "Any type",
-        "gpxp": 200,
+        "gpxp": 4344,
         "req": 1
       },
       {
         "title": "Oak Larders Without Butler",
-        "gpxp": 180,
+        "gpxp": 4429,
         "req": 33
       },
       {
-        "title": "Oak Larders With Butler",
-        "gpxp": 135,
-        "req": 50
-      },
-      {
         "title": "Mahogany Tables",
-        "gpxp": 100,
+        "gpxp": 30603,
         "req": 52
       },
       {
-        "title": "Teak Garden Bench",
-        "gpxp": 135,
-        "req": 66
-      },
-      {
         "title": "Mahogany Homes",
-        "gpxp": 530,
+        "gpxp": 450,
         "req": 1
       },
       {
         "title": "Mahogany Homes",
-        "gpxp": 380,
+        "gpxp": 300,
         "req": 20
       },
       {
         "title": "Mahogany Homes",
-        "gpxp": 300,
+        "gpxp": 220,
         "req": 50
       },
       {
         "title": "Mahogany Homes",
-        "gpxp": 240,
+        "gpxp": 160,
         "req": 70
       }
     ]
@@ -143,22 +128,17 @@
     "methods": [
       {
         "title": "Best Fish",
-        "gpxp": 140,
+        "gpxp": 12447,
         "req": 1
       },
       {
-        "title": "Cooking Fish Without Cooking Gauntlets",
-        "gpxp": 130,
-        "req": 35
-      },
-      {
         "title": "Wines",
-        "gpxp": 55,
+        "gpxp": 54283,
         "req": 35
       },
       {
         "title": "Cooking Fish With Cooking Gauntlets",
-        "gpxp": 90,
+        "gpxp": 53590,
         "req": 68
       }
     ]
@@ -175,62 +155,62 @@
     "methods": [
       {
         "title": "Leather/Gems",
-        "gpxp": 200,
+        "gpxp": 170,
         "req": 1
       },
       {
          "title": "Molten Glasses (irons) With (Gathering)",
-        "gpxp": 500,
+        "gpxp": 450,
          "req": 1
       },
       {
         "title": "Molten Glasses (irons) With (Without Gathering)",
-        "gpxp": 250,
+        "gpxp": 200,
         "req": 1
     },
       {
         "title": "Molten Glasses (irons) With (Gathering)",
-        "gpxp": 450,
+        "gpxp": 400,
         "req": 46
       },
       {
         "title": "Molten Glasses (irons) With (Without Gathering)",
-        "gpxp": 200,
+        "gpxp": 180,
         "req": 46
     },
       {
         "title": "Battlestaves",
-        "gpxp": 95,
+        "gpxp": 45,
         "req": 54
       },
       {
         "title": "Green D'hide Bodies",
-        "gpxp": 150,
+        "gpxp": 40,
         "req": 63
       },
       {
         "title": "Blue D'hide Bodies",
-        "gpxp": 125,
+        "gpxp": 35,
         "req": 71
       },
       {
         "title": "Red D'hide Bodies",
-        "gpxp": 90,
+        "gpxp": 30,
         "req": 77
       },
       {
         "title": "Black D'hide Bodies",
-        "gpxp": 75,
+        "gpxp": 25,
         "req": 84
       },
       {
         "title": "Molten Glasses (irons) With (Gathering)",
-        "gpxp": 400,
+        "gpxp": 350,
         "req": 87
       },
       {
       "title": "Molten Glasses (irons) With Without (Gathering)",
-      "gpxp": 175,
+      "gpxp": 150,
       "req": 87
     }
     ]
@@ -244,36 +224,36 @@
       "farm"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "+15% If No Teleport/Stamina",
     "methods": [
       {
         "title": "Best Tree Seeds",
-        "gpxp": 190,
+        "gpxp": 160,
         "req": 1
       },
       {
         "title": "Tree Runs + Fruit Tree Runs",
-        "gpxp": 120,
+        "gpxp": 80,
         "req": 45
       },
       {
         "title": "Tree Runs + Fruit Tree Runs",
-        "gpxp": 100,
+        "gpxp": 50,
         "req": 75
       },
       {
         "title": " Tithe Farm Using Golovanova Seeds",
-        "gpxp": 270,
+        "gpxp": 230,
         "req": 34
       },
       {
         "title": "Tithe Farm Using Bologano Seeds",
-        "gpxp": 250,
+        "gpxp": 180,
         "req": 54
       },
       {
         "title": "Tithe Farm Using Logavano Seeds",
-        "gpxp": 200,
+        "gpxp": 110,
         "req": 74
       }
     ]
@@ -287,26 +267,26 @@
       "fm"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "Hcim Order +100%\n600k Per Crate",
     "methods": [
-      {
-        "title": "Burning Best Logs",
-        "gpxp": 200,
-        "req": 1
-      },
       {
         "title": "Burning Best Logs",
         "gpxp": 150,
         "req": 1
       },
       {
+        "title": "Burning Best Logs",
+        "gpxp": 100,
+        "req": 1
+      },
+      {
         "title": "Wintertodt (No Fletching)",
-        "gpxp": 90,
+        "gpxp": 50,
         "req": 50
       },
       {
         "title": "Wintertodt (With Fletching)",
-        "gpxp": 110,
+        "gpxp": 60,
         "req": 50
       }
     ]
@@ -320,44 +300,44 @@
       "fish"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "",
     "methods": [
       {
         "title": "Power Fishing",
-        "gpxp": 200,
+        "gpxp": 150,
         "req": 1
       },
       {
         "title": "Tempoross - Regular Harpoon",
-        "gpxp": 450,
+        "gpxp": 400,
         "req": 35,
         "caption": "Or Price Per Permit 400000"
       },
       {
         "title": "Tempoross - Dragon/Crystal Harpoon",
-        "gpxp": 400,
+        "gpxp": 370,
         "req": 35,
         "caption": "Or Price Per Permit 370000"
       },
       {
         "title": "Tempoross - Infernal Harpoon",
-        "gpxp": 370,
+        "gpxp": 350,
         "req": 35,
         "caption": "Or Price Per Permit 350000"
       },
       {
         "title": "Minnows",
-        "gpxp": 190,
+        "gpxp": 150,
         "req": 82
       },
       {
         "title": "Barb Fishing",
-        "gpxp": 160,
+        "gpxp": 140,
         "req": 48
       },
       {
         "title": "Barb Fishing",
-        "gpxp": 140,
+        "gpxp": 120,
         "req": 70
       }
     ]
@@ -371,26 +351,26 @@
       "fletch"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "",
     "methods": [
       {
         "title": "Best Method",
-        "gpxp": 100,
+        "gpxp": 80,
         "req": 1
       },
       {
         "title": "Mithril Darts",
-        "gpxp": 65,
+        "gpxp": 35,
         "req": 52
       },
       {
         "title": "Adamant Darts",
-        "gpxp": 50,
+        "gpxp": 30,
         "req": 67
       },
       {
         "title": "Rune Darts",
-        "gpxp": 45,
+        "gpxp": 25,
         "req": 81,
         "caption": "You provide all supplies and keep all supplies/loot."
       }
@@ -405,31 +385,31 @@
       "herb"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "",
     "methods": [
       {
         "title": "Best Potion",
-        "gpxp": 60,
+        "gpxp": 40,
         "req": 3
       },
       {
         "title": "Prayer Potion",
-        "gpxp": 55,
+        "gpxp": 35,
         "req": 38
       },
       {
         "title": "Super Energy Potion",
-        "gpxp": 50,
+        "gpxp": 30,
         "req": 52
       },
       {
         "title": "Super Restore Potion",
-        "gpxp": 45,
+        "gpxp": 25,
         "req": 63
       },
       {
         "title": "Saradomin Brew",
-        "gpxp": 40,
+        "gpxp": 20,
         "req": 81
       }
     ]
@@ -444,36 +424,36 @@
       "hunting"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "",
     "methods": [
       {
         "title": "Starter Method",
-        "gpxp": 600,
+        "gpxp": 550,
         "req": 1
       },
       {
         "title": "Swamp Lizards",
-        "gpxp": 280,
+        "gpxp": 200,
         "req": 29
       },
       {
         "title": "Orange Salamanders",
-        "gpxp": 240,
+        "gpxp": 150,
         "req": 47
       },
       {
         "title": "Red Salamanders",
-        "gpxp": 200,
+        "gpxp": 120,
         "req": 59
       },
       {
         "title": "Manacial Monkey MM2 Required",
-        "gpxp": 150,
+        "gpxp": 100,
         "req": 60
       },
       {
         "title": "Red chinchompas With Diary",
-        "gpxp": 180,
+        "gpxp": 150,
         "req": 63
       },
       {
@@ -483,22 +463,22 @@
       },
       {
         "title": "Black Salamanders",
-        "gpxp": 150,
+        "gpxp": 90,
         "req": 67
       },
       {
         "title": "Black Chinchompas",
-        "gpxp": 280,
+        "gpxp": 105,
         "req": 73
       },
       {
         "title": "Herbiboar With Stamina",
-        "gpxp": 300,
+        "gpxp": 220,
         "req": 80
       },
       {
         "title": "Herbiboar Without Stamina",
-        "gpxp": 350,
+        "gpxp": 300,
         "req": 80
       }
     ]
@@ -516,64 +496,64 @@
     "methods": [
       {
         "title": "Sand crabs",
-        "gpxp": 220,
+        "gpxp": 170,
         "req": 1
       },
       {
         "title": "Splashing",
-        "gpxp": 280,
+        "gpxp": 50,
         "req": 1
       },
       {
         "title": "Low Alchemy",
-        "gpxp": 200,
+        "gpxp": 160,
         "req": 21
       },
       {
         "title": "High Alchemy",
-        "gpxp": 180,
+        "gpxp": 100,
         "req": 55
       },
       {
         "title": "Bake Pie",
-        "gpxp": 100,
+        "gpxp": 25,
         "req": 65
       },
       {
         "title": "Humidify",
-        "gpxp": 200,
+        "gpxp": 20,
         "req": 68
       },
       {
         "title": "Nightmare Zone",
-        "gpxp": 100,
+        "gpxp": 50,
         "req": 70
       },
       {
         "title": "Bursting (MM1 Tunnels)",
-        "gpxp": 80,
+        "gpxp": 50,
         "req": 70,
         "caption": "HCIM +100%"
       },
       {
         "title": "Bursting (MM2 Tunnels)",
-        "gpxp": 120,
+        "gpxp": 30,
         "req": 70,
         "caption": "HCIM +100%"
       },
       {
         "title": "Superglass Make",
-        "gpxp": 80,
+        "gpxp": 35,
         "req": 77
       },
       {
         "title": "Tan Leather",
-        "gpxp": 100,
+        "gpxp": 40,
         "req": 78
       },
       {
         "title": "String Jewellery",
-        "gpxp": 100,
+        "gpxp": 35,
         "req": 80
       }
     ]
@@ -596,56 +576,56 @@
       "def"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "Blast furnace training is 5x normal price",
     "methods": [
       {
         "title": "Sand Crabs - Mains",
-        "gpxp": 120,
+        "gpxp": 70,
         "req": 1
       },
       {
         "title": "Sand Crabs - Mains",
-        "gpxp": 90,
+        "gpxp": 40,
         "req": 50
       },
       {
         "title": "NMZ Prayer/Absorption - Mains",
-        "gpxp": 80,
+        "gpxp": 50,
         "req": 60
       },
       {
         "title": "Sand Crabs - Pures/Zerkers",
-        "gpxp": 150,
+        "gpxp": 130,
         "req": 1
       },
       {
         "title": "Sand Crabs - Pures/Zerkers",
-        "gpxp": 120,
+        "gpxp": 100,
         "req": 50
       },
       {
         "title": "NMZ Prayer/Absorption - Pures/Zerkers",
-        "gpxp": 120,
+        "gpxp": 90,
         "req": 60
       },
       {
         "title": "Sand Crabs - Obby",
-        "gpxp": 900,
+        "gpxp": 600,
         "req": 1
       },
       {
         "title": "Sand Crabs - Obby",
-        "gpxp": 700,
+        "gpxp": 400,
         "req": 50
       },
       {
         "title": "Sand Crabs - Obby",
-        "gpxp": 500,
+        "gpxp": 300,
         "req": 60
       },
       {
         "title": "Sand Crabs - Obby",
-        "gpxp": 400,
+        "gpxp": 220,
         "req": 70
       }
     ]
@@ -659,31 +639,31 @@
       ""
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "1-35: 12M (Set price)\n+25% Ironman If No D Pickaxe",
     "methods": [
       {
         "title": "Copper/Tin",
-        "gpxp": 650,
+        "gpxp": 550,
         "req": 1
       },
       {
         "title": "Iron Ore Power Mining",
-        "gpxp": 220,
+        "gpxp": 190,
         "req": 15
       },
       {
         "title": "Motherlode Mine",
-        "gpxp": 200,
+        "gpxp": 140,
         "req": 35
       },
       {
         "title": "Motherlode Mine",
-        "gpxp": 150,
+        "gpxp": 125,
         "req": 72
       },
       {
         "title": "Motherlode Mine (Upper Level)",
-        "gpxp": 140,
+        "gpxp": 110,
         "req": 72
       }
     ]
@@ -697,31 +677,31 @@
       "pray"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "",
     "methods": [
       {
         "title": "Ecto",
-        "gpxp": 150,
+        "gpxp": 110,
         "req": 1
       },
       {
         "title": "Chaos Altar Using Any Bones",
-        "gpxp": 120,
+        "gpxp": 90,
         "req": 1
       },
       {
         "title": "Gilded Altar Using Dragon Bones",
-        "gpxp": 80,
+        "gpxp": 50,
         "req": 1
       },
       {
         "title": "Zeah Using Heads",
-        "gpxp": 200,
+        "gpxp": 130,
         "req": 16
       },
       {
         "title": "Gilded Altar Using Superior Dragon Bones",
-        "gpxp": 50,
+        "gpxp": 35,
         "req": 70
       }
     ]
@@ -736,52 +716,52 @@
       "ranging"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "Prices May Vary Depending On Stats/Gear.",
     "methods": [
       {
         "title": "Sand Crabs Low Level",
-        "gpxp": 100,
+        "gpxp": 70,
         "req": 1
       },
       {
         "title": "Sand Crabs Higher Level",
-        "gpxp": 90,
+        "gpxp": 50,
         "req": 60
       },
       {
         "title": "Cannon Only Low Level",
-        "gpxp": 200,
+        "gpxp": 180,
         "req": 1
       },
       {
         "title": "Cannon Only Higher Level",
-        "gpxp": 180,
+        "gpxp": 140,
         "req": 50
       },
       {
         "title": "Cannon With Best Ranged Weapon Low Level",
-        "gpxp": 110,
+        "gpxp": 90,
         "req": 1
       },
       {
         "title": "Cannon With Best Ranged Weapon Higher Level",
-        "gpxp": 90,
+        "gpxp": 50,
         "req": 50
       },
       {
         "title": "NMZ (Prayer/Absorption)",
-        "gpxp": 80,
+        "gpxp": 35,
         "req": 60
       },
       {
         "title": "Chinning - MM1 Tunnels",
-        "gpxp": 70,
+        "gpxp": 40,
         "req": 70,
         "caption": "Hardcore +75%"
       },
       {
         "title": "Chinning - MM2 Tunnels",
-        "gpxp": 55,
+        "gpxp": 25,
         "req": 70,
         "caption": "Hardcore +75%"
       }
@@ -797,46 +777,46 @@
       "rc"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "If using Daeyalt Essence, the price is 20% cheaper",
     "methods": [
       {
         "title": "Library",
-        "gpxp": 400,
+        "gpxp": 300,
         "req": 1
       },
       {
         "title": "Any/Best Runes",
-        "gpxp": 500,
+        "gpxp": 400,
         "req": 1
       },
       {
         "title": "ZMI",
-        "gpxp": 250,
+        "gpxp": 180,
         "req": 1
       },
       {
         "title": "Lava Runes Using Magic Imbue",
-        "gpxp": 200,
+        "gpxp": 150,
         "req": 23
       },
       {
         "title": "Lava Runes Without Magic Imbue",
-        "gpxp": 300,
+        "gpxp": 220,
         "req": 23
       },
       {
         "title": "Guardian of The Rift Low Level",
-        "gpxp": 250,
+        "gpxp": 220,
         "req": 27
       },
       {
         "title": "Guardian of The Rift Higher Level",
-        "gpxp": 200,
+        "gpxp": 190,
         "req": 77
       },
       {
         "title": "Blood/Soul Runes",
-        "gpxp": 175,
+        "gpxp": 150,
         "req": 77
       }
     ]
@@ -850,21 +830,21 @@
       "slay"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "No Bursting +10%\nKarluum Cave +15%\nNo Cannon +25%\nNo Prayer +25%\nIronman No Supplies +35%\nBoss Tasks +40%\nHardcore No Supplies +45%\nHardcore +100%",
     "methods": [
       {
         "title": "Stats Below 70's With Low Tier Gear",
-        "gpxp": 500,
+        "gpxp": 420,
         "req": 1
       },
       {
         "title": "Stats 70-85 With High Tier Gear",
-        "gpxp": 300,
+        "gpxp": 250,
         "req": 1
       },
       {
         "title": "Stats 85+ With Top Tier Gear",
-        "gpxp": 250,
+        "gpxp": 180,
         "req": 1
       }
     ]
@@ -878,26 +858,26 @@
       "smith"
     ],
     "onlyShowBest": false,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "",
     "methods": [
       {
         "title": "Best Bars",
-        "gpxp": 200,
+        "gpxp": 100,
         "req": 1
       },
       {
         "title": "Darts/Knives",
-        "gpxp": 200,
-        "req": 40
-      },
-      {
-        "title": "Best Platebodies",
         "gpxp": 100,
         "req": 40
       },
       {
+        "title": "Best Platebodies",
+        "gpxp": 60,
+        "req": 40
+      },
+      {
         "title": "Goldsmith Gauntlets",
-        "gpxp": 80,
+        "gpxp": 50,
         "req": 40
       }
     ]
@@ -915,42 +895,42 @@
     "methods": [
       {
         "title": "Starter Method",
-        "gpxp": 600,
+        "gpxp": 400,
         "req": 1
       },
       {
         "title": "Fastest Method",
-        "gpxp": 350,
+        "gpxp": 250,
         "req": 25
       },
       {
         "title": "Ardy Knights (55-75 Thieving) With Diary",
-        "gpxp": 180,
+        "gpxp": 120,
         "req": 55
       },
       {
         "title": "Ardy Knights (75-95 Thieving) With Diary",
-        "gpxp": 150,
+        "gpxp": 100,
         "req": 75
       },
       {
         "title": "Ardy Knights (95-99 Thieving) With Diary",
-        "gpxp": 120,
+        "gpxp": 60,
         "req": 95
       },
       {
         "title": "Ardy Knights (55-75 Thieving) Without Diary",
-        "gpxp": 200,
+        "gpxp": 150,
         "req": 55
       },
       {
         "title": "Ardy Knights (75-95 Thieving) Without Diary",
-        "gpxp": 185,
+        "gpxp": 125,
         "req": 75
       },
       {
         "title": "Ardy Knights (95-99 Thieving) Without Diary",
-        "gpxp": 140,
+        "gpxp": 80,
         "req": 95
       }
     ]
@@ -965,21 +945,21 @@
       "wc"
     ],
     "onlyShowBest": true,
-    "caption": "For Any Custom Question Create A Ticket.",
+    "caption": "",
     "methods": [
       {
         "title": "Starter Method Best Trees",
-        "gpxp": 350,
+        "gpxp": 300,
         "req": 1
       },
       {
         "title": "Teak Trees",
-        "gpxp": 180,
+        "gpxp": 100,
         "req": 35
       },
       {
         "title": "Redwood Trees",
-        "gpxp": 100,
+        "gpxp": 70,
         "req": 90
       }
     ]
