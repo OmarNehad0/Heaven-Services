@@ -733,9 +733,11 @@ def load_json(file_name):
         return []
 
 def format_price(price):
+    """Converts price to a formatted string with K/M/GP."""
     try:
-        print(f"Debugging price value: {repr(price)}")  # Debugging line
-        price = float(price)  
+        if isinstance(price, str) and not price.isnumeric():
+            return "N/A 🪙"  # Handle non-numeric strings like "Free" or "Unknown"
+        price = float(price)  # Convert to float
     except (ValueError, TypeError):
         return "N/A 🪙"
 
@@ -745,6 +747,7 @@ def format_price(price):
         return f"{price / 1_000:.2f}K"
     else:
         return f"{int(price)} GP"
+
 
 
 
