@@ -735,9 +735,9 @@ def load_json(file_name):
 def format_price(price):
     """Converts price to a formatted string with K/M/GP."""
     try:
-        price = float(price)
+        price = float(price)  # Convert to float to ensure it's numeric
     except (ValueError, TypeError):
-        return "N/A 🪙"
+        return "N/A 🪙"  # Return 'N/A' if the conversion fails
 
     if price >= 1_000_000:
         return f"{price / 1_000_000:.2f}M"
@@ -745,6 +745,7 @@ def format_price(price):
         return f"{price / 1_000:.2f}K"
     else:
         return f"{int(price)} GP"
+
 
 def find_category(category_name, file_name):
     """Finds the category inside the correct JSON file."""
