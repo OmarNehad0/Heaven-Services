@@ -733,21 +733,19 @@ def load_json(file_name):
         return []
 
 def format_price(price):
-    """Converts price to a formatted string with K/M/GP."""
+    """Converts price to a formatted string with K/M/GP while handling string inputs safely."""
     try:
-        if isinstance(price, str):  
-            price = float(price.replace(",", "").strip())  # Convert string to float safely
-        elif not isinstance(price, (int, float)):  
-            return "N/A 🪙"  # Handle unexpected types
-
-        if price >= 1_000_000:
-            return f"{price / 1_000_000:.2f}M"
-        elif price >= 1_000:
-            return f"{price / 1_000:.2f}K"
-        else:
-            return f"{int(price)} GP"
-    except ValueError:
+        price = float(price)  # Ensure price is a number
+    except (ValueError, TypeError):
         return "N/A 🪙"  # If conversion fails, return default
+    
+    if price >= 1_000_000:
+        return f"{price / 1_000_000:.2f}M GP"
+    elif price >= 1_000:
+        return f"{price / 1_000:.2f}K GP"
+    else:
+        return f"{int(price)} GP"
+
 
 
 def find_category(category_name, file_name):
