@@ -411,5 +411,113 @@
         "price": "1700000"
       }
     ]
+  },
+  {
+    "name": "Herbiboar",
+    "emoji" : "<:Herblore:1332625035503992943>",
+    "aliases": [
+      "herbi","herbiboar"],
+    "items" : [
+      {
+        "name": "herbiboar run",
+        "price": "270000"
+      }
+    ]
+  },
+  {
+    "name": "Hunter Rumors",
+    "emoji" : "<:Hunter:1332625188289908808>",
+    "aliases": [
+      "hunter rumor","rumor"],
+    "items" : [
+      {
+        "name": "Hunter Rumors Run",
+        "price": "3000000"
+      }
+    ]
+  },
+  {
+    "name": "Hunter Rumors",
+    "emoji" : "<:Hunter:1332625188289908808>",
+    "aliases": [
+      "hunter rumor","rumor"],
+    "items" : [
+      {
+        "name": "Hunter Rumors Run",
+        "price": "3000000"
+      }
+    ]
+  },
+  {
+    "name": "Red/Black Chins",
+    "emoji" : "<:Red_chinchompa:1344648891294945290>",
+    "aliases": [
+      "chins","red chins","black chins"],
+    "items" : [
+      {
+        "name": "Red Chins With Above 80 Hunter",
+        "price": 52000
+      },
+      {
+        "name": "Red Chins With Below 80 Hunter",
+        "price": 69000
+      },
+      {
+        "name": "Red Chins No Private Area",
+        "price": 71000
+      },
+      {
+        "name": "Black Chins",
+        "price": 102000
+      }
+    ]
+  },
+  {
+    "name": "Buckets Of Sand",
+    "emoji" : "<:Bucket_of_sand:1344649501373235251>",
+    "aliases": [
+      "bucket of sand","bucket of sands","bucket"],
+    "items" : [
+      {
+        "name": "80+ Mining",
+        "price": 7500
+      },
+      {
+        "name": "Below 80 Mining",
+        "price": 9700
+      },
+      {
+        "name": "Below 60 Mining",
+        "price": 11200
+      }
+    ]
+  },
+  {
+    "name": "Buy From Blast Furnace",
+    "emoji" : "<:Mining:1332624760089346140>",
+    "aliases": [
+      "blast furnace","buy ore","bfurnace"],
+    "items" : [
+      {
+        "name": "Gold ore",
+        "price": 6500
+      },
+      {
+        "name": "Iron ore",
+        "price": 6500
+      },
+      {
+        "name": "Mithril ore",
+        "price": 6500
+      },
+      {
+        "name": "Coal ore",
+        "price": 6500
+      },
+      {
+        "name": "Coal With Coal Bag",
+        "price": 4300
+      }
+    ]
   }
 ]
