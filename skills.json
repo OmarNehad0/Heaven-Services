@@ -22,47 +22,47 @@
       },
       {
         "title": "Varrock Rooftop Course",
-        "gpxp": 1065,
+        "gpxp": 922,
         "req": 30
       },
       {
         "title": "Canifis Rooftop Course",
-        "gpxp": 1086,
+        "gpxp": 935,
         "req": 40
       },
       {
         "title": "Falador Rooftop Course",
-        "gpxp": 2155,
+        "gpxp": 465,
         "req": 50
       },
       {
         "title": "Seers Rooftop Course Without Teleport",
-        "gpxp": 4939,
+        "gpxp": 250,
         "req": 60
       },
       {
         "title": "Seers Rooftop Course With Teleport",
-        "gpxp": 4295,
+        "gpxp": 233,
         "req": 60
       },
       {
         "title": "Pollnivneach Rooftop Course",
-        "gpxp": 4298,
+        "gpxp": 233,
         "req": 70
       },
       {
         "title": "Prifddinas Agility Course",
-        "gpxp": 28581,
+        "gpxp": 233,
         "req": 80
       },
       {
         "title": "Rellekka Rooftop Course With Teleport",
-        "gpxp": 4286,
+        "gpxp": 233,
         "req": 80
       },
       {
         "title": "Ardougne Rooftop Course",
-        "gpxp": 39678,
+        "gpxp": 168,
         "req": 90
       }
     ]
@@ -80,17 +80,17 @@
     "methods": [
       {
         "title": "Any type",
-        "gpxp": 4344,
+        "gpxp": 250,
         "req": 1
       },
       {
         "title": "Oak Larders Without Butler",
-        "gpxp": 4429,
+        "gpxp": 227,
         "req": 33
       },
       {
         "title": "Mahogany Tables",
-        "gpxp": 30603,
+        "gpxp": 32,
         "req": 52
       },
       {
@@ -128,17 +128,17 @@
     "methods": [
       {
         "title": "Best Fish",
-        "gpxp": 12447,
+        "gpxp": 100,
         "req": 1
       },
       {
         "title": "Wines",
-        "gpxp": 54283,
+        "gpxp": 26,
         "req": 35
       },
       {
         "title": "Cooking Fish With Cooking Gauntlets",
-        "gpxp": 53590,
+        "gpxp": 80,
         "req": 68
       }
     ]
