@@ -901,11 +901,17 @@ def get_minigame(minigame_name):
 M_TO_USD = 0.2
 
 @bot.command(name="m")
-async def minigame(ctx, minigame_name: str, multiplier: int = 1):
-    # Ensure multiplier is at least 1 to prevent invalid calculations
-    if multiplier < 1:
-        await ctx.send("Multiplier must be 1 or higher!")
-        return
+async def minigame(ctx, *, args: str):
+    parts = args.rsplit(" ", 1)  # Split the input into minigame name and multiplier
+    minigame_name = parts[0]  # Minigame name (everything except the last word)
+    multiplier = 1  # Default multiplier
+
+    # Check if the last part is a valid number
+    if len(parts) > 1 and parts[1].isdigit():
+        multiplier = int(parts[1])  # Assign multiplier
+        if multiplier < 1:
+            await ctx.send("Multiplier must be 1 or higher!")
+            return
 
     # Find the minigame
     game = get_minigame(minigame_name)
