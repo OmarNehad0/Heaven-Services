@@ -1644,17 +1644,18 @@ class BossSelectView(View):
 async def start(ctx):
     # Direct URL to the banner image
     banner_url = "https://media.discordapp.net/attachments/1327418905789993030/1343960298113208411/banner.gif?ex=67c12650&is=67bfd4d0&hm=b49ba168b4f599f21efbeaa66379404876cef65bf3a9951571aab73dc407c1c0&="
-    import io
 
-    # Download and send the banner image
-    async with aiohttp.ClientSession() as session:
-        async with session.get(banner_url) as response:
-            if response.status == 200:
-                # Read image content
-                banner_data = await response.read()
-                await ctx.send(file=discord.File(io.BytesIO(banner_data), filename="banner.gif"))
-            else:
-                await ctx.send(f"Failed to fetch the banner image. HTTP Status: {response.status}")
+    # Create an embed for the banner
+    embed = discord.Embed(
+        title="Heaven Services Boss Calculator",
+        description="Select a boss from the dropdown below to calculate your kill count rewards.",
+        color=discord.Color.gold(),
+    )
+    embed.set_image(url=banner_url)  # Set the banner as the embed image
+    embed.set_footer(text="Powered by Heaven Services", icon_url=banner_url)
+
+    # Send the embed first
+    await ctx.send(embed=embed)
 
     # Group JSON files into chunks (e.g., 3 dropdowns per message)
     chunk_size = 3  # Number of dropdowns per message
