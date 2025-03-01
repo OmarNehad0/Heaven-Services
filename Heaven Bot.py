@@ -901,7 +901,12 @@ def get_minigame(minigame_name):
 M_TO_USD = 0.2
 
 @bot.command(name="m")
-async def minigame(ctx, *, minigame_name: str):
+async def minigame(ctx, minigame_name: str, multiplier: int = 1):
+    # Ensure multiplier is at least 1 to prevent invalid calculations
+    if multiplier < 1:
+        await ctx.send("Multiplier must be 1 or higher!")
+        return
+
     # Find the minigame
     game = get_minigame(minigame_name)
     if not game:
@@ -916,7 +921,7 @@ async def minigame(ctx, *, minigame_name: str):
 
     # Create the embed
     embed = discord.Embed(
-        title=f"{emoji} {game['name']}",  # Show emoji beside the name
+        title=f"{emoji} {game['name']} x{multiplier}",  # Show emoji and multiplier
         description=caption,
         color=discord.Color.blue(),
     )
@@ -931,11 +936,13 @@ async def minigame(ctx, *, minigame_name: str):
 
     # Add items to the embed as fields
     for item in game.get("items", []):
-        raw_price = item["price"]
-        m_price = raw_price / 1_000_000  # Convert raw price to millions (m)
+        base_price = item["price"]
+        total_price = base_price * multiplier  # Apply multiplier
+        m_price = total_price / 1_000_000  # Convert to millions (m)
         usd_price = round(m_price * 0.2, 2)  # Convert price to USD at a rate of 0.2
+
         embed.add_field(
-            name=item["name"],
+            name=f"{item['name']} (x{multiplier})",
             value=f"<:coins:1332378895047069777> {m_price:.1f}m / <:btc:1332372139541528627> ${usd_price:,.2f}",
             inline=False,
         )
@@ -1103,12 +1110,18 @@ async def s(ctx, skill_name: str, levels: str):
             )
 
         # Add each chunk as a separate field in the embed
-        for idx, chunk in enumerate(chunks):
-         embed.add_field(
-         name=f"Alternatively, if you want to choose a specific method (Part {idx + 1}):",
-         value=chunk,
-         inline=False,
-         )
+        embed.add_field(
+            name="__Alternatively, if you want to choose a specific method__",
+            value=chunks[0],
+            inline=False,
+        )
+
+        for chunk in chunks[1:]:
+           embed.add_field(
+           name="",
+           value=chunk,
+           inline=False,
+           )
 
         # Send the embed
         await ctx.send(embed=embed)
