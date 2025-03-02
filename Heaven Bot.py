@@ -819,7 +819,7 @@ async def select_callback(interaction: discord.Interaction):
 async def dropdown(ctx):
     banner_url = "https://media.discordapp.net/attachments/1332341372333723732/1332806835375308811/demo1.gif"
     ticket_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
-    voucher_link = "https://discord.com/channels/520905245174267908/1327419108366487634"
+    voucher_link = "https://www.sythe.org/threads/heaven-services-vouch-thread/"
 
     # Send Banner Before Dropdowns
     banner_embed = discord.Embed()
@@ -1403,7 +1403,7 @@ async def feedback(ctx):
     initial_embed = Embed(
         title="Vouch For Us!",
         color=0x8a2be2,
-        description="**We Appreciate Vouching For Us On [Sythe](https://www.sythe.org/threads/www-sythe-org-threads-cynx-osrs-service-vouch-thread/page-6#post-85913828).**\n\n**Please select your rating below (1-5 stars).**\nOnce selected, you will be asked to leave a review."
+        description="**We Appreciate Vouching For Us On [Sythe](https://www.sythe.org/threads/heaven-services-vouch-thread/).**\n\n**Please select your rating below (1-5 stars).**\nOnce selected, you will be asked to leave a review."
     )
     initial_embed.set_author(name=ctx.author.name, icon_url=ctx.author.display_avatar.url)
     initial_embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&=")
