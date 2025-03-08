@@ -936,7 +936,7 @@ async def minigame(ctx, *, args: str):
 
     # Set the thumbnail
     embed.set_thumbnail(
-        url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
+        url="https://media.discordapp.net/attachments/1332354894597853346/1347946556078293064/he1.gif?ex=67cdac8e&is=67cc5b0e&hm=dce3961c84897962673dfb49faf5dbbae321e9f816ea75744714b09b77be50e8&="
     )
 
     # Set the footer
