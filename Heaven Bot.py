@@ -1676,14 +1676,24 @@ async def start(ctx):
         else:
             print("No valid dropdowns in this chunk.")
 
-# Example command to handle a boss name with a multiplier
-@bot.command()
+
+current_exchange_rate = 0.2  # Default exchange rate
+
+@bot.tree.command(name="rate", description="Set the exchange rate for GP to USD.")
+async def rate(interaction: discord.Interaction, new_rate: float):
+    global current_exchange_rate
+    current_exchange_rate = new_rate
+    await interaction.response.send_message(f"Exchange rate updated to `{new_rate}` per million GP.", ephemeral=True)
+
+def price_to_usd(price):
+    return (price / 1_000_000) * current_exchange_rate  # Uses dynamic rate
+
+@bot.command(name="b")
 async def b(ctx, *, boss_name_with_multiplier: str):
     """
     This command handles boss names with spaces and optional multipliers.
     Usage: !b The Leviathan 1
     """
-    # Split the input by spaces and check if the last part is a number (multiplier)
     parts = boss_name_with_multiplier.rsplit(" ", 1)
     boss_name = parts[0]
     multiplier = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 1
@@ -1691,12 +1701,10 @@ async def b(ctx, *, boss_name_with_multiplier: str):
     print(f"Command !b received. Boss name: {boss_name}, Multiplier: {multiplier}")  # Debug print
 
     try:
-        # Load bosses from all JSON files
         bosses = []
         for json_file in JSON_FILES:
-            bosses.extend(load_bosses_from_file(json_file))  # Add bosses from each file to the list
+            bosses.extend(load_bosses_from_file(json_file))  # Load bosses from all JSON files
 
-        # Find the boss by name or alias in all loaded bosses
         boss = next(
             (b for b in bosses if boss_name.lower() == b["name"].lower() or boss_name.lower() in b.get("aliases", [])),
             None
@@ -1706,7 +1714,6 @@ async def b(ctx, *, boss_name_with_multiplier: str):
             await ctx.send(f"Boss `{boss_name}` not found.")
             return
         
-        # Create embed with calculations
         embed = discord.Embed(
             title=f"**{boss['name']}**",
             description=boss["caption"],
@@ -1715,7 +1722,7 @@ async def b(ctx, *, boss_name_with_multiplier: str):
         for item in boss["items"]:
             total_price = item["price"] * multiplier
             total_price_formatted = format_price(total_price)
-            total_usd = price_to_usd(total_price)
+            total_usd = price_to_usd(total_price)  # Uses updated exchange rate
 
             field_value = (f"**Price:** {format_price(item['price'])} x {multiplier} = {total_price_formatted}\n"
                            f"**Value in $:** ${total_usd:.2f}")
@@ -1726,9 +1733,9 @@ async def b(ctx, *, boss_name_with_multiplier: str):
 
         embed.set_footer(
             text="Heaven Services",
-            icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
-        )  # Footer with thumbnail-style icon
-        embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&=")
+            icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
+        )
+        embed.set_author(name="Boss Calculator", icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
 
         await ctx.send(embed=embed)
     except Exception as e:
