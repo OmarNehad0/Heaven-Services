@@ -963,8 +963,6 @@ with open("skills.json", "r") as f:
 with open("xp_data.json", "r") as f:
     XP_TABLE = {int(k): v for k, v in json.load(f)["xp_data"].items()}  # Ensure keys are integers
 
-# Constants
-EXCHANGE_RATE = 0.2  # 1M GP = $0.2
 EMOJI_CATEGORY = {
     "gp": "<:coins:1332378895047069777>",  # Replace with your emoji ID for GP
     "usd": "<:btc:1332372139541528627>"  # Replace with your emoji ID for USD
@@ -1001,6 +999,10 @@ async def s(ctx, skill_name: str, levels: str):
             await ctx.send(f"Error: Skill '{skill_name}' not found.")
             return
 
+        # Fetch the dynamic exchange rate
+        global current_exchange_rate
+        exchange_rate = current_exchange_rate
+
         # Calculate cheapest method breakdown
         breakdown = []
         total_gp_cost = 0
@@ -1026,7 +1028,7 @@ async def s(ctx, skill_name: str, levels: str):
 
             # Calculate costs for this segment
             gp_cost = xp_to_next * cheapest_method["gpxp"] / 1_000_000  # Convert to millions
-            usd_cost = gp_cost * EXCHANGE_RATE
+            usd_cost = gp_cost * exchange_rate
             total_gp_cost += gp_cost
             total_usd_cost += usd_cost
 
@@ -1044,29 +1046,11 @@ async def s(ctx, skill_name: str, levels: str):
             current_level = target_level
 
         # Full method calculations
-        additional_calculations = []
-        for method in skill["methods"]:
-            if method["req"] > level_start:
-                continue
-
-            # Calculate total cost for the method from level_start to level_end
-            xp_required = XP_TABLE[level_end] - XP_TABLE[level_start]
-            gp_cost_full = xp_required * method["gpxp"] / 1_000_000  # Convert to millions
-            usd_cost_full = gp_cost_full * EXCHANGE_RATE
-            additional_calculations.append({
-                "title": method["title"],
-                "gpxp": method["gpxp"],
-                "gp_cost": gp_cost_full,
-                "usd_cost": usd_cost_full,
-            })
-
-        # Add additional calculations for full methods
-        # Full method calculations (showing all available methods)
         additional_text = "\n".join([
-        f"**{method['title']}** (Requires level {method['req']}) {method['gpxp']}gp/xp\n"
-        f"**{(XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000:,.2f}M** <:coins:1332378895047069777>\n"
-        f"**${((XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000) * EXCHANGE_RATE:,.2f}** <:btc:1332372139541528627>\n"
-        for method in skill["methods"]
+            f"**{method['title']}** (Requires level {method['req']}) {method['gpxp']}gp/xp\n"
+            f"**{(XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000:,.2f}M** <:coins:1332378895047069777>\n"
+            f"**${((XP_TABLE[level_end] - XP_TABLE[level_start]) * method['gpxp'] / 1_000_000) * exchange_rate:,.2f}** <:btc:1332372139541528627>\n"
+            for method in skill["methods"]
         ])
 
         # Chunk the text to ensure no field exceeds 1024 characters
@@ -1078,11 +1062,11 @@ async def s(ctx, skill_name: str, levels: str):
             description=f"Requires {XP_TABLE[level_end] - XP_TABLE[level_start]:,} XP",
             color=discord.Color.blue(),
         )
-        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&=")  # Thumbnail image
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
         embed.set_footer(
             text="Heaven Services",
-            icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
-        )  # Footer with thumbnail-style icon
+            icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
+        )
 
         # Add total cost
         embed.add_field(
@@ -1118,19 +1102,19 @@ async def s(ctx, skill_name: str, levels: str):
             value=chunks[0],
             inline=False,
         )
-
         for chunk in chunks[1:]:
-           embed.add_field(
-           name="",
-           value=chunk,
-           inline=False,
-           )
+            embed.add_field(
+                name="",
+                value=chunk,
+                inline=False,
+            )
 
         # Send the embed
         await ctx.send(embed=embed)
 
     except Exception as e:
         await ctx.send(f"Error calculating skill: {e}")
+
 
 
 
@@ -1180,14 +1164,11 @@ async def quest_calculator(ctx, *, quests: str):
         title="Quest Calculator ",
         color=discord.Color.purple()
     )
-    embed.set_thumbnail(
-        url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
-    )  # Replace with your thumbnail URL
     embed.set_footer(
         text="Heaven Services",
         icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
     )
-
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
     # Add found quests to the embed
     if found_quests:
         embed.add_field(
