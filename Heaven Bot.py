@@ -880,19 +880,6 @@ async def dropdown(ctx):
 
     bot.persistent_views_added = True  # Mark persistent views added
 
-current_exchange_rate = 0.2  # Default rate
-
-# Command to set the exchange rate
-@bot.tree.command(name="rate", description="Set the exchange rate for GP to USD.")
-async def rate(interaction: discord.Interaction, new_rate: float):
-    global current_exchange_rate
-    current_exchange_rate = new_rate
-    await interaction.response.send_message(f"Exchange rate updated to {new_rate} per million GP.", ephemeral=True)
-
-# Function to get price in USD
-def price_to_usd(price):
-    return (price / 1_000_000) * current_exchange_rate  # Uses dynamic rate    
-
 # Load minigame data
 with open("minigames.json", "r") as file:
     minigames = json.load(file)
@@ -1677,6 +1664,17 @@ async def start(ctx):
             await ctx.send(view=view)
         else:
             print("No valid dropdowns in this chunk.")
+
+current_exchange_rate = 0.2  # Default exchange rate
+
+@bot.tree.command(name="rate", description="Set the exchange rate for GP to USD.")
+async def rate(interaction: discord.Interaction, new_rate: float):
+    global current_exchange_rate
+    current_exchange_rate = new_rate
+    await interaction.response.send_message(f"Exchange rate updated to `{new_rate}` per million GP.", ephemeral=True)
+
+def price_to_usd(price):
+    return (price / 1_000_000) * current_exchange_rate  # Uses dynamic rate
 
 @bot.command(name="b")
 async def b(ctx, *, boss_name_with_multiplier: str):
