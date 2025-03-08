@@ -924,7 +924,8 @@ async def minigame(ctx, *, args: str):
     emoji = game.get("emoji", "")
 
     # Fetch the dynamic exchange rate
-    exchange_rate = get_dynamic_exchange_rate()
+    global current_exchange_rate
+    exchange_rate = current_exchange_rate
 
     # Create the embed
     embed = discord.Embed(
