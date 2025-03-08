@@ -923,6 +923,9 @@ async def minigame(ctx, *, args: str):
     # Extract emoji for display
     emoji = game.get("emoji", "")
 
+    # Fetch the dynamic exchange rate
+    exchange_rate = get_dynamic_exchange_rate()
+
     # Create the embed
     embed = discord.Embed(
         title=f"{emoji} {game['name']} x{multiplier}",  # Show emoji and multiplier
@@ -943,7 +946,7 @@ async def minigame(ctx, *, args: str):
         base_price = item["price"]
         total_price = base_price * multiplier  # Apply multiplier
         m_price = total_price / 1_000_000  # Convert to millions (m)
-        usd_price = round(m_price * 0.2, 2)  # Convert price to USD at a rate of 0.2
+        usd_price = round(m_price * exchange_rate, 2)  # Convert price to USD using dynamic rate
 
         embed.add_field(
             name=f"{item['name']} (x{multiplier})",
@@ -1062,7 +1065,7 @@ async def s(ctx, skill_name: str, levels: str):
             description=f"Requires {XP_TABLE[level_end] - XP_TABLE[level_start]:,} XP",
             color=discord.Color.blue(),
         )
-        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332354894597853346/1347946556078293064/he1.gif?ex=67cdac8e&is=67cc5b0e&hm=dce3961c84897962673dfb49faf5dbbae321e9f816ea75744714b09b77be50e8&=")
         embed.set_footer(
             text="Heaven Services",
             icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif"
@@ -1168,7 +1171,7 @@ async def quest_calculator(ctx, *, quests: str):
         text="Heaven Services",
         icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
     )
-    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif")
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332354894597853346/1347946556078293064/he1.gif?ex=67cdac8e&is=67cc5b0e&hm=dce3961c84897962673dfb49faf5dbbae321e9f816ea75744714b09b77be50e8&=")
     # Add found quests to the embed
     if found_quests:
         embed.add_field(
