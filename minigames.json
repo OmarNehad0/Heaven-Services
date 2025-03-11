@@ -318,15 +318,6 @@
     ]
   },
   {
-    "name": "Pets",
-    "aliases": [
-      "pets",
-      "pethunt"
-    ],
-    "emoji": "<:Abyssal_Sire:1332733623484420179>",
-    "caption": "Create a ticket and we will quote prices for you"
-  },
-  {
     "name": "Pyramid Plunder",
     "emoji": "<:Pharaohs_sceptre:1333067752134676560>",
     "aliases": [
