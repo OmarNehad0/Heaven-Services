@@ -507,5 +507,52 @@
         "price": 4300
       }
     ]
+  },
+  {
+    "name": "Minnows",
+    "emoji" : "<:Shark:1349138542390939668>",
+    "aliases": [
+      "im grinds","imgrind","minnows"],
+    "items" : [
+      {
+        "name": "82-90 Fishing",
+        "price": 30000
+      },
+      {
+        "name": "90-95 Fishing",
+        "price": 24000
+      },
+      {
+        "name": "95-99 Fishing",
+        "price": 21000
+      }
+    ]
+  },{
+    "name": "Plank With Butler",
+    "emoji" : "<:Plank:1349138844926214185>",
+    "aliases": [
+      "Plank"],
+    "items" : [
+      {
+        "name": "plank with butler",
+        "price": 25000
+      }
+    ]
+  },
+{
+    "name": "Molten Glass",
+    "emoji" : "<:Molten_glass:1349138988090527826>",
+    "aliases": [
+      "molten glass","molten"],
+    "items" : [
+      {
+        "name": "Making Glass Per Seaweed",
+        "price": 18000
+      },
+      {
+        "name": "Blowing Glass",
+        "price": 7000
+      }
+    ]
   }
 ]
