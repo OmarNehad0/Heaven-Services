@@ -57,12 +57,16 @@
     "emoji": "<:Castle_wars_ticket:1332628074486956093>",
     "aliases": [
       "castlewars",
-      "cw"
+      "cw","soulwar","sw"
     ],
     "items": [
       {
         "name": "Per ticket",
         "price": 4200000
+      },
+      {
+        "name": "Soul War Point",
+        "price": 140000
       }
     ]
   },
@@ -328,21 +332,6 @@
       {
         "name": "Any Chest",
         "price": 158666
-      }
-    ]
-  },
-  {
-    "name": "Soul Wars (SW)",
-    "emoji": "<:Soul_cape_red:1332629617785442407>",
-    "aliases": [
-      "sw",
-      "soulwars"
-    ],
-    "caption": "Prices below are per point",
-    "items": [
-      {
-        "name": "Per Point",
-        "price": 140000
       }
     ]
   },
