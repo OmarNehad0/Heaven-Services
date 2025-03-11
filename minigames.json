@@ -554,5 +554,23 @@
         "price": 7000
       }
     ]
+  }, {
+    "name": "Tempross (Permites)",
+    "emoji": "<:Tempoross:1349139480191176704>",
+    "aliases": [
+      "tempross",
+      "permits"
+    ],
+    "caption": "Prices Are Per Point\n+10% if under level 50 fishing\n+10% upcharge if no humidify",
+    "items": [
+      {
+        "name": "Infernal Harpoon",
+        "price": 420000
+      },
+      {
+        "name": "Permits",
+        "price": 470000
+      }
+    ]
   }
 ]
