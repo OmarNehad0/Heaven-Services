@@ -394,34 +394,24 @@
         "req": 1
       },
       {
-        "title": "Best Method",
+        "title": "Swamp Lizards",
         "gpxp": 435,
         "req": 29
       },
       {
-        "title": "Best Method",
+        "title": "Orange Salamanders",
         "gpxp": 438,
         "req": 47
       },
       {
-        "title": "Best Method",
+        "title": "Red Salamanders",
         "gpxp": 169,
         "req": 59
-      },
-      {
-        "title": "Best Method",
-        "gpxp": 175,
-        "req": 60
       },
       {
         "title": "Monkey",
         "gpxp": 138,
         "req": 60
-      },
-      {
-        "title": "Best Method",
-        "gpxp": 175,
-        "req": 63
       },
       {
         "title": "Red chinchompas With Diary",
@@ -434,12 +424,7 @@
         "req": 63
       },
       {
-        "title": "Monkey",
-        "gpxp": 140,
-        "req": 63
-      },
-      {
-        "title": "Best Method",
+        "title": "Black Salamanders",
         "gpxp": 157,
         "req": 67
       },
@@ -454,36 +439,21 @@
         "req": 67
       },
       {
-        "title": "Monkey",
-        "gpxp": 23,
-        "req": 67
-      },
-      {
         "title": "Best Method",
         "gpxp": 158,
         "req": 73
       },
       {
-        "title": "Red chinchompas Without Diary",
+        "title": "Black chinchompas Without Diary",
         "gpxp": 244,
         "req": 73
       },
       {
-        "title": "Red chinchompas With Diary",
+        "title": "Black chinchompas With Diary",
         "gpxp": 202,
         "req": 73
       },
       {
-        "title": "Monkey",
-        "gpxp": 132,
-        "req": 73
-      },
-      {
-        "title": "Best Method",
-        "gpxp": 140,
-        "req": 80
-      },
-      {
         "title": "Red chinchompas Without Diary",
         "gpxp": 183,
         "req": 80
@@ -494,16 +464,6 @@
         "req": 80
       },
       {
-        "title": "Monkey",
-        "gpxp": 114,
-        "req": 80
-      },
-      {
-        "title": "Best Method",
-        "gpxp": 140,
-        "req": 90
-      },
-      {
         "title": "Red chinchompas Without Diary",
         "gpxp": 183,
         "req": 90
@@ -511,11 +471,6 @@
       {
         "title": "Red chinchompas With Diary",
         "gpxp": 166,
-        "req": 90
-      },
-      {
-        "title": "Monkey",
-        "gpxp": 96,
         "req": 90
       }
     ]
@@ -748,12 +703,12 @@
     "caption": "Prices May Vary Depending On Stats/Gear.",
     "methods": [
       {
-        "title": "Ranged",
+        "title": "Sand Crabs Low Level",
         "gpxp": 142,
         "req": 1
       },
       {
-        "title": "Ranged",
+        "title": "Sand Crabs Higher Level",
         "gpxp": 93,
         "req": 65
       },
@@ -766,11 +721,6 @@
         "title": "Chinning - MM2",
         "gpxp": 37,
         "req": 65
-      },
-      {
-        "title": "Ranged",
-        "gpxp": 93,
-        "req": 90
       },
       {
         "title": "Chinning - MM1",
@@ -799,12 +749,12 @@
     "caption": "If using Daeyalt Essence, the price is 20% cheaper",
     "methods": [
       {
-        "title": "Runecrafting",
+        "title": "Library",
         "gpxp": 476,
         "req": 1
       },
       {
-        "title": "Runecrafting",
+        "title": "Lava Runes",
         "gpxp": 463,
         "req": 23
       },
@@ -822,16 +772,6 @@
         "title": "zeah Blood",
         "gpxp": 175,
         "req": 77
-      },
-      {
-        "title": "zmi",
-        "gpxp": 271,
-        "req": 90
-      },
-      {
-        "title": "zeah Blood",
-        "gpxp": 175,
-        "req": 90
       },
       {
         "title": "zeah Soul",
@@ -938,28 +878,13 @@
         "req": 55
       },
       {
-        "title": "Blackjacking",
-        "gpxp": 226,
-        "req": 55
-      },
-      {
         "title": "Ardy Knights (75-95 Thieving) With Diary",
         "gpxp": 96,
         "req": 75
       },
       {
-        "title": "Blackjacking",
-        "gpxp": 137,
-        "req": 75
-      },
-      {
         "title": "Ardy Knights (95-99 Thieving) With Diary",
         "gpxp": 70,
-        "req": 95
-      },
-      {
-        "title": "Blackjacking",
-        "gpxp": 100,
         "req": 95
       }
     ]
