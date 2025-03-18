@@ -390,87 +390,87 @@
     "methods": [
       {
         "title": "Best Method",
-        "gpxp": 1344,
+        "gpxp": 1496,
         "req": 1
       },
       {
         "title": "Swamp Lizards",
-        "gpxp": 435,
+        "gpxp": 504,
         "req": 29
       },
       {
         "title": "Orange Salamanders",
-        "gpxp": 438,
+        "gpxp": 469,
         "req": 47
       },
       {
         "title": "Red Salamanders",
-        "gpxp": 169,
+        "gpxp": 194,
         "req": 59
       },
       {
         "title": "Monkey",
-        "gpxp": 138,
+        "gpxp": 190,
         "req": 60
       },
       {
         "title": "Red chinchompas With Diary",
-        "gpxp": 202,
+        "gpxp": 217,
         "req": 63
       },
       {
         "title": "Red chinchompas Without Diary",
-        "gpxp": 243,
+        "gpxp": 262,
         "req": 63
       },
       {
         "title": "Black Salamanders",
-        "gpxp": 157,
+        "gpxp": 168,
         "req": 67
       },
       {
         "title": "Red chinchompas Without Diary",
-        "gpxp": 244,
+        "gpxp": 260,
         "req": 67
       },
       {
         "title": "Red chinchompas With Diary",
-        "gpxp": 202,
+        "gpxp": 215,
         "req": 67
       },
       {
         "title": "Best Method",
-        "gpxp": 158,
-        "req": 73
-      },
-      {
-        "title": "Black chinchompas Without Diary",
-        "gpxp": 244,
-        "req": 73
-      },
-      {
-        "title": "Black chinchompas With Diary",
-        "gpxp": 202,
+        "gpxp": 169,
         "req": 73
       },
       {
         "title": "Red chinchompas Without Diary",
-        "gpxp": 183,
+        "gpxp": 260,
+        "req": 73
+      },
+      {
+        "title": "Red chinchompas With Diary",
+        "gpxp": 214,
+        "req": 73
+      },
+      {
+        "title": "Red chinchompas Without Diary",
+        "gpxp": 195,
         "req": 80
       },
       {
         "title": "Red chinchompas With Diary",
-        "gpxp": 166,
+        "gpxp": 177,
         "req": 80
       },
       {
         "title": "Red chinchompas Without Diary",
-        "gpxp": 183,
+        "gpxp": 195,
         "req": 90
       },
       {
         "title": "Red chinchompas With Diary",
-        "gpxp": 166,
+        "gpxp": 177,
         "req": 90
       }
     ]
@@ -641,16 +641,6 @@
         "req": 35
       },
       {
-        "title": "Iron Ore Power Mining",
-        "gpxp": 399,
-        "req": 35
-      },
-      {
-        "title": "Iron Ore Power Mining",
-        "gpxp": 349,
-        "req": 72
-      },
-      {
         "title": "Motherlode (lower)",
         "gpxp": 305,
         "req": 72
@@ -704,33 +694,33 @@
     "methods": [
       {
         "title": "Sand Crabs Low Level",
-        "gpxp": 142,
+        "gpxp": 130,
         "req": 1
       },
       {
         "title": "Sand Crabs Higher Level",
-        "gpxp": 93,
+        "gpxp": 70,
         "req": 65
       },
       {
         "title": "Chinning - MM1",
-        "gpxp": 74,
+        "gpxp": 60,
         "req": 65
       },
       {
         "title": "Chinning - MM2",
-        "gpxp": 37,
+        "gpxp": 30,
         "req": 65
       },
       {
         "title": "Chinning - MM1",
-        "gpxp": 74,
+        "gpxp": 60,
         "req": 90,
         "caption": "Hardcore +75%"
       },
       {
         "title": "Chinning - MM2",
-        "gpxp": 37,
+        "gpxp": 30,
         "req": 90,
         "caption": "Hardcore +75%"
       }
