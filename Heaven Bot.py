@@ -1393,12 +1393,13 @@ async def feedback(ctx):
 
 # Payment methods with custom emojis and addresses
 payment_methods_with_emojis = {
-    "Bitcoin": ("1D398RDWnEW4DRYeQ3DKSmbzT1sMuM1xgW", "<:btc:1332372139541528627>"),
-    "USDT (TRC20)": ("TXfZyGJ7Jbx94uD8vzdFoEFfcS7heJDZBW", "<:usdt:1332372201080623115>"),
-    "Eth (Erc20)" : ("0x40a6190110d3f1d8a7936eb0de3287b1d88921dc" , "<:eth:1332372162711130142>"),
-    "Binance to Binance & USDT" : ("461848277", "<:binance:1332372691088445480>"),
-    "LiteCoin" :("LQ3yQWMstLTenNRWbFiwiNXkua4PoKdrZY" ,"<:ltc:1332372439652634647>"),
-    "Ada (Cardano)" : ("addr1v92xngktp696jnpav2vjyps2a5hqzdpxkfdlqd98ed4hgscsy74a2", "<:cardano:1333053268192002200>")}
+    "Bitcoin": ("1PU9SVUQx2HmmfeN4yu4dWowkMaHMwNPcn", "<:btc:1332372139541528627>"),
+    "USDT MATIC Polygon POS": ("0xcb0fb56e0286a3b685fac4152b75fa64a1fcdcba", "<:usdt:1332372201080623115>"),
+    "USDT (TRC20)": ("TH4ZzbBfvMa7fmvbXYEv7ccePWM6dNS8CF", "<:usdt:1332372201080623115>"),
+    "Eth (Erc20)" : ("0xcb0fb56e0286a3b685fac4152b75fa64a1fcdcba" , "<:eth:1332372162711130142>"),
+    "Binance to Binance & USDT" : ("1073345898", "<:binance:1332372691088445480>"),
+    "LiteCoin" :("LgbuG4FjKS184zRyRFAGXoBLjtqGHdxWJB" ,"<:ltc:1332372439652634647>"),
+    "Ada (Cardano)" : ("addr1v85dektwcye9j4anmpjs778k6wm5muyc99kgmxq46glx2yse35ep3", "<:cardano:1333053268192002200>")}
 
 # Command to display payment options
 @bot.command(name="pay")
