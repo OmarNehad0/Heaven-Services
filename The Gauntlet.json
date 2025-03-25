@@ -4,11 +4,11 @@
       "aliases": [
         "gauntlet"
       ],
-      "caption": "Prices May Vary\nFor A Custom Service Create A Ticket\n+200k If no piety \n+200k if no cox scrolls",
+      "caption": "+10% for each prayer missing [Piety,Rigour,Augury]",
       "items": [
         {
-          "name": "Normal - 70+",
-          "price": 2000000,
+          "name": "Normal  80+",
+          "price": 2500000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Youngllef_%28follower%29.png/280px-Youngllef_%28follower%29.png?fc90e"
         }
       ],
@@ -19,36 +19,31 @@
       "aliases": [
         "cg"
       ],
-      "caption": "Prices May Vary\nFor A Custom Service Create A Ticket\n+200k If no piety \n +200k if no cox scrolls",
+      "caption": "+10% for each prayer missing [Piety,Rigour,Augury]",
       "items": [
         {
-          "name": "Maxed Stats",
+          "name": "Stats 99",
           "price": 4600000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Corrupted_Youngllef.png/1024px-Corrupted_Youngllef.png?fc90e"
         },
         {
-          "name": "Stats 95+",
+          "name": "Stats 90+",
           "price": 5000000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Corrupted_Youngllef.png/1024px-Corrupted_Youngllef.png?fc90e"
         },
         {
-          "name": "Stats 90+",
+          "name": "Stats 85+",
           "price": 5500000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Corrupted_Youngllef.png/1024px-Corrupted_Youngllef.png?fc90e"
         },
         {
-          "name": "Stats 85+",
-          "price": 6000000,
-          "image" : "https://oldschool.runescape.wiki/images/thumb/Corrupted_Youngllef.png/1024px-Corrupted_Youngllef.png?fc90e"
-        },
-        {
           "name": "Stats 80+",
-          "price": 6500000,
+          "price": 5900000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Corrupted_Youngllef.png/1024px-Corrupted_Youngllef.png?fc90e"
         },
         {
           "name": "Stats 75+",
-          "price": 7000000,
+          "price": 6400000,
           "image" : "https://oldschool.runescape.wiki/images/thumb/Corrupted_Youngllef.png/1024px-Corrupted_Youngllef.png?fc90e"
         }],
      "emoji" : "<:280pxCorrupted_Hunllef:1222390344377696288>"
