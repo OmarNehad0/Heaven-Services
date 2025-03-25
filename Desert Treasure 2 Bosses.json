@@ -1,119 +1,133 @@
-[
-  {
+[{
     "name": "Duke Sucellus",
-    "aliases": ["Duke"],
-    "caption": "For Any Custom Question Create A Ticket.",
+    "aliases": [
+      "Duke"
+    ],
+    "caption": "You keep all loot.\nPrices may vary depending on stats and gear\n+10% for no Tablet\n+10%for no BGS\n+10% for no Blood fury\n+10% If you're using Noxious halberd or Emberlight or Soulreaper\n+20% If you're using Tent whip or blade\n+10% if your Combat stats below 95\n+20% if below 90"  ,
     "items": [
       {
-        "name": "Duke Sucellus!",
-        "price": 2100000,
+        "name": "Duke Sucellus",
+        "price": 1750000,
         "image": "https://oldschool.runescape.wiki/images/thumb/Duke_Sucellus.png/800px-Duke_Sucellus.png?d588a"
       }
     ],
-    "emoji": "<:Duke_Sucellus:1269335561974583387>"
+        "emoji" : "<:Duke_Sucellus:1269335561974583387>"
   },
-  {
-    "name": "Vardorvis",
-    "aliases": ["Vard"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "Vardorvis!",
-        "price": 2500000,
-        "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
-      }
-    ],
-    "emoji": "<:200pxVardorvis:1321171167154802780>"
-  },
-  {
-    "name": "The Whisperer",
-    "aliases": ["whisperer"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "The Whisperer!",
-        "price": 2300000,
-        "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
-      }
-    ],
-    "emoji": "<:120pxThe_Whisperer:1321171164290224198>"
-  },
-  {
-    "name": "The Leviathan",
-    "aliases": ["Levi"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "The Leviathan!",
-        "price": 1900000,
-        "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
-      }
-    ],
-    "emoji": "<:280pxThe_Leviathan:1212850976264953926>"
-  },
-  {
-    "name": "Awakened Duke",
-    "aliases": ["AwDuke"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "Awakened Duke!",
-        "price": 140000000,
-        "image": "https://oldschool.runescape.wiki/images/thumb/Duke_Sucellus.png/800px-Duke_Sucellus.png?d588a"
-      }
-    ],
-    "emoji": "<:Duke_Sucellus:1269335561974583387>"
-  },
-  {
-    "name": "Awakened Leviathan",
-    "aliases": ["AwLevi"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "Awakened Leviathan!",
-        "price": 256000000,
-        "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
-      }
-    ],
-    "emoji": "<:280pxThe_Leviathan:1212850976264953926>"
-  },
-  {
-    "name": "Awakened Vardorvis",
-    "aliases": ["AwVard"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "Awakened Vardorvis!",
-        "price": 140000000,
-        "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
-      }
-    ],
-    "emoji": "<:200pxVardorvis:1321171167154802780>"
-  },
-  {
-    "name": "Awakened Whisperer",
-    "aliases": ["AwWhisp"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "Awakened Whisperer!",
-        "price": 140000000,
-        "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
-      }
-    ],
-    "emoji": "<:120pxThe_Whisperer:1321171164290224198>"
-  },
-  {
-    "name": "Blood Torva",
-    "aliases": ["BTorva"],
-    "caption": "For Any Custom Question Create A Ticket.",
-    "items": [
-      {
-        "name": "BTorva!",
-        "price": 600000000,
-        "image": "https://oldschool.runescape.wiki/images/thumb/Ancient_blood_ornament_kit_detail.png/800px-Ancient_blood_ornament_kit_detail.png?4b3c1"
-      }
-    ],
-    "emoji": "<:130pxAncient_blood_ornamentkit:1245095090590842940>"
-  }
+            {
+                "name": "Vardorvis",
+                "aliases": [
+                  "Vard"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear\n+10% for no Tablet\n+10%for no BGS\n+10% for no Blood fury\n+10% If you're using Noxious halberd or Emberlight or Soulreaper\n+20% If you're using Tent whip or blade\n+10% if your Combat stats below 95\n+20% if below 90",
+                "items": [
+                  {
+                    "name": "Vardorvis",
+                    "price": 2000000,
+                    "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
+                  }
+                ],
+        "emoji" : "<:200pxVardorvis:1321171167154802780>"
+              },  {
+                "name": "The Whisperer",
+                "aliases": [
+                  "whisperer"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear\n+10% If No Xerics Honour tele or Tablet\n+20% If No Shadow\n+30% If No Sang\n+10% If No Saturated Heart or Magic boosts\n+10% If No Venator Bow\n+10% if your Combat stats below 95\n+20% if below 90",
+                "items": [
+                  {
+                    "name": "The Whisperer",
+                    "price": 2000000,
+                    "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
+                  }
+                ],
+                "emoji" : "<:120pxThe_Whisperer:1321171164290224198>"
+              },  {
+                "name": "The Leviathan",
+                "aliases": [
+                  "Levi"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear\n+10% If No Tablet\n+10% If No ZCB + Rubies (e)\n+10% If No Rigour\n+10% if your Combat stats below 95\n+20% if below 90",
+                "items": [
+                  {
+                    "name": "The Leviathan",
+                    "price": 2000000,
+                    "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
+                  }
+                ],
+                "emoji" : "<:280pxThe_Leviathan:1212850976264953926>"
+              },  {
+                "name": "Awakened Duke",
+                "aliases": [
+                  "AwDuke"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "items": [
+                  {
+                    "name": "Awakened Duke",
+                    "price": 120000000,
+                    "image": "https://oldschool.runescape.wiki/images/thumb/Duke_Sucellus.png/800px-Duke_Sucellus.png?d588a"
+                  }
+                ],
+        "emoji" : "<:Duke_Sucellus:1269335561974583387>"
+              },  {
+                "name": "Awakened Leviathan",
+                "aliases": [
+                  "AwLevi"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "items": [
+                  {
+                    "name": "Awakened Leviathan",
+                    "price": 150000000,
+                    "image": "https://oldschool.runescape.wiki/images/thumb/The_Leviathan.png/800px-The_Leviathan.png?d588a"
+                  }
+                ],
+                "emoji" : "<:280pxThe_Leviathan:1212850976264953926>"
+              },  
+              {
+                "name": "Awakened Vardorvis",
+                "aliases": [
+                  "AwVard"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "items": [
+                  {
+                    "name": "Awakened Vardorvis",
+                    "price": 120000000,
+                    "image": "https://oldschool.runescape.wiki/images/Vardorvis.png?48af8"
+                  }
+                ],
+        "emoji" : "<:200pxVardorvis:1321171167154802780>"
+              },  
+              {
+                "name": "Awakened Whisperer",
+                "aliases": [
+                  "AwWhisp"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "items": [
+                  {
+                    "name": "Awakened Whisperer",
+                    "price": 180000000,
+                    "image": "https://oldschool.runescape.wiki/images/thumb/The_Whisperer.png/320px-The_Whisperer.png?aedab"
+                  }
+                ],
+                "emoji" : "<:120pxThe_Whisperer:1321171164290224198>"
+              },  
+              {
+                "name": "BTorva",
+                "aliases": [
+                  "BTorva"
+                ],
+                "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
+                "items": [
+                  {
+                    "name": "BTorva",
+                    "price": 400000000,
+                    "image": "https://oldschool.runescape.wiki/images/thumb/Ancient_blood_ornament_kit_detail.png/800px-Ancient_blood_ornament_kit_detail.png?4b3c1"
+                  }
+                ],
+                "emoji" : "<:130pxAncient_blood_ornamentkit:1245095090590842940>"
+              }
+     
 ]
