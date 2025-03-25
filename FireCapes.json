@@ -2,16 +2,21 @@
     {
         "name": "Firecape",
         "aliases": ["fc"],
-        "caption": "For Any Custom Question Create A Ticket.",
+        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
         "items": [
             {
                 "name": "90+ Range + Rigour",
-                "price": 23000000,
+                "price": 13000000,
+                "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
+            },
+            {
+                "name": "80+ Range + Rigour",
+                "price": 18000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "75+ Range + Rigour",
-                "price": 32000000,
+                "price": 24000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             }
         ],
@@ -20,26 +25,26 @@
     {
         "name": "firecape low",
         "aliases": ["fcLow"],
-        "caption": "For Any Custom Question Create A Ticket.",
+        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
         "items": [
             {
                 "name": "85-99 Range / -70 Defence",
-                "price": 30000000,
+                "price": 20000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "75-84 Range / -70 Defence",
-                "price": 40000000,
+                "price": 30000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "70-74 Range / -70 Defence",
-                "price": 60000000,
+                "price": 40000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "61-69 Range / -70 Defence",
-                "price": 750000000,
+                "price": 60000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             }
         ],
@@ -48,26 +53,26 @@
     {
         "name": "Firecape pure",
         "aliases": ["purefc", "fcpure"],
-        "caption": "For Any Custom Question Create A Ticket.",
+        "caption": "You keep all loot.\nPrices may vary depending on stats and gear",
         "items": [
             {
                 "name": "85-99 Range",
-                "price": 40000000,
+                "price": 30000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "75-84 Range",
-                "price": 50000000,
+                "price": 40000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "71-74 Range",
-                "price": 70000000,
+                "price": 60000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "61-70 Range",
-                "price": 100000000,
+                "price": 80000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             }
         ],
@@ -76,129 +81,130 @@
     {
         "name": "No Pray Firecape",
         "aliases" : ["NoPray"],
-        "caption": "For Any Custom Question Create A Ticket.",
+        "caption": "Must Already Have Dwarven Rock Cake\nWe Provide All Items And Sweets Except Dwarven Cake or Twisted Bow",
         "items": [
             {
                 "name": "50+ Range, Below 50 Hp",
-                "price": 650000000,
+                "price": 600000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "50+ Range, 50+ Hp",
-                "price": 620000000,
+                "price": 566000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "50+ Range, 75+ Hp",
-                "price": 510000000,
+                "price": 465000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "60+ Range, Below 50 Hp",
-                "price": 550000000,
+                "price": 465000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "60+ Range, 50+ Hp",
-                "price": 480000000,
+                "price": 433000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "60+ Range, 75+ Hp",
-                "price": 440000000,
+                "price": 399000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "75+ Range, Below 50 Hp",
-                "price": 456000000,
+                "price": 416000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "75+ Range, 50+ Hp",
-                "price": 422000000,
+                "price": 382000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "75+ Range, 75+ Hp",
-                "price": 372000000,
+                "price": 332000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "85+ Range, Below 50 Hp",
-                "price": 440000000,
+                "price": 399000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "85+ Range, Below 50 Hp With Twisted Bow",
-                "price": 375000000,
+                "price": 332000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "85+ Range, 50+ Hp",
-                "price": 410000000,
+                "price": 366000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "85+ Range, 50+ Hp With Twisted Bow",
-                "price": 345000000,
+                "price": 300000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "85+ Range, 75+ Hp",
-                "price": 345000000,
+                "price": 300000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "85+ Range, 75+ Hp With Twisted Bow",
-                "price": 275000000,
+                "price": 232000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "90+ Range, Below 50 Hp",
-                "price": 390000000,
+                "price": 349000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "90+ Range, Below 50 Hp With Twisted Bow",
-                "price": 330000000,
+                "price": 283000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "90+ Range, 50+ Hp",
-                "price": 365000000,
+                "price": 315000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "90+ Range, 50+ Hp With Twisted Bow",
-                "price": 290000000,
+                "price": 249000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "90+ Range, 75+ Hp",
-                "price": 325000000,
+                "price": 283000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "90+ Range, 75+ Hp With Twisted Bow",
-                "price": 255000000,
+                "price": 216000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "Unique Cape 40+ Range, 34+ Hp",
-                "price": 845000000,
+                "price": 798000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "Unique Cape 40+ Range, 50+ Hp",
-                "price": 745000000,
+                "price": 699000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             },
             {
                 "name": "Unique Cape 40+ Range, 75+ Hp",
-                "price": 675000000,
+                "price": 632000000,
                 "image": "https://oldschool.runescape.wiki/images/thumb/Fire_cape_detail.png/800px-Fire_cape_detail.png?f1d08"
             }
         ],
                "emoji" : "<:150pxFire_cape_detail:1321173086183100539>"
     }
 ]
+
