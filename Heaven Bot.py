@@ -29,6 +29,8 @@ import requests
 from bs4 import BeautifulSoup
 import pymongo
 from pymongo import MongoClient, ReturnDocument
+import difflib
+import re
 
 # Define intents
 intents = discord.Intents.default()
@@ -1124,26 +1126,54 @@ async def s(ctx, skill_name: str, levels: str):
 
 
 # Emoji categories
+# Emoji categories
 EMOJI_CATEGORY = {
-    "gp": "<:coins:1332378895047069777>",  # Replace with your emoji ID for GP
-    "usd": "<:btc:1332372139541528627>"  # Replace with your emoji ID for USD
+    "gp": "<:coins:1332378895047069777>",
+    "usd": "<:btc:1332372139541528627>"
 }
 
 # Load quest data from JSON file
 with open("quests-members.json", "r") as f:
     quest_data = json.load(f)
 
-# Helper function to find a quest by name or alias
-def find_quest(quest_name):
-    normalized_input = " ".join(quest_name.lower().strip().split())
-    for quest in quest_data:
-        normalized_name = " ".join(quest["name"].lower().strip().split())
-        normalized_aliases = [" ".join(alias.lower().strip().split()) for alias in quest["aliases"]]
-        if normalized_input == normalized_name or normalized_input in normalized_aliases:
-            return quest
-    return None
+# Normalization function to clean input
+def normalize(text):
+    return re.sub(r"[^\w\s]", "", text.lower()).strip()
 
-# Command to calculate quests
+# Helper function to find a quest by name or alias (with fuzzy matching)
+def find_quest(quest_name):
+    normalized_input = normalize(quest_name)
+
+    all_names = []
+    name_map = {}
+
+    for quest in quest_data:
+        normalized_name = normalize(quest["name"])
+        all_names.append(normalized_name)
+        name_map[normalized_name] = quest
+
+        for alias in quest.get("aliases", []):
+            normalized_alias = normalize(alias)
+            all_names.append(normalized_alias)
+            name_map[normalized_alias] = quest
+
+        if normalized_input == normalized_name or normalized_input in [normalize(a) for a in quest.get("aliases", [])]:
+            return quest, None
+
+    # Fuzzy match
+    close_matches = difflib.get_close_matches(normalized_input, all_names, n=1, cutoff=0.6)
+    if close_matches:
+        best_match = close_matches[0]
+        return name_map[best_match], best_match
+
+    return None, None
+
+# Dummy price-to-USD conversion function
+def price_to_usd(gp_amount):
+    exchange_rate = 0.70 / 1000000  # 0.70 USD per 1m GP
+    return gp_amount * exchange_rate
+
+# Quest calculator command
 @bot.command(name="q")
 async def quest_calculator(ctx, *, quests: str):
     quest_names = [q.strip() for q in quests.split(",")]
@@ -1152,36 +1182,36 @@ async def quest_calculator(ctx, *, quests: str):
     total_price_gp = 0
 
     for quest_name in quest_names:
-        quest = find_quest(quest_name)
+        quest, matched_name = find_quest(quest_name)
         if quest:
             price_m = quest['price'] // 1000000
             found_quests.append(f"• **{quest['name']}**: {price_m}M {EMOJI_CATEGORY['gp']}")
             total_price_gp += quest["price"]
         else:
-            not_found_quests.append(f"• {quest_name}")
+            # Try to suggest a similar name
+            suggestion, _ = find_quest(quest_name)
+            if suggestion:
+                not_found_quests.append(f"• `{quest_name}` not found. Did you mean **{suggestion['name']}**?")
+            else:
+                not_found_quests.append(f"• `{quest_name}` not found.")
 
-    # Get the dynamic exchange rate
     total_price_usd = price_to_usd(total_price_gp)
 
-    # Create the embed message
     embed = discord.Embed(
-        title="Quest Calculator ",
+        title="Quest Calculator",
         color=discord.Color.purple()
     )
     embed.set_footer(
         text="Heaven Services",
         icon_url="https://media.discordapp.net/attachments/1327412187228012596/1333768375804891136/he1.gif?ex=679a1819&is=6798c699&hm=f4cc870dd744931d8a5dd09ca07bd3c7a53b5781cec82a13952be601d8dbe52e&="
     )
-    embed.set_thumbnail(url="https://media.discordapp.net/attachments/1332354894597853346/1347946556078293064/he1.gif?ex=67cdac8e&is=67cc5b0e&hm=dce3961c84897962673dfb49faf5dbbae321e9f816ea75744714b09b77be50e8&=")
-    # Add found quests to the embed
-    if found_quests:
-        embed.add_field(
-            name="Quests",
-            value="\n".join(found_quests),
-            inline=False
-        )
+    embed.set_thumbnail(
+        url="https://media.discordapp.net/attachments/1332354894597853346/1347946556078293064/he1.gif?ex=67cdac8e&is=67cc5b0e&hm=dce3961c84897962673dfb49faf5dbbae321e9f816ea75744714b09b77be50e8&="
+    )
 
-    # Add the total price
+    if found_quests:
+        embed.add_field(name="Quests", value="\n".join(found_quests), inline=False)
+
     if total_price_gp > 0:
         embed.add_field(
             name="Order Total",
@@ -1192,7 +1222,6 @@ async def quest_calculator(ctx, *, quests: str):
             inline=False
         )
 
-    # Add not found quests to the embed
     if not_found_quests:
         embed.add_field(
             name="Could not find the following quests",
@@ -1200,9 +1229,10 @@ async def quest_calculator(ctx, *, quests: str):
             inline=False
         )
 
-    embed.set_image(url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&=")
+    embed.set_image(
+        url="https://media.discordapp.net/attachments/1332341372333723732/1333038474571284521/avatar11.gif?ex=67977052&is=67961ed2&hm=e48d59d1efb3fcacae515a33dbb6182ef59c0268fba45628dd213c2cc241d66a&="
+    )
 
-    # Send the embed
     await ctx.send(embed=embed)
 
 
