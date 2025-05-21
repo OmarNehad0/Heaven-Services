@@ -1467,7 +1467,7 @@ JSON_FILES = [
     "God Wars Dungeon.json",
     "The Gauntlet.json",
     "Wilderness Bosses.json",
-    "Desert Treasure 2 bosses.json"
+    "Desert Treasure 2 Bosses.json"
 ]
 # Emoji mapping for each JSON file
 EMOJI_MAP = {
